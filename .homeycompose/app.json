@@ -10,6 +10,7 @@
   "description": {
     "en": "Support for the Govee smart devices."
   },
+  "source": "https://github.com/kaohlive/com.govee.developer",
   "category": [
     "lights"
   ],
