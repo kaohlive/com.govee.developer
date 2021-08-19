@@ -1,0 +1,29 @@
+{
+  "id": "H6054",
+  "name": {
+    "en": "Flow Pro Light Bar"
+  },
+  "class": "light",
+  "capabilities": [ ],
+  "images": {
+    "small": "/drivers/h6054/assets/images/small.png",
+    "large": "/drivers/h6054/assets/images/large.png",
+    "xlarge": "/drivers/h6054/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "options": {
+        "singular": true
+      },
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}
