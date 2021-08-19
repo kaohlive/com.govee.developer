@@ -6,9 +6,9 @@
   "class": "light",
   "capabilities": [ ],
   "images": {
-    "small": "/drivers/h6054/assets/images/small.png",
-    "large": "/drivers/h6054/assets/images/large.png",
-    "xlarge": "/drivers/h6054/assets/images/xlarge.png"
+    "small": "/drivers/H6054/assets/images/small.png",
+    "large": "/drivers/H6054/assets/images/large.png",
+    "xlarge": "/drivers/H6054/assets/images/xlarge.png"
   },
   "pair": [
     {
