@@ -1,7 +1,7 @@
 {
   "id": "com.govee.developer",
   "brandColor": "#00ACE7",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "name": {
@@ -10,6 +10,7 @@
   "description": {
     "en": "Support for the Govee smart devices."
   },
+  "homeyCommunityTopicId": 50660,
   "source": "https://github.com/kaohlive/com.govee.developer",
   "category": [
     "lights"

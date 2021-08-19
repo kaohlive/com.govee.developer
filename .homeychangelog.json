@@ -1,5 +1,8 @@
 {
   "1.0.0": {
     "en": "First release with 2 devices. Lets give it a run and see if it works ok"
+  },
+  "1.0.1": {
+    "en": "Additional readme content and links to source and forum"
   }
 }
