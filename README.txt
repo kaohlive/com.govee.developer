@@ -6,13 +6,6 @@ You need to use the Govee app to request the API key for you account.
 Then after installing this app you can set the API key in the app settings.
 Then you can add the Govee devices.
 
-Supprted devices
-Currently the app supports the:
-H6054 - Flow Pro Light Bar
-H6199 - Immersion TV Strip Light
-
-I will be adding more devices, for special requests please drop me a note.
-
 Limitations
 The Govee API does only allow basic light operations, these are:
 turn on/off
