@@ -1,14 +1,14 @@
 {
   "id": "com.govee.developer",
   "brandColor": "#00ACE7",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "name": {
     "en": "Govee"
   },
   "description": {
-    "en": "Support for the Govee smart devices."
+    "en": "It's time you reinvent your viewing experience with more color and less eye fatigue."
   },
   "homeyCommunityTopicId": 50660,
   "source": "https://github.com/kaohlive/com.govee.developer",
