@@ -7,5 +7,8 @@
   },
   "1.0.2": {
     "en": "Process feedback from certification process"
+  },
+  "1.1.0": {
+    "en": "Added support for the H6052 and H6144 devices"
   }
 }
