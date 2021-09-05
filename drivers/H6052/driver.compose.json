@@ -1,0 +1,29 @@
+{
+  "id": "H6052",
+  "name": {
+    "en": "Aura Lamp Table"
+  },
+  "class": "light",
+  "capabilities": [ ],
+  "images": {
+    "small": "/drivers/H6052/assets/images/small.png",
+    "large": "/drivers/H6052/assets/images/large.png",
+    "xlarge": "/drivers/H6052/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "options": {
+        "singular": true
+      },
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}
