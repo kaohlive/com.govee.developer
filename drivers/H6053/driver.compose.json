@@ -1,14 +1,14 @@
 {
-  "id": "H6052",
+  "id": "H6053",
   "name": {
-    "en": "Aura Table Lamp"
+    "en": "Flow Light Bar"
   },
   "class": "light",
   "capabilities": [ ],
   "images": {
-    "small": "/drivers/H6052/assets/images/small.png",
-    "large": "/drivers/H6052/assets/images/large.png",
-    "xlarge": "/drivers/H6052/assets/images/xlarge.png"
+    "small": "/drivers/H6054/assets/images/small.png",
+    "large": "/drivers/H6054/assets/images/large.png",
+    "xlarge": "/drivers/H6054/assets/images/xlarge.png"
   },
   "pair": [
     {
