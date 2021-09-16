@@ -10,5 +10,8 @@
   },
   "1.1.0": {
     "en": "Added support for the H6052 and H6144 devices"
+  },
+  "1.2.0": {
+    "en": "Added several new devices"
   }
 }
