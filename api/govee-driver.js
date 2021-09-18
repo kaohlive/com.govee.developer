@@ -10,18 +10,28 @@ class GoveeDriver extends Driver {
    * onInit is called when the driver is initialized.
    */
   async onInit() {
-    console.log(this.homey.settings.get('api_key'));
+    //console.log(this.homey.settings.get('api_key'));
     this.api = new gv.GoveeClient({
       api_key: this.homey.settings.get('api_key')
     });
     this.log('govee.driver has been initialized');
-  }  
+  }
+
+  async reInit() {
+    //console.log(this.homey.settings.get('api_key'));
+    this.api = new gv.GoveeClient({
+      api_key: this.homey.settings.get('api_key')
+    });
+    this.log('govee.driver has been re-initialized');
+  }
 
   /**
    * onPairListDevices is called when a user is adding a device and the 'list_devices' view is called.
    * This should return an array with the data of devices that are available for pairing.
    */
   async ListDevices() {
+    console.log('Lets restart the API client to ensure we use the latest API key from the settings');
+    await this.reInit();
     console.log('List available devices');
 
     var devicelist = await this.api.deviceList();
