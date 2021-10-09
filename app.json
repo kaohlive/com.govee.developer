@@ -30,14 +30,14 @@
     {
       "id": "H6051",
       "name": {
-        "en": "Aura Lite Table Lamp"
+        "en": "H6051: Aura Lite Table Lamp"
       },
       "class": "light",
       "capabilities": [],
       "images": {
-        "small": "/drivers/H6052/assets/images/small.png",
-        "large": "/drivers/H6052/assets/images/large.png",
-        "xlarge": "/drivers/H6052/assets/images/xlarge.png"
+        "small": "/drivers/H6051/assets/images/small.png",
+        "large": "/drivers/H6051/assets/images/large.png",
+        "xlarge": "/drivers/H6051/assets/images/xlarge.png"
       },
       "pair": [
         {
@@ -59,7 +59,7 @@
     {
       "id": "H6052",
       "name": {
-        "en": "Aura Table Lamp"
+        "en": "H6052: Aura Table Lamp"
       },
       "class": "light",
       "capabilities": [],
@@ -88,14 +88,14 @@
     {
       "id": "H6053",
       "name": {
-        "en": "Flow Light Bar"
+        "en": "H6053: Flow Light Bar"
       },
       "class": "light",
       "capabilities": [],
       "images": {
-        "small": "/drivers/H6054/assets/images/small.png",
-        "large": "/drivers/H6054/assets/images/large.png",
-        "xlarge": "/drivers/H6054/assets/images/xlarge.png"
+        "small": "/drivers/H6053/assets/images/small.png",
+        "large": "/drivers/H6053/assets/images/large.png",
+        "xlarge": "/drivers/H6053/assets/images/xlarge.png"
       },
       "pair": [
         {
@@ -117,7 +117,7 @@
     {
       "id": "H6054",
       "name": {
-        "en": "Flow Pro Light Bar"
+        "en": "H6054: Flow Pro Light Bar"
       },
       "class": "light",
       "capabilities": [],
@@ -146,14 +146,14 @@
     {
       "id": "H6056",
       "name": {
-        "en": "Flow Plus Light Bar"
+        "en": "H6056: Flow Plus Light Bar"
       },
       "class": "light",
       "capabilities": [],
       "images": {
-        "small": "/drivers/H6054/assets/images/small.png",
-        "large": "/drivers/H6054/assets/images/large.png",
-        "xlarge": "/drivers/H6054/assets/images/xlarge.png"
+        "small": "/drivers/H6056/assets/images/small.png",
+        "large": "/drivers/H6056/assets/images/large.png",
+        "xlarge": "/drivers/H6056/assets/images/xlarge.png"
       },
       "pair": [
         {
@@ -175,14 +175,43 @@
     {
       "id": "H6062",
       "name": {
-        "en": "Glide wall light"
+        "en": "H6062: Glide wall light"
       },
       "class": "light",
       "capabilities": [],
       "images": {
-        "small": "/drivers/H6054/assets/images/small.png",
-        "large": "/drivers/H6054/assets/images/large.png",
-        "xlarge": "/drivers/H6054/assets/images/xlarge.png"
+        "small": "/drivers/H6062/assets/images/small.png",
+        "large": "/drivers/H6062/assets/images/large.png",
+        "xlarge": "/drivers/H6062/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "options": {
+            "singular": true
+          },
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
+      "id": "H6072",
+      "name": {
+        "en": "H6072: Lyra floor lamp"
+      },
+      "class": "light",
+      "capabilities": [],
+      "images": {
+        "small": "/drivers/H6072/assets/images/small.png",
+        "large": "/drivers/H6072/assets/images/large.png",
+        "xlarge": "/drivers/H6072/assets/images/xlarge.png"
       },
       "pair": [
         {
@@ -204,14 +233,14 @@
     {
       "id": "H6101",
       "name": {
-        "en": "RGBIC for TV"
+        "en": "H6101: RGBIC for TV"
       },
       "class": "light",
       "capabilities": [],
       "images": {
-        "small": "/drivers/H6054/assets/images/small.png",
-        "large": "/drivers/H6054/assets/images/large.png",
-        "xlarge": "/drivers/H6054/assets/images/xlarge.png"
+        "small": "/drivers/H6101/assets/images/small.png",
+        "large": "/drivers/H6101/assets/images/large.png",
+        "xlarge": "/drivers/H6101/assets/images/xlarge.png"
       },
       "pair": [
         {
@@ -233,14 +262,72 @@
     {
       "id": "H6104",
       "name": {
-        "en": "RGBIC for TV with Alexa"
+        "en": "H6104: RGBIC for TV with Alexa"
       },
       "class": "light",
       "capabilities": [],
       "images": {
-        "small": "/drivers/H6054/assets/images/small.png",
-        "large": "/drivers/H6054/assets/images/large.png",
-        "xlarge": "/drivers/H6054/assets/images/xlarge.png"
+        "small": "/drivers/H6104/assets/images/small.png",
+        "large": "/drivers/H6104/assets/images/large.png",
+        "xlarge": "/drivers/H6104/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "options": {
+            "singular": true
+          },
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
+      "id": "H6110",
+      "name": {
+        "en": "H6110: 2*5m MultiColor Strip Light with Alexa"
+      },
+      "class": "light",
+      "capabilities": [],
+      "images": {
+        "small": "/drivers/H6110/assets/images/small.png",
+        "large": "/drivers/H6110/assets/images/large.png",
+        "xlarge": "/drivers/H6110/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "options": {
+            "singular": true
+          },
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
+      "id": "H6138",
+      "name": {
+        "en": "H6138: 5m MultiColor for Home"
+      },
+      "class": "light",
+      "capabilities": [],
+      "images": {
+        "small": "/drivers/H6138/assets/images/small.png",
+        "large": "/drivers/H6138/assets/images/large.png",
+        "xlarge": "/drivers/H6138/assets/images/xlarge.png"
       },
       "pair": [
         {
@@ -262,14 +349,14 @@
     {
       "id": "H6143",
       "name": {
-        "en": "5m RGBIC Strip Light"
+        "en": "H6143: 5m RGBIC Strip Light"
       },
       "class": "light",
       "capabilities": [],
       "images": {
-        "small": "/drivers/H6144/assets/images/small.png",
-        "large": "/drivers/H6144/assets/images/large.png",
-        "xlarge": "/drivers/H6144/assets/images/xlarge.png"
+        "small": "/drivers/H6143/assets/images/small.png",
+        "large": "/drivers/H6143/assets/images/large.png",
+        "xlarge": "/drivers/H6143/assets/images/xlarge.png"
       },
       "pair": [
         {
@@ -291,7 +378,7 @@
     {
       "id": "H6144",
       "name": {
-        "en": "2 * 5m RGBIC Strip Light"
+        "en": "H6144: 2*5m RGBIC Strip Light"
       },
       "class": "light",
       "capabilities": [],
@@ -320,14 +407,14 @@
     {
       "id": "H6163",
       "name": {
-        "en": "5m RGBIC with Alexa"
+        "en": "H6163: 5m RGBIC with Alexa"
       },
       "class": "light",
       "capabilities": [],
       "images": {
-        "small": "/drivers/H6144/assets/images/small.png",
-        "large": "/drivers/H6144/assets/images/large.png",
-        "xlarge": "/drivers/H6144/assets/images/xlarge.png"
+        "small": "/drivers/H6163/assets/images/small.png",
+        "large": "/drivers/H6163/assets/images/large.png",
+        "xlarge": "/drivers/H6163/assets/images/xlarge.png"
       },
       "pair": [
         {

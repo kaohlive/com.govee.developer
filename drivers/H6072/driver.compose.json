@@ -1,14 +1,14 @@
 {
-  "id": "H6053",
+  "id": "H6072",
   "name": {
-    "en": "H6053: Flow Light Bar"
+    "en": "H6072: Lyra floor lamp"
   },
   "class": "light",
   "capabilities": [ ],
   "images": {
-    "small": "/drivers/H6053/assets/images/small.png",
-    "large": "/drivers/H6053/assets/images/large.png",
-    "xlarge": "/drivers/H6053/assets/images/xlarge.png"
+    "small": "/drivers/H6072/assets/images/small.png",
+    "large": "/drivers/H6072/assets/images/large.png",
+    "xlarge": "/drivers/H6072/assets/images/xlarge.png"
   },
   "pair": [
     {

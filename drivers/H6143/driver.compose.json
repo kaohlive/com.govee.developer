@@ -1,14 +1,14 @@
 {
   "id": "H6143",
   "name": {
-    "en": "5m RGBIC Strip Light"
+    "en": "H6143: 5m RGBIC Strip Light"
   },
   "class": "light",
   "capabilities": [ ],
   "images": {
-    "small": "/drivers/H6144/assets/images/small.png",
-    "large": "/drivers/H6144/assets/images/large.png",
-    "xlarge": "/drivers/H6144/assets/images/xlarge.png"
+    "small": "/drivers/H6143/assets/images/small.png",
+    "large": "/drivers/H6143/assets/images/large.png",
+    "xlarge": "/drivers/H6143/assets/images/xlarge.png"
   },
   "pair": [
     {

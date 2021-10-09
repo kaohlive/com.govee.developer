@@ -1,14 +1,14 @@
 {
-  "id": "H6053",
+  "id": "H6138",
   "name": {
-    "en": "H6053: Flow Light Bar"
+    "en": "H6138: 5m MultiColor for Home"
   },
   "class": "light",
   "capabilities": [ ],
   "images": {
-    "small": "/drivers/H6053/assets/images/small.png",
-    "large": "/drivers/H6053/assets/images/large.png",
-    "xlarge": "/drivers/H6053/assets/images/xlarge.png"
+    "small": "/drivers/H6138/assets/images/small.png",
+    "large": "/drivers/H6138/assets/images/large.png",
+    "xlarge": "/drivers/H6138/assets/images/xlarge.png"
   },
   "pair": [
     {

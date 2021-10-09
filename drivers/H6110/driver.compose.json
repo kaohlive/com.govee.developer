@@ -1,14 +1,14 @@
 {
-  "id": "H6053",
+  "id": "H6110",
   "name": {
-    "en": "H6053: Flow Light Bar"
+    "en": "H6110: 2*5m MultiColor Strip Light with Alexa"
   },
   "class": "light",
   "capabilities": [ ],
   "images": {
-    "small": "/drivers/H6053/assets/images/small.png",
-    "large": "/drivers/H6053/assets/images/large.png",
-    "xlarge": "/drivers/H6053/assets/images/xlarge.png"
+    "small": "/drivers/H6110/assets/images/small.png",
+    "large": "/drivers/H6110/assets/images/large.png",
+    "xlarge": "/drivers/H6110/assets/images/xlarge.png"
   },
   "pair": [
     {

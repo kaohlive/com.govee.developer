@@ -1,14 +1,14 @@
 {
   "id": "H6104",
   "name": {
-    "en": "RGBIC for TV with Alexa"
+    "en": "H6104: RGBIC for TV with Alexa"
   },
   "class": "light",
   "capabilities": [ ],
   "images": {
-    "small": "/drivers/H6054/assets/images/small.png",
-    "large": "/drivers/H6054/assets/images/large.png",
-    "xlarge": "/drivers/H6054/assets/images/xlarge.png"
+    "small": "/drivers/H6104/assets/images/small.png",
+    "large": "/drivers/H6104/assets/images/large.png",
+    "xlarge": "/drivers/H6104/assets/images/xlarge.png"
   },
   "pair": [
     {

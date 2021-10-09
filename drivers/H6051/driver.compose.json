@@ -1,14 +1,14 @@
 {
   "id": "H6051",
   "name": {
-    "en": "Aura Lite Table Lamp"
+    "en": "H6051: Aura Lite Table Lamp"
   },
   "class": "light",
   "capabilities": [ ],
   "images": {
-    "small": "/drivers/H6052/assets/images/small.png",
-    "large": "/drivers/H6052/assets/images/large.png",
-    "xlarge": "/drivers/H6052/assets/images/xlarge.png"
+    "small": "/drivers/H6051/assets/images/small.png",
+    "large": "/drivers/H6051/assets/images/large.png",
+    "xlarge": "/drivers/H6051/assets/images/xlarge.png"
   },
   "pair": [
     {

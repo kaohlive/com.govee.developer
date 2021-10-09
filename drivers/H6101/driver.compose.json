@@ -1,14 +1,14 @@
 {
   "id": "H6101",
   "name": {
-    "en": "RGBIC for TV"
+    "en": "H6101: RGBIC for TV"
   },
   "class": "light",
   "capabilities": [ ],
   "images": {
-    "small": "/drivers/H6054/assets/images/small.png",
-    "large": "/drivers/H6054/assets/images/large.png",
-    "xlarge": "/drivers/H6054/assets/images/xlarge.png"
+    "small": "/drivers/H6101/assets/images/small.png",
+    "large": "/drivers/H6101/assets/images/large.png",
+    "xlarge": "/drivers/H6101/assets/images/xlarge.png"
   },
   "pair": [
     {

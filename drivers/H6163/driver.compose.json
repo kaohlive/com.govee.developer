@@ -1,14 +1,14 @@
 {
   "id": "H6163",
   "name": {
-    "en": "5m RGBIC with Alexa"
+    "en": "H6163: 5m RGBIC with Alexa"
   },
   "class": "light",
   "capabilities": [ ],
   "images": {
-    "small": "/drivers/H6144/assets/images/small.png",
-    "large": "/drivers/H6144/assets/images/large.png",
-    "xlarge": "/drivers/H6144/assets/images/xlarge.png"
+    "small": "/drivers/H6163/assets/images/small.png",
+    "large": "/drivers/H6163/assets/images/large.png",
+    "xlarge": "/drivers/H6163/assets/images/xlarge.png"
   },
   "pair": [
     {

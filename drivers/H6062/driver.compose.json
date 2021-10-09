@@ -1,14 +1,14 @@
 {
   "id": "H6062",
   "name": {
-    "en": "Glide wall light"
+    "en": "H6062: Glide wall light"
   },
   "class": "light",
   "capabilities": [ ],
   "images": {
-    "small": "/drivers/H6054/assets/images/small.png",
-    "large": "/drivers/H6054/assets/images/large.png",
-    "xlarge": "/drivers/H6054/assets/images/xlarge.png"
+    "small": "/drivers/H6062/assets/images/small.png",
+    "large": "/drivers/H6062/assets/images/large.png",
+    "xlarge": "/drivers/H6062/assets/images/xlarge.png"
   },
   "pair": [
     {
