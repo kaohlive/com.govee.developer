@@ -1,14 +1,14 @@
 {
-  "id": "H6199",
+  "id": "H619A",
   "name": {
-    "en": "H6199: Immersion TV Strip Light"
+    "en": "H619A: 5m RGBIC Pro Strip Light"
   },
   "class": "light",
-  "capabilities": [],
+  "capabilities": [ ],
   "images": {
-    "small": "/drivers/H6199/assets/images/small.png",
-    "large": "/drivers/H6199/assets/images/large.png",
-    "xlarge": "/drivers/H6199/assets/images/xlarge.png"
+    "small": "/drivers/H619A/assets/images/small.png",
+    "large": "/drivers/H619A/assets/images/large.png",
+    "xlarge": "/drivers/H619A/assets/images/xlarge.png"
   },
   "pair": [
     {

@@ -1,14 +1,14 @@
 {
-  "id": "H6199",
+  "id": "H615A",
   "name": {
-    "en": "H6199: Immersion TV Strip Light"
+    "en": "H615A: 5m RGBIC Strip Light"
   },
   "class": "light",
-  "capabilities": [],
+  "capabilities": [ ],
   "images": {
-    "small": "/drivers/H6199/assets/images/small.png",
-    "large": "/drivers/H6199/assets/images/large.png",
-    "xlarge": "/drivers/H6199/assets/images/xlarge.png"
+    "small": "/drivers/H615A/assets/images/small.png",
+    "large": "/drivers/H615A/assets/images/large.png",
+    "xlarge": "/drivers/H615A/assets/images/xlarge.png"
   },
   "pair": [
     {

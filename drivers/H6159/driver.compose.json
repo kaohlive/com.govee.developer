@@ -1,14 +1,14 @@
 {
-  "id": "H6199",
+  "id": "H6159",
   "name": {
-    "en": "H6199: Immersion TV Strip Light"
+    "en": "H6159: 5m Multicolor"
   },
   "class": "light",
-  "capabilities": [],
+  "capabilities": [ ],
   "images": {
-    "small": "/drivers/H6199/assets/images/small.png",
-    "large": "/drivers/H6199/assets/images/large.png",
-    "xlarge": "/drivers/H6199/assets/images/xlarge.png"
+    "small": "/drivers/H6159/assets/images/small.png",
+    "large": "/drivers/H6159/assets/images/large.png",
+    "xlarge": "/drivers/H6159/assets/images/xlarge.png"
   },
   "pair": [
     {
