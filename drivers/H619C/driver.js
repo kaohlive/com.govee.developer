@@ -1,7 +1,7 @@
 'use strict';
 
 const GoveeDriver = require('../../api/govee-driver')
-const deviceModel = 'H619B';
+const deviceModel = 'H619C';
 
 class goveeDeviceDriver extends GoveeDriver {
   /**

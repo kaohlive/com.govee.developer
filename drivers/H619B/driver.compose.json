@@ -1,14 +1,14 @@
 {
-  "id": "H619A",
+  "id": "H619B",
   "name": {
-    "en": "H619A: 5m RGBIC Pro Strip Light"
+    "en": "H619B: 7.5m RGBIC Pro Strip Light"
   },
   "class": "light",
   "capabilities": [ ],
   "images": {
-    "small": "/drivers/H619A/assets/images/small.png",
-    "large": "/drivers/H619A/assets/images/large.png",
-    "xlarge": "/drivers/H619A/assets/images/xlarge.png"
+    "small": "/drivers/H619B/assets/images/small.png",
+    "large": "/drivers/H619B/assets/images/large.png",
+    "xlarge": "/drivers/H619B/assets/images/xlarge.png"
   },
   "pair": [
     {
