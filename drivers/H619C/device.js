@@ -2,7 +2,7 @@
 
 const GoveeDevice = require('../../api/govee-device')
 
-class H619BCDevice extends GoveeDevice {
+class H619CDevice extends GoveeDevice {
   /**
    * onInit is called when the device is initialized.
    */
