@@ -34,5 +34,8 @@
   },
   "1.4.1": {
     "en": "added a patch to prevent crashes in some color temp scenarios"
+  },
+  "1.5.0": {
+    "en": "Added Neon Led strip support"
   }
 }
