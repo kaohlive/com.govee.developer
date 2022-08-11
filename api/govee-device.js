@@ -49,6 +49,7 @@ class GoveeDevice extends Device {
           let rangeTotal = rangeMax-rangeMin;
           console.log('range[max:'+rangeMax+', min: '+rangeMin+', range: '+rangeTotal+']');
           var rangePerc = (colorTem['colorTem']-rangeMin)/rangeTotal;
+          if (rangePerc>1) rangePerc = 1; //Seems that sometimes this math ends up in a higher than 1 result, strange but without more data hard to locate.
           this.setCapabilityValue('light_temperature', rangePerc);
         } else {
           console.log('no color temp known');
