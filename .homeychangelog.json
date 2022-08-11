@@ -31,5 +31,8 @@
   },
   "1.4.0": {
     "en": "Added an Unknown device to support new devices"
+  },
+  "1.4.1": {
+    "en": "added a patch to prevent crashes in some color temp scenarios"
   }
 }
