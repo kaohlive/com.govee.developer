@@ -15,14 +15,20 @@ class GoveeDevice extends Device {
   }
 
   start_update_loop() {
+    let interval = this.homey.settings.get('poll_interval');
+    if(interval < 60000)
+    {
+      this.log('Interval is not set or set to low, force 1 min');
+      interval = 60000;
+    }
     this._timer = setInterval(() => {
         this.refreshState();
-    }, 30000); //0.5 min
+    }, interval); //Do not set this to low, 4 devices per halve minute already surpases the 10K global call count per day
   }
 
   async refreshState()
   {
-    this.log('govee.device.'+this.data.model+': '+this.data.name+' ddevice state to be retrieved');
+    this.log('govee.device.'+this.data.model+': '+this.data.name+' device state to be retrieved');
     this.driver.deviceState(this.data.model, this.data.mac).then(currentState => {
       console.log(JSON.stringify(currentState.properties));
       //Now update the capabilities with the actual state
@@ -37,7 +43,10 @@ class GoveeDevice extends Device {
       if (this.hasCapability('dim'))
       {
         var brightness = currentState.properties.find(property => { return property['brightness'] != undefined })
-        this.setCapabilityValue('dim', (brightness['brightness']/100));
+        if (brightness['brightness'] > 100)
+          this.setCapabilityValue('dim', (brightness['brightness']/255)); //Seems to be a mismatch in documentation. It should be a range between 0 and 100
+        else
+          this.setCapabilityValue('dim', (brightness['brightness']/100));
       }
       if (this.hasCapability('light_temperature'))
       {
@@ -47,7 +56,7 @@ class GoveeDevice extends Device {
           let rangeMin = this.data.properties.colorTem.range.min;
           let rangeMax = this.data.properties.colorTem.range.max;
           let rangeTotal = rangeMax-rangeMin;
-          console.log('range[max:'+rangeMax+', min: '+rangeMin+', range: '+rangeTotal+']');
+          console.log('colorTem: '+colorTem['colorTem']+' - range[max:'+rangeMax+', min: '+rangeMin+', range: '+rangeTotal+']');
           var rangePerc = (colorTem['colorTem']-rangeMin)/rangeTotal;
           if (rangePerc>1) rangePerc = 1; //Seems that sometimes this math ends up in a higher than 1 result, strange but without more data hard to locate.
           this.setCapabilityValue('light_temperature', rangePerc);

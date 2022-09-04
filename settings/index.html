@@ -17,13 +17,17 @@
     </p>
 
     <fieldset>
-        <legend>Govee API Key</legend>
+        <legend>Govee API Settings</legend>
 
         <div class="field row">
-            <label for="username">Key</label>
+            <label for="apikey">Your API Key</label>
             <input id="apikey" type="text" value="" />
         </div>
-        <button id="save" class="right">Save key</button>
+        <div class="field row">
+          <label for="pollinterval">Device state poll interval (in ms), increase this if your devices stop working due to rate limiting. Minimum setting is 60 seconds</label>
+          <input id="pollinterval" type="text" value="60000" />
+        </div>
+        <button id="save" class="right">Save settings</button>
     </fieldset>
 
 
@@ -36,10 +40,14 @@
         Homey.ready();
 
         var keyElement = document.getElementById('apikey');
+        var intervalElement = document.getElementById('pollinterval');
         var saveElement = document.getElementById('save');
 
         saveElement.addEventListener('click', function(e) {
           Homey.set('api_key', keyElement.value, function( err ){
+            if( err ) return Homey.alert( err );
+          });
+          Homey.set('poll_interval', intervalElement.value, function( err ){
             if( err ) return Homey.alert( err );
           });
         });
@@ -47,6 +55,13 @@
         Homey.get('api_key', function( err, key ) {
            if( err ) return Homey.alert( err );
            keyElement.value = key;
+        });
+
+        Homey.get('poll_interval', function( err, pollinterval ) {
+           if( err ) return Homey.alert( err );
+           if(pollinterval < 60000)
+            pollinterval = 60000;
+           intervalElement.value = pollinterval;
         });
 
     }
