@@ -37,5 +37,8 @@
   },
   "1.5.0": {
     "en": "Added Neon Led strip support"
+  },
+  "1.5.1": {
+    "en": "added a poll interval setting, and brightness bug fix for some devices"
   }
 }
