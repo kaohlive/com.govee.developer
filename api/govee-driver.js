@@ -2,7 +2,7 @@
 
 const { Driver } = require('homey');
 const tinycolor = require('tinycolor2');
-const gv = require('../../api/govee-api');
+const gv = require('./govee-api');
 
 
 class GoveeDriver extends Driver {

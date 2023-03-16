@@ -40,5 +40,8 @@
   },
   "1.5.1": {
     "en": "added a poll interval setting, and brightness bug fix for some devices"
+  },
+  "1.5.2": {
+    "en": "Attempt to fix homey pro 2023 support"
   }
 }
