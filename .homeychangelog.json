@@ -43,5 +43,8 @@
   },
   "1.5.2": {
     "en": "Attempt to fix homey pro 2023 support"
+  },
+  "2.1.0": {
+    "en": "Major rework on device driver, merged to single driver"
   }
 }

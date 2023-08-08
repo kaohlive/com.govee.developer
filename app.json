@@ -2,7 +2,7 @@
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.govee.developer",
   "brandColor": "#00ACE7",
-  "version": "1.5.2",
+  "version": "2.1.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "name": {
@@ -33,6 +33,7 @@
         "en": "H6051: Aura Lite Table Lamp"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6051/assets/images/small.png",
@@ -62,6 +63,7 @@
         "en": "H6052: Aura Table Lamp"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6052/assets/images/small.png",
@@ -91,6 +93,7 @@
         "en": "H6053: Flow Light Bar"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6053/assets/images/small.png",
@@ -120,6 +123,7 @@
         "en": "H6054: Flow Pro Light Bar"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6054/assets/images/small.png",
@@ -149,6 +153,7 @@
         "en": "H6056: Flow Plus Light Bar"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6056/assets/images/small.png",
@@ -178,6 +183,7 @@
         "en": "H6062: Glide wall light"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6062/assets/images/small.png",
@@ -207,6 +213,7 @@
         "en": "H6072: Lyra floor lamp"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6072/assets/images/small.png",
@@ -236,6 +243,7 @@
         "en": "H6101: RGBIC for TV"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6101/assets/images/small.png",
@@ -265,6 +273,7 @@
         "en": "H6104: RGBIC for TV with Alexa"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6104/assets/images/small.png",
@@ -294,6 +303,7 @@
         "en": "H6110: 2*5m MultiColor Strip Light with Alexa"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6110/assets/images/small.png",
@@ -323,6 +333,7 @@
         "en": "H6138: 5m MultiColor for Home"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6138/assets/images/small.png",
@@ -352,6 +363,7 @@
         "en": "H6143: 5m RGBIC Strip Light"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6143/assets/images/small.png",
@@ -381,6 +393,7 @@
         "en": "H6144: 2*5m RGBIC Strip Light"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6144/assets/images/small.png",
@@ -410,6 +423,7 @@
         "en": "H6159: 5m Multicolor"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6159/assets/images/small.png",
@@ -439,6 +453,7 @@
         "en": "H615A: 5m RGBIC Strip Light"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H615A/assets/images/small.png",
@@ -468,6 +483,7 @@
         "en": "H615B: 10m RGBIC Pro Strip Light"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H615B/assets/images/small.png",
@@ -497,6 +513,7 @@
         "en": "H615C: 15m RGBIC Pro Strip Light"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H615C/assets/images/small.png",
@@ -526,6 +543,7 @@
         "en": "H6163: 5m RGBIC with Alexa"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6163/assets/images/small.png",
@@ -555,6 +573,7 @@
         "en": "H6199: Immersion TV Strip Light"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H6199/assets/images/small.png",
@@ -584,6 +603,7 @@
         "en": "H619A: 5m RGBIC Pro Strip Light"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H619A/assets/images/small.png",
@@ -613,6 +633,7 @@
         "en": "H619B: 7.5m RGBIC Pro Strip Light"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H619B/assets/images/small.png",
@@ -642,6 +663,7 @@
         "en": "H619C: 10m RGBIC Pro Strip Light"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H619C/assets/images/small.png",
@@ -671,6 +693,7 @@
         "en": "H61A0: 3m Neon LED Strip Light"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H61A0/assets/images/small.png",
@@ -700,6 +723,7 @@
         "en": "H61A2: 5m Neon LED Strip Light"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/H61A2/assets/images/small.png",
@@ -729,11 +753,72 @@
         "en": "Unknown: A Govee device that has no specific implementation"
       },
       "class": "light",
+      "deprecated": true,
       "capabilities": [],
       "images": {
         "small": "/drivers/UNKNOWN/assets/images/small.png",
         "large": "/drivers/UNKNOWN/assets/images/large.png",
         "xlarge": "/drivers/UNKNOWN/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "options": {
+            "singular": true
+          },
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
+      "id": "govee-appliance",
+      "name": {
+        "en": "Appliance"
+      },
+      "class": "light",
+      "deprecated": true,
+      "icon": "default.svg",
+      "capabilities": [],
+      "images": {
+        "small": "/drivers/govee-appliance/assets/images/small.png",
+        "large": "/drivers/govee-appliance/assets/images/large.png",
+        "xlarge": "/drivers/govee-appliance/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "options": {
+            "singular": true
+          },
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    },
+    {
+      "id": "govee-device",
+      "name": {
+        "en": "Devices"
+      },
+      "class": "light",
+      "capabilities": [],
+      "images": {
+        "small": "/drivers/govee-device/assets/images/small.png",
+        "large": "/drivers/govee-device/assets/images/large.png",
+        "xlarge": "/drivers/govee-device/assets/images/xlarge.png"
       },
       "pair": [
         {
