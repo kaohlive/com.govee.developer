@@ -4,6 +4,7 @@
     "en": "H6053: Flow Light Bar"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H6053/assets/images/small.png",

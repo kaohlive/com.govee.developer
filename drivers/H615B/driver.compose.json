@@ -4,6 +4,7 @@
     "en": "H615B: 10m RGBIC Pro Strip Light"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H615B/assets/images/small.png",

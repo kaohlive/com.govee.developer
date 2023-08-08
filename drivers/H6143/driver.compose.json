@@ -4,6 +4,7 @@
     "en": "H6143: 5m RGBIC Strip Light"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H6143/assets/images/small.png",

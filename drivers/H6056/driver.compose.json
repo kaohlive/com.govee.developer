@@ -4,6 +4,7 @@
     "en": "H6056: Flow Plus Light Bar"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H6056/assets/images/small.png",

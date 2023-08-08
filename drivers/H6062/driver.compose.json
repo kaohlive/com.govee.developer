@@ -4,6 +4,7 @@
     "en": "H6062: Glide wall light"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H6062/assets/images/small.png",

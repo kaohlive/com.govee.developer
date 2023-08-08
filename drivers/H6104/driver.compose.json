@@ -4,6 +4,7 @@
     "en": "H6104: RGBIC for TV with Alexa"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H6104/assets/images/small.png",

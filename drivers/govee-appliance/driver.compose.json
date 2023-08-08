@@ -1,0 +1,31 @@
+{
+  "id": "govee-appliance",
+  "name": {
+    "en": "Appliance"
+  },
+  "class": "light",
+  "deprecated": true,
+  "icon": "default.svg",
+  "capabilities": [ ],
+  "images": {
+    "small": "/drivers/govee-appliance/assets/images/small.png",
+    "large": "/drivers/govee-appliance/assets/images/large.png",
+    "xlarge": "/drivers/govee-appliance/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "options": {
+        "singular": true
+      },
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}

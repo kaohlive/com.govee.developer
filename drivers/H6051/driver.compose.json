@@ -4,6 +4,7 @@
     "en": "H6051: Aura Lite Table Lamp"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H6051/assets/images/small.png",

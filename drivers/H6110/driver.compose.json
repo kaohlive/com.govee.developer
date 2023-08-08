@@ -4,6 +4,7 @@
     "en": "H6110: 2*5m MultiColor Strip Light with Alexa"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H6110/assets/images/small.png",

@@ -4,6 +4,7 @@
     "en": "H6101: RGBIC for TV"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H6101/assets/images/small.png",

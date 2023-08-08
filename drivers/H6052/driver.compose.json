@@ -4,6 +4,7 @@
     "en": "H6052: Aura Table Lamp"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H6052/assets/images/small.png",

@@ -4,6 +4,7 @@
     "en": "H615A: 5m RGBIC Strip Light"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H615A/assets/images/small.png",

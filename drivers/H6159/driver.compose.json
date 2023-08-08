@@ -4,6 +4,7 @@
     "en": "H6159: 5m Multicolor"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H6159/assets/images/small.png",

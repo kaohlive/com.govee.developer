@@ -4,6 +4,7 @@
     "en": "H6054: Flow Pro Light Bar"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H6054/assets/images/small.png",

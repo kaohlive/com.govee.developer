@@ -4,6 +4,7 @@
     "en": "H6072: Lyra floor lamp"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H6072/assets/images/small.png",

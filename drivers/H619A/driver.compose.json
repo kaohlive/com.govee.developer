@@ -4,6 +4,7 @@
     "en": "H619A: 5m RGBIC Pro Strip Light"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H619A/assets/images/small.png",

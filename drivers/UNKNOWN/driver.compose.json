@@ -4,6 +4,7 @@
     "en": "Unknown: A Govee device that has no specific implementation"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/UNKNOWN/assets/images/small.png",

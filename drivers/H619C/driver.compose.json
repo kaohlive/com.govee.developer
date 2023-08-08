@@ -4,6 +4,7 @@
     "en": "H619C: 10m RGBIC Pro Strip Light"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H619C/assets/images/small.png",

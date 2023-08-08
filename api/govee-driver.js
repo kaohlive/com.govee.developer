@@ -41,6 +41,7 @@ class GoveeDriver extends Driver {
     var devices = await devicelist.data.devices.map((device) => {
       let goveedevice = {
         id: device.device,
+        icon: 'add_list_type_device_'+device.model.substring(1)+'.svg',
         name: device.deviceName,
         data: {
           mac: device.device,

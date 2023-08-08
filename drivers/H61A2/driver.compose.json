@@ -4,6 +4,7 @@
     "en": "H61A2: 5m Neon LED Strip Light"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H61A2/assets/images/small.png",

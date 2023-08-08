@@ -4,6 +4,7 @@
     "en": "H6199: Immersion TV Strip Light"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [],
   "images": {
     "small": "/drivers/H6199/assets/images/small.png",

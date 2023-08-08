@@ -4,6 +4,7 @@
     "en": "H6138: 5m MultiColor for Home"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H6138/assets/images/small.png",

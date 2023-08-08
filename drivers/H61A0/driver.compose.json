@@ -4,6 +4,7 @@
     "en": "H61A0: 3m Neon LED Strip Light"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H61A0/assets/images/small.png",

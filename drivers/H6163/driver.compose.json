@@ -4,6 +4,7 @@
     "en": "H6163: 5m RGBIC with Alexa"
   },
   "class": "light",
+  "deprecated": true,
   "capabilities": [ ],
   "images": {
     "small": "/drivers/H6163/assets/images/small.png",

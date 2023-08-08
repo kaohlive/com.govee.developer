@@ -10,6 +10,7 @@ class GoveeDevice extends Device {
     this.data = this.getData();
     this.setupCapabilities();
     this.log('govee.device.'+this.data.model+': '+this.data.name+' has been setup');
+    this.log(this.icon);
     this.refreshState();
     this.start_update_loop();
   }
