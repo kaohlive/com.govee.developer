@@ -46,5 +46,8 @@
   },
   "2.1.0": {
     "en": "Major rework on device driver, merged to single driver"
+  },
+  "2.2.0": {
+    "en": "Fix for colors and color temp"
   }
 }
