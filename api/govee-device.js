@@ -240,8 +240,11 @@ class GoveeDevice extends Device {
     let rangeMin = this.data.properties.colorTem.range.min;
     let rangeMax = this.data.properties.colorTem.range.max;
     var relativeColorTemp = rangeMax-((rangeMax-rangeMin)*value);
-    await this.driver.colorTemp(relativeColorTemp,this.data.model, this.data.mac);
-    this.setIfHasCapability('light_temperature', value);
+    if(value>=0)
+    {
+      await this.driver.colorTemp(relativeColorTemp,this.data.model, this.data.mac);
+      this.setIfHasCapability('light_temperature', value);
+    }
   }
 
   setIfHasCapability(cap, value) {
