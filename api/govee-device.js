@@ -123,10 +123,15 @@ class GoveeDevice extends Device {
       this.registerCapabilityListener('dim', this.onCapabilityDim.bind(this));
     if (this.hasCapability('light_temperature'))
       this.registerCapabilityListener('light_temperature', this.onCapabilityLightTemperature.bind(this));
-    if (this.hasCapability('light_saturation'))
-      this.registerCapabilityListener('light_saturation', this.onCapabilitySaturation.bind(this));
-    if (this.hasCapability('light_hue'))
-      this.registerCapabilityListener('light_hue', this.onCapabilityHue.bind(this));
+    if(this.hasCapability('light_hue') && this.hasCapability('light_saturation'))
+    {
+      this.registerMultipleCapabilityListener(['light_saturation', 'light_hue'], this.onCapabilityHueSaturation.bind(this))
+    } else {
+      if (this.hasCapability('light_saturation'))
+        this.registerCapabilityListener('light_saturation', this.onCapabilitySaturation.bind(this));
+      if (this.hasCapability('light_hue'))
+        this.registerCapabilityListener('light_hue', this.onCapabilityHue.bind(this));
+    }
   }
 
   /**
@@ -193,6 +198,7 @@ class GoveeDevice extends Device {
     //Since we need full RGB values for Govee, Lets retrieve the hue value
     var hue = this.getState().light_hue;
     var light = 1;
+    console.log("Capability trigger: Saturation");
     await this.driver.color(hue,value,light,this.data.model, this.data.mac);
     this.setIfHasCapability('light_saturation', value);
   }
@@ -206,8 +212,22 @@ class GoveeDevice extends Device {
     //Since we need full RGB values for Govee, lets retrieve the saturation
     var saturation = this.getState().light_saturation;
     var light = 1;
+    console.log("Capability trigger: Hue");
     await this.driver.color(value,saturation,light,this.data.model, this.data.mac);
     this.setIfHasCapability('light_hue', value);
+  }
+
+  /**
+   * Sets the Hue and Saturation of the color
+   * @param {number} value The color in gradient value based on the color wheel of Homey
+   * @param {*} opts 
+   */
+  async onCapabilityHueSaturation( newValues, opts ) {
+    var light = 1;
+    console.log("Capability trigger: Hue & Saturation");
+    await this.driver.color(newValues.light_hue,newValues.light_saturation,light,this.data.model, this.data.mac);
+    this.setIfHasCapability('light_hue', newValues.light_hue);
+    this.setIfHasCapability('light_saturation', newValues.light_saturation);
   }
 
   /**
@@ -219,7 +239,7 @@ class GoveeDevice extends Device {
     //If the capability colorTem is available, these properties should be also
     let rangeMin = this.data.properties.colorTem.range.min;
     let rangeMax = this.data.properties.colorTem.range.max;
-    var relativeColorTemp = ((rangeMax-rangeMin)*value)+rangeMin;
+    var relativeColorTemp = rangeMax-((rangeMax-rangeMin)*value);
     await this.driver.colorTemp(relativeColorTemp,this.data.model, this.data.mac);
     this.setIfHasCapability('light_temperature', value);
   }

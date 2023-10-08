@@ -98,7 +98,7 @@ class GoveeDriver extends Driver {
       'b': rgb.b,
       'g': rgb.g
     }
-		console.log('device hue change requested ['+hue+','+sat+','+light+'] converted to color ['+JSON.stringify(color)+']');
+		console.log('device color change requested ['+hue+','+sat+','+light+'] converted to color ['+JSON.stringify(color)+']');
     return this.api.color(color, model, device);
   }
 

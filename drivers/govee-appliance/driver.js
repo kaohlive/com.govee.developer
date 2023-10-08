@@ -17,4 +17,4 @@ class goveeApplianceDriver extends GoveeDriver {
 
   }
 }
-module.exports = goveeDeviceDriver;
+module.exports = goveeApplianceDriver;
