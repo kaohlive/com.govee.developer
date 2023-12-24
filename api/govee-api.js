@@ -48,6 +48,12 @@ class GoveeClient {
     };
     return this.request("/v1/devices", config);
   }
+  applianceList() {
+    let config = {
+      method: 'GET'
+    };
+    return this.request("/v1/appliance/devices", config);
+  }
 
   deviceControl(body) {
     const config = {
@@ -56,10 +62,25 @@ class GoveeClient {
     }
     return this.request("/v1/devices/control", config);
   }
+  applianceControl(body) {
+    const config = {
+      method: 'PUT',
+      body: JSON.stringify(body)
+    }
+    return this.request("/v1/appliance/devices/control", config);
+  }
 
   deviceState(options) {
     let qs = options ? "?" + options : "";
     let url = "/v1/devices/state" + qs;
+    let config = {
+      method: 'GET'
+    };
+    return this.request(url, config);
+  }
+  applianceState(options) {
+    let qs = options ? "?" + options : "";
+    let url = "/v1/appliance/devices/state" + qs;
     let config = {
       method: 'GET'
     };
@@ -76,7 +97,7 @@ class GoveeClient {
     });
   }
 
-  turn(mode, model, device) {
+  devicesTurn(mode, model, device) {
     return new Promise((resolve, reject) => {
       if ((mode !== 'on' || mode === 'off') && (mode === 'on' || mode !== 'off')) {
         reject(new Error("Incorrect turn parameter"));
@@ -91,6 +112,63 @@ class GoveeClient {
           }
         };
         this.deviceControl(params).then(res => {
+          resolve(res);
+        }).catch(e => {reject(e)});
+      }
+    });
+  }
+  applianceTurn(mode, model, device) {
+    return new Promise((resolve, reject) => {
+      if ((mode !== 'on' || mode === 'off') && (mode === 'on' || mode !== 'off')) {
+        reject(new Error("Incorrect turn parameter"));
+      } else {
+        console.log('attempt to switch appliance ['+device+':'+model+'] to new mode: '+mode)
+        let params = {
+          'device': device,
+          'model': model,
+          'cmd' : {
+            'name': 'turn',
+            'value': mode
+          }
+        };
+        this.applianceControl(params).then(res => {
+          resolve(res);
+        }).catch(e => {reject(e)});
+      }
+    });
+  }
+
+  devicesMode(mode, model, device) {
+  return new Promise((resolve, reject) => {
+      console.log('attempt to switch device ['+device+':'+model+'] to new mode: '+mode)
+      let params = {
+        'device': device,
+        'model': model,
+        'cmd' : {
+          'name': 'mode',
+          'value': mode
+        }
+      };
+      this.deviceControl(params).then(res => {
+        resolve(res);
+      }).catch(e => {reject(e)});
+    });
+  }
+  applianceMode(mode, model, device) {
+    return new Promise((resolve, reject) => {
+      if ((mode !== 'on' || mode === 'off') && (mode === 'on' || mode !== 'off')) {
+        reject(new Error("Incorrect turn parameter"));
+      } else {
+        console.log('attempt to switch appliance ['+device+':'+model+'] to new mode: '+mode)
+        let params = {
+          'device': device,
+          'model': model,
+          'cmd' : {
+            'name': 'mode',
+            'value': mode
+          }
+        };
+        this.applianceControl(params).then(res => {
           resolve(res);
         }).catch(e => {reject(e)});
       }

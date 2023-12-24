@@ -29,12 +29,15 @@ class GoveeDriver extends Driver {
    * onPairListDevices is called when a user is adding a device and the 'list_devices' view is called.
    * This should return an array with the data of devices that are available for pairing.
    */
-  async ListDevices() {
+  async ListDevices(type) {
     console.log('Lets restart the API client to ensure we use the latest API key from the settings');
     await this.reInit();
-    console.log('List available devices');
-
-    var devicelist = await this.api.deviceList();
+    console.log('List available '+type);
+    var devicelist = null;
+    if (type=='device')
+      devicelist = await this.api.deviceList();
+    else if (type=='appliance')
+      devicelist = await this.api.applianceList();
     console.log(devicelist);
 
     //Convert to our Homey device info object
@@ -71,9 +74,20 @@ class GoveeDriver extends Driver {
     });
   }
 
-  async turn(mode, model, device) {
+  async turn(mode, model, device, type) {
 		console.log('device state change requested ['+mode+']');
-    return this.api.turn(mode, model, device);
+    if(type=='device')
+      return this.api.devicesTurn(mode, model, device);
+    else if (type=='appliance')
+      return this.api.applianceTurn(mode, model, device);
+  }
+
+  async mode(mode, model, device, type) {
+		console.log('device mode change requested ['+mode+']');
+    if(type=='device')
+      return this.api.devicesMode(mode, model, device);
+    else if (type=='appliance')
+      return this.api.applianceMode(mode, model, device);
   }
 
   async brightness(dim, model, device) {

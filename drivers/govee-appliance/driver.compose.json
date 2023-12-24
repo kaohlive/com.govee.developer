@@ -4,7 +4,6 @@
     "en": "Appliance"
   },
   "class": "light",
-  "deprecated": true,
   "icon": "default.svg",
   "capabilities": [ ],
   "images": {
@@ -17,7 +16,7 @@
       "id": "list_devices",
       "template": "list_devices",
       "options": {
-        "singular": true
+        "singular": false
       },
       "navigation": {
         "next": "add_devices"

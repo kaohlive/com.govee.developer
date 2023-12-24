@@ -10,7 +10,7 @@ class goveeDeviceDriver extends GoveeDriver {
   async onPairListDevices() {
     console.log('List available govee devices');
     //Lets get our base driver all devices call (thats a single API call and therefor the best option)
-    var devicelist = await this.ListDevices();
+    var devicelist = await this.ListDevices('device');
     console.log(devicelist);
     return devicelist;
     //We do NOT apply our device type filter now to ensure we list all devices

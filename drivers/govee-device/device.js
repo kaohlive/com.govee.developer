@@ -8,6 +8,7 @@ class goveeDevice extends GoveeDevice {
    */
   async onInit() {
     //Setup the matching capaciltities of this device
+    this.goveedevicetype='device';
     await this.setupDevice();
   }
 
