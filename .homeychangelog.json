@@ -52,5 +52,8 @@
   },
   "2.2.1": {
     "en": "Handle crash"
+  },
+  "2.3.0": {
+    "en": "Added basic support for appliances"
   }
 }
