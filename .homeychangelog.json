@@ -58,5 +58,8 @@
   },
   "2.5.0": {
     "en": "Added support for local api devices"
+  },
+  "2.5.1": {
+    "en": "Quick hotfix"
   }
 }
