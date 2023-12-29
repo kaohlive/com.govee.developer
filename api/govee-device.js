@@ -7,6 +7,8 @@ class GoveeDevice extends Device {
    * onInit is called when the device is initialized.
    */
   async setupDevice() {
+    this.data = this.getData();
+
     //Todo: remove after a while
     //Note: Fix due to late arrival of this capability in my devices
     if(this.data.capabilitieslist.includes('color') && this.data.capabilitieslist.includes('colorTem'))
@@ -15,7 +17,6 @@ class GoveeDevice extends Device {
         await this.addCapability('light_mode');
     }
 
-    this.data = this.getData();
     this.setupCapabilities();
     this.log('govee.device.'+this.data.model+': '+this.data.name+' of type '+this.goveedevicetype+' has been setup');
     this.log(this.icon);
@@ -83,13 +84,15 @@ class GoveeDevice extends Device {
         {
           var colorHSV=this.driver.colorCommandGetParser(colorRGB['color']);
           console.log(JSON.stringify(colorHSV))
-          this.setCapabilityValue('light_mode', 'color'); //Tell homey we are in color mode
+          if(this.hasCapability('light_mode'))
+            this.setCapabilityValue('light_mode', 'color'); //Tell homey we are in color mode
           this.setCapabilityValue('light_saturation', colorHSV.s);
           this.setCapabilityValue('light_hue', (colorHSV.h/360));
         }
         else {
           console.log('no color rgb known');
-          this.setCapabilityValue('light_mode', 'temperature'); //Tell homey we are not in color mode
+          if(this.hasCapability('light_mode'))
+            this.setCapabilityValue('light_mode', 'temperature'); //Tell homey we are not in color mode
           this.setCapabilityValue('light_hue', null);
           this.setCapabilityValue('light_saturation', null);
         }
