@@ -55,5 +55,8 @@
   },
   "2.3.0": {
     "en": "Added basic support for appliances"
+  },
+  "2.5.0": {
+    "en": "Added support for local api devices"
   }
 }
