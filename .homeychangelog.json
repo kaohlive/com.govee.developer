@@ -61,5 +61,8 @@
   },
   "2.5.1": {
     "en": "Quick hotfix"
+  },
+  "2.5.2": {
+    "en": "Error handling"
   }
 }
