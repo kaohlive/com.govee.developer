@@ -70,10 +70,12 @@ class GoveeDevice extends Device {
           var rangePerc = (colorTem['colorTem']-rangeMin)/rangeTotal;
           if (rangePerc>1) rangePerc = 1; //Seems that sometimes this math ends up in a higher than 1 result, strange but without more data hard to locate.
           this.setCapabilityValue('light_temperature', rangePerc);
-          this.setCapabilityValue('light_mode', 'temperature'); //Tell homey we are in colorTemp mode
+          if(this.hasCapability('light_mode'))
+            this.setCapabilityValue('light_mode', 'temperature'); //Tell homey we are in colorTemp mode
         } else {
           console.log('no color temp known');
-          this.setCapabilityValue('light_mode', 'color'); //Tell homey we are not in colorTemp mode
+          if(this.hasCapability('light_mode'))
+            this.setCapabilityValue('light_mode', 'color'); //Tell homey we are not in colorTemp mode
           this.setCapabilityValue('light_temperature', null);
         }
       }
