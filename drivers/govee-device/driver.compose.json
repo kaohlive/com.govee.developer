@@ -1,7 +1,7 @@
 {
   "id": "govee-device",
   "name": {
-    "en": "Devices"
+    "en": "Cloud API Devices"
   },
   "class": "light",
   "capabilities": [ ],

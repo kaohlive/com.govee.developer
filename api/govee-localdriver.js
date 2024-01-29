@@ -31,6 +31,7 @@ class GoveeDriver extends Driver {
         name: device.model,
         data: {
           id: device.deviceID,
+          name: device.deviceID,
           model: device.model,
           capabilitieslist: device.state
         }
