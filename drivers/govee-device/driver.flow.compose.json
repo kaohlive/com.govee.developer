@@ -1,0 +1,48 @@
+{
+  "actions": [
+    {
+      "id": "switch-to-light-scene",
+      "title": {
+        "en": "Switch to light scene"
+      },
+      "hint": {
+        "en": "Switches to the selected light scene (and turns on the device if off)"
+      },
+      "titleFormatted": {
+        "en": "Switch to light scene [[lightScene]]"
+      },
+      "$filter": "capabilities=lightScenes",
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "lightScene",
+          "placeholder": {
+            "en": "Sunset glow"
+          }
+        }
+      ]
+    },
+    {
+      "id": "switch-to-diy-light-scene",
+      "title": {
+        "en": "Switch to diy scene"
+      },
+      "hint": {
+        "en": "Switches to the selected DIY scene (and turns on the device if off)"
+      },
+      "titleFormatted": {
+        "en": "Switch to DIY scene [[diyScene]]"
+      },
+      "$filter": "capabilities=lightDiyScenes",
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "diyScene",
+          "placeholder": {
+            "en": "Valantine special"
+          }
+        }
+      ]
+    }
+  ]
+}

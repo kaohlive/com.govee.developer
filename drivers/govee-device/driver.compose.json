@@ -4,7 +4,8 @@
     "en": "Cloud API Devices"
   },
   "class": "light",
-  "capabilities": [ ],
+  "platforms": ["local"],
+  "capabilities": ["onoff","dim","light_saturation","light_hue","light_temperature","light_mode","lightScenes","lightDiyScenes"],
   "images": {
     "small": "/drivers/govee-device/assets/images/small.png",
     "large": "/drivers/govee-device/assets/images/large.png",

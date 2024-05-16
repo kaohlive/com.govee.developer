@@ -1,33 +1,28 @@
 //Based on the govee-lan-control npm package
 
-const fetch = require('isomorphic-unfetch');
 const localapi = require("govee-lan-control");
-
-var GoveeClient=null;
-//This will remember all discovered devices
-var localDevices = [];
 
 class GoveeLocalClient {
   constructor() {
-    GoveeClient = new localapi.default();
-    GoveeClient.on("ready", () => {
+    this.GoveeClient = new localapi.default();
+    this.localDevices = [];
+    this.GoveeClient.on("ready", () => {
       console.log("Local Govee Server/client is ready!");
     });
-    GoveeClient.on("deviceAdded", (device) => {
-      localDevices.push(device);
-      console.log("New Device! [", device.model, ']. Total devices:'+localDevices.length);
+    this.GoveeClient.on("deviceAdded", (device) => {
+      this.localDevices.push(device);
+      console.log("New Device! [", device.model, ']. Total devices:'+this.localDevices.length);
     });
   }
 
   deviceList() {
-    //GoveeClient.discover();
-    console.log('Local API returning: '+localDevices.length+' devices');
-    return localDevices;
+    console.log('Local API returning: '+this.localDevices.length+' devices');
+    return this.localDevices;
   }
 
   getDeviceById(deviceId)
   {
-    var filteredDevices=localDevices.filter(device => {
+    var filteredDevices=this.localDevices.filter(device => {
       return device.deviceID === deviceId
     });
     if(filteredDevices.length==0)

@@ -3,6 +3,7 @@
     "en": "Local API devices"
   },
   "class": "light",
+  "platforms": ["local"],
   "capabilities": [
     "onoff"
   ],

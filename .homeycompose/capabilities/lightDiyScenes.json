@@ -1,0 +1,13 @@
+{
+  "type": "number",
+  "title": {
+    "en": "DIY Scenes"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "slider",
+  "decimals": 0,
+  "min": 0,
+  "max": 1,
+  "step": 1
+}

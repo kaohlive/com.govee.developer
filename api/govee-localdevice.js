@@ -20,7 +20,7 @@ class GoveeLocalDevice extends Device {
   registerUpdateEvent(apidevice) {
     apidevice.on('updatedStatus', (state, stateChanged) => {
       if(stateChanged.length>0){
-        console.log("Received an update for device ["+this.data.id+"]");
+        this.log("Received an update for device ["+this.data.id+"]");
         this.refreshState(state,stateChanged);
       }
     });
@@ -28,7 +28,7 @@ class GoveeLocalDevice extends Device {
 
   start_update_loop() {
     this._timer = setInterval(() => {
-        var discoveredDevice = this.driver.api.getDeviceById(this.data.id);
+        var discoveredDevice = this.homey.app.localApiClient.getDeviceById(this.data.id);
         if(discoveredDevice!=null)
         {
           this.setWarning(null);
@@ -42,19 +42,19 @@ class GoveeLocalDevice extends Device {
 
   async refreshState(newState,stateChanged)
   {
-    console.log(JSON.stringify(stateChanged));
+    //console.log(JSON.stringify(stateChanged));
     //console.log(JSON.stringify(newState));
     this.log('govee.device.'+this.data.model+': '+this.data.id+' device state to be retrieved');
     //Now update the capabilities with the actual state
     if (this.hasCapability('onoff') && stateChanged.includes('onOff'))
     {
-      console.log('New power state is '+(newState.isOn==1));
+      this.log('New power state is '+(newState.isOn==1));
       this.setCapabilityValue('onoff', (newState.isOn==1));
     }
     if (this.hasCapability('dim') && stateChanged.includes('brightness'))
     {
       var brightness = newState.brightness;
-      console.log('New brightness is '+brightness);
+      this.log('New brightness is '+brightness);
       if (brightness > 100)
         this.setCapabilityValue('dim', (brightness/255)); //Seems to be a mismatch in documentation. It should be a range between 0 and 100
       else
@@ -63,24 +63,24 @@ class GoveeLocalDevice extends Device {
     if(stateChanged.includes('color') || stateChanged.includes('colorKelvin'))
     {
       var colorRGB = newState.color;
-      console.log(colorRGB)
+      this.log(colorRGB)
       if((colorRGB.r==255 && colorRGB.g==255 && colorRGB.b==255) ||
       (colorRGB.r==0 && colorRGB.g==0 && colorRGB.b==0)) //Is the color black or white
       {
-        console.log('its white, set in colorTemp mode');
+        this.log('its white, set in colorTemp mode');
         //Determine colorTemp based on the Kelvin value
         var colorTem = newState.colorKelvin;
         let rangeMin = 2000;
         let rangeMax = 9000;
         let rangeTotal = rangeMax-rangeMin;
-        console.log('colorTem: '+colorTem+' - range[max:'+rangeMax+', min: '+rangeMin+', range: '+rangeTotal+']');
+        this.log('colorTem: '+colorTem+' - range[max:'+rangeMax+', min: '+rangeMin+', range: '+rangeTotal+']');
         var rangePerc = (colorTem-rangeMin)/rangeTotal;
         if (rangePerc>1) rangePerc = 1; //Seems that sometimes this math ends up in a higher than 1 result, strange but without more data hard to locate.
         this.setCapabilityValue('light_temperature', rangePerc);
         this.setCapabilityValue('light_mode', 'temperature');
       } else {
         var colorHSV=this.driver.colorCommandGetParser(colorRGB);
-        console.log('Set in color mode'+JSON.stringify(colorHSV));
+        this.log('Set in color mode'+JSON.stringify(colorHSV));
         this.setCapabilityValue('light_saturation', colorHSV.s);
         this.setCapabilityValue('light_hue', (colorHSV.h/360));
         this.setCapabilityValue('light_mode', 'color'); //Tell homey we are not in colorTemp mode
@@ -195,7 +195,7 @@ class GoveeLocalDevice extends Device {
     //Since we need full RGB values for Govee, Lets retrieve the hue value
     var hue = this.getState().light_hue;
     var light = 1;
-    console.log("Capability trigger: Saturation");
+    this.log("Capability trigger: Saturation");
     await this.driver.color(hue,value,light,this.data.id);
     this.setIfHasCapability('light_saturation', value);
   }
@@ -209,7 +209,7 @@ class GoveeLocalDevice extends Device {
     //Since we need full RGB values for Govee, lets retrieve the saturation
     var saturation = this.getState().light_saturation;
     var light = 1;
-    console.log("Capability trigger: Hue");
+    this.log("Capability trigger: Hue");
     await this.driver.color(value,saturation,light,this.data.id);
     this.setIfHasCapability('light_hue', value);
   }
@@ -221,7 +221,7 @@ class GoveeLocalDevice extends Device {
    */
   async onCapabilityHueSaturation( newValues, opts ) {
     var light = 1;
-    console.log("Capability trigger: Hue & Saturation");
+    this.log("Capability trigger: Hue & Saturation");
     await this.driver.color(newValues.light_hue,newValues.light_saturation,light,this.data.id);
     this.setIfHasCapability('light_hue', newValues.light_hue);
     this.setIfHasCapability('light_saturation', newValues.light_saturation);
@@ -233,7 +233,7 @@ class GoveeLocalDevice extends Device {
    * @param {*} opts 
    */
     async onCapabilityLightMode( value, opts ) {
-      console.log("Capability trigger: Switch light modes");
+      this.log("Capability trigger: Switch light modes");
       this.setIfHasCapability('light_mode', value);
       if(value=='temperature'){
         var colorTemp = this.getCapabilityValue('light_temperature');
@@ -265,7 +265,7 @@ class GoveeLocalDevice extends Device {
     if (this.hasCapability(cap)) {
         return this.setCapabilityValue(cap, value).catch(this.error)
     } else {
-        console.log('Attempt to set cap ['+cap+'] on device '+this.data.model+':'+this.data.name+' but it is not available');
+        this.log('Attempt to set cap ['+cap+'] on device '+this.data.model+':'+this.data.name+' but it is not available');
     }
   }
 }

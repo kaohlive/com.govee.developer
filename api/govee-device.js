@@ -273,7 +273,7 @@ class GoveeDevice extends Device {
     //Since we need full RGB values for Govee, Lets retrieve the hue value
     var hue = this.getState().light_hue;
     var light = 1;
-    console.log("Capability trigger: Saturation");
+    this.log("Capability trigger: Saturation");
     await this.driver.color(hue,value,light,this.data.model, this.data.mac);
     this.setIfHasCapability('light_saturation', value);
   }
@@ -287,7 +287,7 @@ class GoveeDevice extends Device {
     //Since we need full RGB values for Govee, lets retrieve the saturation
     var saturation = this.getState().light_saturation;
     var light = 1;
-    console.log("Capability trigger: Hue");
+    this.log("Capability trigger: Hue");
     await this.driver.color(value,saturation,light,this.data.model, this.data.mac);
     this.setIfHasCapability('light_hue', value);
   }
@@ -299,7 +299,7 @@ class GoveeDevice extends Device {
    */
   async onCapabilityHueSaturation( newValues, opts ) {
     var light = 1;
-    console.log("Capability trigger: Hue & Saturation");
+    this.log("Capability trigger: Hue & Saturation");
     await this.driver.color(newValues.light_hue,newValues.light_saturation,light,this.data.model, this.data.mac);
     this.setIfHasCapability('light_hue', newValues.light_hue);
     this.setIfHasCapability('light_saturation', newValues.light_saturation);
@@ -328,7 +328,7 @@ class GoveeDevice extends Device {
    * @param {*} opts 
    */
     async onCapabilityLightMode( value, opts ) {
-      console.log("Capability trigger: Switch light modes");
+      this.log("Capability trigger: Switch light modes");
       this.setIfHasCapability('light_mode', value);
       if(value=='temperature'){
         var colorTemp = this.getCapabilityValue('light_temperature');
@@ -341,9 +341,9 @@ class GoveeDevice extends Device {
 
   setIfHasCapability(cap, value) {
     if (this.hasCapability(cap)) {
-        return this.setCapabilityValue(cap, value).catch(this.error)
+      return this.setCapabilityValue(cap, value).catch(this.error)
     } else {
-        console.log('Attempt to set cap ['+cap+'] on device '+this.data.model+':'+this.data.name+' but it is not available');
+      this.log('Attempt to set cap ['+cap+'] on device '+this.data.model+':'+this.data.name+' but it is not available');
     }
   }
 }

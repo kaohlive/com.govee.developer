@@ -1,6 +1,6 @@
 'use strict';
 
-const GoveeDevice = require('../../api/govee-device')
+const GoveeDevice = require('../../api/govee-device-v2')
 
 class goveeDevice extends GoveeDevice {
   /**

@@ -5,6 +5,9 @@
   "version": "2.5.4",
   "compatibility": ">=5.0.0",
   "sdk": 3,
+  "platforms": [
+    "local"
+  ],
   "name": {
     "en": "Govee"
   },
@@ -63,7 +66,19 @@
         "en": "Cloud API Devices"
       },
       "class": "light",
-      "capabilities": [],
+      "platforms": [
+        "local"
+      ],
+      "capabilities": [
+        "onoff",
+        "dim",
+        "light_saturation",
+        "light_hue",
+        "light_temperature",
+        "light_mode",
+        "lightScenes",
+        "lightDiyScenes"
+      ],
       "images": {
         "small": "/drivers/govee-device/assets/images/small.png",
         "large": "/drivers/govee-device/assets/images/large.png",
@@ -91,6 +106,9 @@
         "en": "Local API devices"
       },
       "class": "light",
+      "platforms": [
+        "local"
+      ],
       "capabilities": [
         "onoff"
       ],
@@ -119,7 +137,89 @@
       "id": "govee-local-device"
     }
   ],
+  "flow": {
+    "actions": [
+      {
+        "id": "switch-to-light-scene",
+        "title": {
+          "en": "Switch to light scene"
+        },
+        "hint": {
+          "en": "Switches to the selected light scene (and turns on the device if off)"
+        },
+        "titleFormatted": {
+          "en": "Switch to light scene [[lightScene]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-device&capabilities=lightScenes"
+          },
+          {
+            "type": "autocomplete",
+            "name": "lightScene",
+            "placeholder": {
+              "en": "Sunset glow"
+            }
+          }
+        ]
+      },
+      {
+        "id": "switch-to-diy-light-scene",
+        "title": {
+          "en": "Switch to diy scene"
+        },
+        "hint": {
+          "en": "Switches to the selected DIY scene (and turns on the device if off)"
+        },
+        "titleFormatted": {
+          "en": "Switch to DIY scene [[diyScene]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-device&capabilities=lightDiyScenes"
+          },
+          {
+            "type": "autocomplete",
+            "name": "diyScene",
+            "placeholder": {
+              "en": "Valantine special"
+            }
+          }
+        ]
+      }
+    ]
+  },
   "capabilities": {
+    "lightDiyScenes": {
+      "type": "number",
+      "title": {
+        "en": "DIY Scenes"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "slider",
+      "decimals": 0,
+      "min": 0,
+      "max": 1,
+      "step": 1
+    },
+    "lightScenes": {
+      "type": "number",
+      "title": {
+        "en": "Light Scenes"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "slider",
+      "decimals": 0,
+      "min": 0,
+      "max": 1,
+      "step": 1
+    },
     "mode": {
       "type": "enum",
       "title": {
