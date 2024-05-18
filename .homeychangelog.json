@@ -70,5 +70,8 @@
   },
   "2.5.4": {
     "en": "small fix for discovery"
+  },
+  "2.6.0": {
+    "en": "Rewrite to Govee API v2 with light scene support"
   }
 }
