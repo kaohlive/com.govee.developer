@@ -7,7 +7,7 @@ class GoveeDevice extends Device {
    * onInit is called when the device is initialized.
    */
   async setupDevice() {
-    this.data = this.getDeviceData();
+    this.data = await this.getDeviceData();
     //Lets create any missing capability based on the capabilitiesList
     await this.createDynamicCapabilities();
     //Now lets hook those capabilities to events
@@ -19,45 +19,29 @@ class GoveeDevice extends Device {
     this.start_update_loop();
   }
 
-  getDeviceData()
+  async getDeviceData()
   {
     //Lets get the device data object
     let deviceData = this.getData();
-    if('goveeApi' in deviceData && deviceData.goveeApi==='v2')
+    //Lets check what version of the device we are working with
+    let deviceVersion = await this.getStoreValue('deviceVersion');
+    if(deviceVersion==='v2'){
+      deviceData.capabilitieslist=await this.getStoreValue('capabilityList');
       return deviceData;
+    }
     //Then its the old device, we need to map the capabilities
-    let newCapabilities = [];
-    if(deviceData.capabilitieslist.includes('turn'))
-    {
-      let cap = {"type":"devices.capabilities.on_off","instance":"powerSwitch","parameters":{"dataType":"ENUM","options":[{"name":"on","value":1},{"name":"off","value":0}]}}
-      newCapabilities.push(cap)
+    //Lets retrive the v2 capabilities of this device from the API
+    var devicelist = await this.driver.api.deviceList();
+    var thisdevice = devicelist.data.find(function(e) { return e.device === deviceData.mac })
+    if(thisdevice!=null){
+      this.log('Device '+deviceData.mac+' needs to be upgraded, retrieved its capabilities');
+      console.log(JSON.stringify(thisdevice.capabilities));
+      //Now make sure we store these, so we can consider the device upgraded
+      this.setStoreValue('capabilityList',thisdevice.capabilities);
+      this.setStoreValue('deviceVersion','v2');
+      deviceData.capabilitieslist=thisdevice.capabilities;
+      return deviceData;
     }
-    if(deviceData.capabilitieslist.includes('brightness'))
-    {
-      let cap = {"type":"devices.capabilities.range","instance":"brightness","parameters":{"unit":"unit.percent","dataType":"INTEGER","range":{"min":1,"max":100,"precision":1}}}
-      newCapabilities.push(cap)
-    }
-    if(deviceData.capabilitieslist.includes('color'))
-    {
-      let cap = {"type":"devices.capabilities.color_setting","instance":"colorRgb","parameters":{"dataType":"INTEGER","range":{"min":0,"max":16777215,"precision":1}}}
-      newCapabilities.push(cap)
-    }
-    if(deviceData.capabilitieslist.includes('colorTem'))
-    {
-      let capOptions = deviceData.properties.colorTem;
-      console.log(JSON.stringify(capOptions));
-      //{"colorTem":{"range":{"min":2000,"max":9000}}}
-      let cap = {"type":"devices.capabilities.color_setting","instance":"colorTemperatureK","parameters":{"dataType":"INTEGER","range":{"min":capOptions.range.min,"max":capOptions.range.max,"precision":1}}}
-      newCapabilities.push(cap)
-    }
-    if(deviceData.capabilitieslist.includes('mode'))
-    {
-      let cap = {"type":"devices.capabilities.on_off","instance":"powerSwitch","parameters":{"dataType":"ENUM","options":[{"name":"on","value":1},{"name":"off","value":0}]}}
-      newCapabilities.push(cap)
-    }
-    deviceData.capabilitieslist=newCapabilities;
-    console.log(JSON.stringify(deviceData));
-    return deviceData;
   }
 
   start_update_loop() {
@@ -167,6 +151,9 @@ class GoveeDevice extends Device {
   async onAdded() {
     this.log('govee.device.'+this.data.model+': '+this.data.name+' has been added');
     this.log('Lets connect capabilities:'+JSON.stringify(this.data.capabilitieslist));
+    //Lets make the capabilities list more flexible, lets store it in the storevalues
+    this.setStoreValue('capabilityList',this.data.capabilitieslist);
+    this.setStoreValue('deviceVersion','v2');
     //Now create the capabilties based on the device
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "powerSwitch" })) {
 		  if(!this.hasCapability('onoff'))
@@ -228,6 +215,7 @@ class GoveeDevice extends Device {
           this.lightScenes=modeValues;
         }
 
+
         const modeOptions = {
           "type": "number",
           "title": {
@@ -243,12 +231,18 @@ class GoveeDevice extends Device {
         }
         //console.log(JSON.stringify(this.lightScenes))
         //console.log('Light scenes: '+JSON.stringify(modeOptions));
-        await this.setCapabilityOptions('lightScenes', modeOptions);
-        //Register the flow actions
-        this.log('Setup the flow for Light scene capability');
-        await this.setupFlowSwitchLightScene(); 
+        if(this.lightScenes.options.length>0){
+          //What if there are no lightscenes? then the control is going to give errors
+          await this.setCapabilityOptions('lightScenes', modeOptions);
+          //Register the flow actions
+          this.log('Setup the flow for Light scene capability');
+          await this.setupFlowSwitchLightScene(); 
+        } else {
+          await this.removeCapability('lightScenes'); 
+        }
       }
-    }
+    } else if(this.hasCapability('lightScenes'))
+      await this.removeCapability('lightScenes');  
     //DIY scenes are the ones you can create yourself for the device
     if(this.data.capabilitieslist.find(function(e) {return e.instance == "diyScene" }))
     {
@@ -285,12 +279,17 @@ class GoveeDevice extends Device {
         //console.log(JSON.stringify(this.diyScenes))
         //Now setup the slider
         //console.log('DIY Light scenes: '+JSON.stringify(modeOptions));
-        await this.setCapabilityOptions('lightDiyScenes', modeOptions);
-        //Register the flow actions
-        this.log('Setup the flow for DIY scene capability');
-        await this.setupFlowSwitchDiyScene();
+        if(this.diyScenes.options.length>0){
+          await this.setCapabilityOptions('lightDiyScenes', modeOptions);
+          //Register the flow actions
+          this.log('Setup the flow for DIY scene capability');
+          await this.setupFlowSwitchDiyScene();
+        } else {
+          await this.removeCapability('lightDiyScenes'); 
+        }
       }
-    }
+    } else if(this.hasCapability('lightDiyScenes'))
+      await this.removeCapability('lightDiyScenes');  
   }
 
   /**

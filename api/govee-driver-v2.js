@@ -44,6 +44,7 @@ class GoveeDriver extends Driver {
         icon: '../../../assets/add_list_type_device_'+device.sku.substring(1)+'.svg',
         name: device.deviceName,
         data: {
+          id: device.device,
           mac: device.device,
           name: device.deviceName,
           model: device.sku,
