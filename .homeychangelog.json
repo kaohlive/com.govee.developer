@@ -76,5 +76,11 @@
   },
   "2.6.1": {
     "en": "added support for musicMode and snapshots"
+  },
+  "2.6.2": {
+    "en": "beta support for Dreamview mode"
+  },
+  "2.6.3": {
+    "en": "added flow improvements"
   }
 }
