@@ -206,11 +206,12 @@ class GoveeDevice extends Device {
 		// 	  await this.addCapability('gradientToggle');
     // } else if(this.hasCapability('gradientToggle'))
     //   await this.removeCapability('gradientToggle');
-    // if(this.data.capabilitieslist.find(function(e) { return e.instance == "dreamViewToggle" })) {
-    //   if(!this.hasCapability('dreamViewToggle'))
-    //     await this.addCapability('dreamViewToggle');
-    // } else if(this.hasCapability('dreamViewToggle'))
-    //   await this.removeCapability('dreamViewToggle'); 
+    if(this.data.capabilitieslist.find(function(e) { return e.instance == "dreamViewToggle" })) {
+      if(!this.hasCapability('dreamViewToggle'))
+        await this.addCapability('dreamViewToggle');
+      await this.setupFlowDreamView();
+    } else if(this.hasCapability('dreamViewToggle'))
+      await this.removeCapability('dreamViewToggle'); 
     //Use the mode capability for Dynamic LightScenes
     if(this.data.capabilitieslist.find(function(e) {return e.instance == "lightScene" }))
     {
@@ -550,6 +551,34 @@ class GoveeDevice extends Device {
   }
 
   //FLOWS SECTION
+  async setupFlowDreamView() {
+    this.log('Create the flow for the dream view capability');
+    //Now setup the flow cards
+    this._activateDreamview = await this.homey.flow.getActionCard('activate-dreamview'); 
+    this._activateDreamview
+      .registerRunListener(async (args, state) => {
+        this.log('attempt to toggle dreamview: '+args.activate);
+        this.setIfHasCapability('dreamViewToggle', args.activate);
+        if(args.activate){
+          return new Promise((resolve, reject) => {
+            this.driver.toggle(1, 'dreamViewToggle', args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+              resolve(true);
+            }, (_error) => {
+              reject(_error);
+            });
+          });
+        } else {
+          return new Promise((resolve, reject) => {
+            this.driver.toggle(0, 'dreamViewToggle', args.device.data.model,args.device.data.mac, args.device.goveedevicetype).then(() => {
+              resolve(true);
+            }, (_error) => {
+              reject(_error);
+            });
+          });
+        }
+      });
+  }
+
   async setupFlowSwitchLightScene() {
     this.log('Create the flow for the Light scene capability');
     //Now setup the flow cards
@@ -562,7 +591,7 @@ class GoveeDevice extends Device {
             this.driver.setLightScene(args.lightScene.value, "lightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
               resolve(true);
             }, (_error) => {
-              resolve(false);
+              reject(_error);
             });
         });
       });
@@ -592,7 +621,7 @@ class GoveeDevice extends Device {
           this.driver.setLightScene(args.diyScene.value, "diyScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
             resolve(true);
           }, (_error) => {
-            resolve(false);
+            reject(_error);
           });
         });
       });
@@ -622,7 +651,7 @@ class GoveeDevice extends Device {
           this.driver.setLightScene(args.snapshot.value, "snapshot", args.device.data.model, args.device.data.mac, this.goveedevicetype).then(() => {
             resolve(true);
           }, (_error) => {
-            resolve(false);
+            reject(_error);
           });
         });
       });
@@ -656,7 +685,7 @@ class GoveeDevice extends Device {
           this.driver.setMusicMode(args.musicMode.value, args.sensitivity, args.device.data.model, args.device.data.mac).then(() => {
             resolve(true);
           }, (_error) => {
-            resolve(false);
+            reject(_error);
           });
         });
       });

@@ -100,6 +100,37 @@
           "labelMultiplier": 1
         }
       ]
+    },
+    {
+      "id": "activate-dreamview",
+      "title": {
+        "en": "Toggle the dream view mode"
+      },
+      "titleTrue": {
+        "en": "Activate dream view mode"
+      },
+      "titleFalse": {
+        "en": "Deactivate dream view mode"
+      },
+      "insightsTitleTrue": {
+        "en": "Dream view mode was activated"
+      },
+      "insightsTitleTFalse": {
+        "en": "Dream view mode was deactivated"
+      },      
+      "hint": {
+        "en": "Activates or deactivates the dream view mode that is supported by the device (music or video)"
+      },
+      "$filter": "capabilities=dreamViewToggle",
+      "args": [
+        {
+          "type": "checkbox",
+          "name": "activate",
+          "placeholder": {
+            "en": "Activate"
+          }
+        }
+      ]
     }
     
   ]

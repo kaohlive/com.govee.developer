@@ -35,7 +35,7 @@ class GoveeClient {
       {
         return data;
       } 
-      throw new Error(data);      
+      throw new Error(data.msg);      
     });      
   }
 
@@ -223,7 +223,10 @@ class GoveeClient {
         }
         this.deviceControl(params).then(res => {
           resolve(res);
-        }).catch(e => {reject(e)});
+        }).catch(res => {
+          console.log(JSON.stringify(res));
+          reject(res)
+        });
       }
     });
   }
