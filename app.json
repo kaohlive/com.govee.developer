@@ -2,7 +2,7 @@
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.govee.developer",
   "brandColor": "#00ACE7",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -77,7 +77,9 @@
         "light_temperature",
         "light_mode",
         "lightScenes",
-        "lightDiyScenes"
+        "lightDiyScenes",
+        "snapshots",
+        "musicMode"
       ],
       "images": {
         "small": "/drivers/govee-device/assets/images/small.png",
@@ -190,10 +192,93 @@
             }
           }
         ]
+      },
+      {
+        "id": "activate-snapshot",
+        "title": {
+          "en": "Activate snapshot"
+        },
+        "hint": {
+          "en": "Activates a previously created snapshot for yor device configuration"
+        },
+        "titleFormatted": {
+          "en": "Activate snapshot [[snapshot]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-device&capabilities=snapshots"
+          },
+          {
+            "type": "autocomplete",
+            "name": "snapshot",
+            "placeholder": {
+              "en": "game setup"
+            }
+          }
+        ]
+      },
+      {
+        "id": "activate-music-mode",
+        "title": {
+          "en": "Activate music mode"
+        },
+        "hint": {
+          "en": "Activates the music mode in the specified mode and sensitivity"
+        },
+        "titleFormatted": {
+          "en": "Activate music mode [[musicMode]] with sensitivity [[sensitivity]]%"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-device&capabilities=musicMode"
+          },
+          {
+            "type": "autocomplete",
+            "name": "musicMode",
+            "placeholder": {
+              "en": "Music mode"
+            }
+          },
+          {
+            "type": "range",
+            "name": "sensitivity",
+            "placeholder": {
+              "en": "Sensitivity"
+            },
+            "labelDecimals": 0,
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "%",
+            "labelMultiplier": 1
+          }
+        ]
       }
     ]
   },
   "capabilities": {
+    "dreamViewToggle": {
+      "type": "boolean",
+      "title": {
+        "en": "Dream View Toggle"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "toggle"
+    },
+    "gradientToggle": {
+      "type": "boolean",
+      "title": {
+        "en": "Gradient Toggle"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "toggle"
+    },
     "lightDiyScenes": {
       "type": "number",
       "title": {
@@ -229,6 +314,28 @@
       "setable": true,
       "uiComponent": "picker",
       "values": []
+    },
+    "musicMode": {
+      "type": "string",
+      "title": {
+        "en": "Music mode"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": null
+    },
+    "snapshots": {
+      "type": "number",
+      "title": {
+        "en": "Snapshots"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": null,
+      "decimals": 0,
+      "min": 0,
+      "max": 1,
+      "step": 1
     }
   }
 }
