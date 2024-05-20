@@ -159,7 +159,7 @@ class GoveeDevice extends Device {
 		  if(!this.hasCapability('onoff'))
 			  await this.addCapability('onoff');
     } else if(this.hasCapability('onoff'))
-      await this.removeCapability('onoff');   
+      await this.removeCapability('onoff');  
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "brightness" })) {
       if(!this.hasCapability('dim'))
         await this.addCapability('dim'); 
@@ -195,6 +195,22 @@ class GoveeDevice extends Device {
   async createDynamicCapabilities()
   {
     this.log('Start adding dynamic capabilities');
+    //Add new feauters
+    // if(this.data.capabilitieslist.find(function(e) { return e.instance == "segmentedColorRgb" })) {
+		//   if(!this.hasCapability('light_hue.segment'))
+		// 	  await this.addCapability('light_hue.segment');
+    // } else if(this.hasCapability('light_hue.segment'))
+    //   await this.removeCapability('light_hue.segment');
+    // if(this.data.capabilitieslist.find(function(e) { return e.instance == "gradientToggle" })) {
+		//   if(!this.hasCapability('gradientToggle'))
+		// 	  await this.addCapability('gradientToggle');
+    // } else if(this.hasCapability('gradientToggle'))
+    //   await this.removeCapability('gradientToggle');
+    // if(this.data.capabilitieslist.find(function(e) { return e.instance == "dreamViewToggle" })) {
+    //   if(!this.hasCapability('dreamViewToggle'))
+    //     await this.addCapability('dreamViewToggle');
+    // } else if(this.hasCapability('dreamViewToggle'))
+    //   await this.removeCapability('dreamViewToggle'); 
     //Use the mode capability for Dynamic LightScenes
     if(this.data.capabilitieslist.find(function(e) {return e.instance == "lightScene" }))
     {
@@ -289,7 +305,31 @@ class GoveeDevice extends Device {
         }
       }
     } else if(this.hasCapability('lightDiyScenes'))
-      await this.removeCapability('lightDiyScenes');  
+      await this.removeCapability('lightDiyScenes');
+    //snapshots
+    if(this.data.capabilitieslist.find(function(e) {return e.instance == "snapshot" }))
+    {
+      if(!this.hasCapability('snapshots')) {
+        await this.addCapability('snapshots');
+      }
+      if(this.hasCapability('snapshots')) {
+        this.log('Setting up snapshot capability');
+        await this.setupFlowSnapshots();
+      }
+    } else if(this.hasCapability('snapshots'))
+      await this.removeCapability('snapshots');
+    //MusicMode
+    if(this.data.capabilitieslist.find(function(e) {return e.instance == "musicMode" }))
+      {
+        if(!this.hasCapability('musicMode')) {
+          await this.addCapability('musicMode');
+        }
+        if(this.hasCapability('musicMode')) {
+          this.log('Setting up music mode capability');
+          await this.setupFlowMusicMode();
+        }
+      } else if(this.hasCapability('musicMode'))
+        await this.removeCapability('musicMode');
   }
 
   /**
@@ -301,6 +341,10 @@ class GoveeDevice extends Device {
     this.log('Now link capabilities with listeners');
     if (this.hasCapability('onoff'))
       this.registerCapabilityListener('onoff', this.onCapabilityOnoff.bind(this));
+    if (this.hasCapability('dreamViewToggle'))
+      this.registerCapabilityListener('dreamViewToggle', this.onCapabilityDreamview.bind(this));
+    if (this.hasCapability('gradientToggle'))
+      this.registerCapabilityListener('gradientToggle', this.onCapabilityGradient.bind(this));
     if (this.hasCapability('dim'))
       this.registerCapabilityListener('dim', this.onCapabilityDim.bind(this));
     if (this.hasCapability('light_temperature'))
@@ -365,6 +409,24 @@ class GoveeDevice extends Device {
       await this.driver.turn(0,this.data.model, this.data.mac, this.goveedevicetype);
     }
     this.setIfHasCapability('onoff', value);
+  }
+
+  async onCapabilityDreamview( value, opts ) {
+    if(value){
+      await this.driver.toggle(1, 'dreamViewToggle', this.data.model, this.data.mac, this.goveedevicetype);
+    } else {
+      await this.driver.toggle(0, 'dreamViewToggle', this.data.model,this.data.mac, this.goveedevicetype);
+    }
+    this.setIfHasCapability('dreamViewToggle', value);
+  }
+
+  async onCapabilityGradient( value, opts ) {
+    if(value){
+      await this.driver.toggle(1, 'gradientToggle', this.data.model, this.data.mac, this.goveedevicetype);
+    } else {
+      await this.driver.toggle(0, 'gradientToggle', this.data.model, this.data.mac, this.goveedevicetype);
+    }
+    this.setIfHasCapability('gradientToggle', value);
   }
 
   /**
@@ -497,7 +559,7 @@ class GoveeDevice extends Device {
         this.log('attempt to switch to a Light Scene: '+args.lightScene);
         return new Promise((resolve, reject) => {
           this.log('now send the light scene capability command');
-            this.driver.setLightScene(args.lightScene.value, "lightScene", this.data.model, this.data.mac, this.goveedevicetype).then(() => {
+            this.driver.setLightScene(args.lightScene.value, "lightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
               resolve(true);
             }, (_error) => {
               resolve(false);
@@ -505,9 +567,9 @@ class GoveeDevice extends Device {
         });
       });
     this._switchLightScene
-      .registerArgumentAutocompleteListener('lightScene', async (query) => {
+      .registerArgumentAutocompleteListener('lightScene', async (query, args) => {
         this.log('attempt to list available light scenes matching filter ['+query+']');
-        let filteredScenes = this.lightScenes.options.filter(function(e) { 
+        let filteredScenes = args.device.lightScenes.options.filter(function(e) { 
           return e.name.toLowerCase().includes(query.toLowerCase()) 
         });
         this.log(JSON.stringify(filteredScenes));
@@ -527,7 +589,7 @@ class GoveeDevice extends Device {
         this.log('attempt to switch to a DIY Light Scene: '+args.diyScene);
         return new Promise((resolve, reject) => {
           this.log('now send the DIY light scene capability command');
-          this.driver.setLightScene(args.diyScene.value, "diyScene", this.data.model, this.data.mac, this.goveedevicetype).then(() => {
+          this.driver.setLightScene(args.diyScene.value, "diyScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
             resolve(true);
           }, (_error) => {
             resolve(false);
@@ -535,15 +597,81 @@ class GoveeDevice extends Device {
         });
       });
     this._switchDiyLightScene
-      .registerArgumentAutocompleteListener('diyScene', async (query) => {
+      .registerArgumentAutocompleteListener('diyScene', async (query, args) => {
         this.log('attempt to list available DIY light scenes matching filter ['+query+']');
-        let filteredScenes = this.diyScenes.options.filter(function(e) { 
+        let filteredScenes = args.device.diyScenes.options.filter(function(e) { 
           return e.name.toLowerCase().includes(query.toLowerCase()) 
         });
         this.log(JSON.stringify(filteredScenes));
         return filteredScenes.map((scene) => {
           scene.formattedName = scene.name;
           return scene;
+        });
+      });
+  }
+
+  async setupFlowSnapshots() {
+    //console.log('Create the flow for the Snapshots capability');
+    //Now setup the flow cards
+    this._activateSnapshot = await this.homey.flow.getActionCard('activate-snapshot'); 
+    this._activateSnapshot
+      .registerRunListener(async (args, state) => {
+        this.log('attempt to activate snapshot: '+args.snapshot);
+        return new Promise((resolve, reject) => {
+          this.log('now send the DIY light scene capability command');
+          this.driver.setLightScene(args.snapshot.value, "snapshot", args.device.data.model, args.device.data.mac, this.goveedevicetype).then(() => {
+            resolve(true);
+          }, (_error) => {
+            resolve(false);
+          });
+        });
+      });
+    this._activateSnapshot
+      .registerArgumentAutocompleteListener('snapshot', async (query, args) => {
+        this.log('attempt to list available snapshots matching filter ['+query+']');
+        var devicelist = await this.driver.api.deviceList();
+        var thisdevice = devicelist.data.find(function(e) { return e.device === args.device.data.mac })
+        console.log("device "+args.device.data.mac+"|"+JSON.stringify(thisdevice));
+        let snaphotList = thisdevice.capabilities.find(function(e) { return e.instance === "snapshot" })
+        let filteredSnapshots = snaphotList.parameters.options.filter(function(e) { 
+          return e.name.toLowerCase().includes(query.toLowerCase()) 
+        });
+        this.log(JSON.stringify(filteredSnapshots));
+        return filteredSnapshots.map((snapshot) => {
+          snapshot.formattedName = snapshot.name;
+          return snapshot;
+        });
+      });
+  }
+
+  async setupFlowMusicMode() {
+    //console.log('Create the flow for the MusicMode capability');
+    //Now setup the flow cards
+    this._activateMusicMode = await this.homey.flow.getActionCard('activate-music-mode'); 
+    this._activateMusicMode
+      .registerRunListener(async (args, state) => {
+        this.log('attempt to activate music mode: '+args.musicMode);
+        return new Promise((resolve, reject) => {
+          this.log('now send the music mode capability command');
+          this.driver.setMusicMode(args.musicMode.value, args.sensitivity, args.device.data.model, args.device.data.mac).then(() => {
+            resolve(true);
+          }, (_error) => {
+            resolve(false);
+          });
+        });
+      });
+    this._activateMusicMode
+      .registerArgumentAutocompleteListener('musicMode', async (query, args) => {
+        this.log('attempt to list available musicModes matching filter ['+query+']');
+        let musicModeCapa = args.device.data.capabilitieslist.find(function(e) { return e.instance == "musicMode" });
+        let musicModes = musicModeCapa.parameters.fields.find(function(e) { return e.fieldName == "musicMode" });
+        let filteredModes = musicModes.options.filter(function(e) { 
+          return e.name.toLowerCase().includes(query.toLowerCase()) 
+        });
+        this.log(JSON.stringify(filteredModes));
+        return filteredModes.map((musicModes) => {
+          musicModes.formattedName = musicModes.name;
+          return musicModes;
         });
       });
   }

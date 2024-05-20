@@ -154,6 +154,30 @@ class GoveeClient {
       });
   }
 
+  setMusicMode(musicMode, sensitivity, model, device) {
+    return new Promise((resolve, reject) => {
+      //console.log('attempt to switch device ['+device+':'+model+'] to new mode: '+scene)
+      let params = {
+        "requestId": "uuid",
+        "payload": {
+          "sku": model,
+          "device": device,
+          "capability": {
+            "type": "devices.capabilities.music_setting",
+            "instance": "musicMode",
+            "value": {
+              "musicMode":musicMode,
+              "sensitivity":sensitivity
+            }
+            }
+          }
+        }
+        this.deviceControl(params).then(res => {
+          resolve(res);
+        }).catch(e => {reject(e)});
+      });
+  }
+
   devicesTurn(mode, model, device) {
     return new Promise((resolve, reject) => {
       if ((mode != 1 && mode != 0)) {
@@ -179,6 +203,30 @@ class GoveeClient {
     });
   }
   
+  devicesToggle(mode, instance, model, device) {
+    return new Promise((resolve, reject) => {
+      if ((mode != 1 && mode != 0)) {
+        reject(new Error("Incorrect toggle parameter"));
+      } else {
+        //console.log('attempt to switch device ['+device+':'+model+'] to new mode: '+mode)
+        let params = {
+          "requestId": "uuid",
+          "payload": {
+            "sku": model,
+            "device": device,
+            "capability": {
+              "type": "devices.capabilities.toggle",
+              "instance": instance,
+              "value": mode
+            }
+          }
+        }
+        this.deviceControl(params).then(res => {
+          resolve(res);
+        }).catch(e => {reject(e)});
+      }
+    });
+  }
   
   devicesMode(mode, model, device) {
   return new Promise((resolve, reject) => {

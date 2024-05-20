@@ -1,0 +1,9 @@
+{
+  "type": "string",
+  "title": {
+    "en": "Music mode"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": null
+}

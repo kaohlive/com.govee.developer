@@ -1,0 +1,9 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Dream View Toggle"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": "toggle"
+}
