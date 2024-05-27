@@ -82,5 +82,8 @@
   },
   "2.6.3": {
     "en": "added flow improvements"
+  },
+  "2.6.4": {
+    "en": "Added support for segment control through flow"
   }
 }
