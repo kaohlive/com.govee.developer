@@ -80,7 +80,9 @@
         "lightDiyScenes",
         "snapshots",
         "musicMode",
-        "dreamViewToggle"
+        "dreamViewToggle",
+        "segmentControlColor",
+        "segmentControlBrightness"
       ],
       "images": {
         "small": "/drivers/govee-device/assets/images/small.png",
