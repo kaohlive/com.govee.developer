@@ -1,0 +1,9 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Segment brightness control"
+  },
+  "getable": false,
+  "setable": false,
+  "uiComponent": null
+}

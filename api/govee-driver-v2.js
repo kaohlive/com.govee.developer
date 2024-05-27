@@ -110,6 +110,21 @@ class GoveeDriver extends Driver {
     return this.api.setMusicMode(musicMode, sensitivity, model, device);
   }
 
+  async setSegmentColor(segment, colorHex, mode, model, device, type) {
+    let colorParsed = this.colorHexCommandSetParser(colorHex);
+    this.log('device segment change requested ['+segment+'] to color '+colorParsed);
+    return this.api.setSegmentColor(segment, parseInt(colorParsed, 16), mode, model, device);
+  }
+  async setSegmentBrightness(segment, brightness, mode, model, device, type) {
+    this.log('device segment change requested ['+segment+'] to brightness '+brightness);
+    return this.api.setSegmentBrightness(segment, brightness, mode, model, device);
+  }
+
+  async setSegmentBrightness(segment ,brightness, mode, model, device, type) {
+    this.log('device segment change requested ['+segment+'] to brightness '+brightness);
+    return this.api.setSegmentBrightness(segment ,brightness, mode, model, device);
+  }
+
   async turn(mode, model, device, type) {
 		this.log('device state change requested ['+mode+']');
     return this.api.devicesTurn(mode, model, device);
@@ -144,6 +159,12 @@ class GoveeDriver extends Driver {
     let colorHex = this.colorCommandSetParser(hue*360,sat*100,light*100);
 		this.log('device color change requested ['+hue+','+sat+','+light+'] converted to color ['+JSON.stringify(colorHex)+']');
     return this.api.color(parseInt(colorHex, 16), model, device);
+  }
+
+  colorHexCommandSetParser( colorStr ) {
+    var colorhex = tinycolor(colorStr);
+    //this.log("attempt to convert "+colorStr+" mapped to "+colorhex.toHex());
+    return colorhex.toHex();
   }
 
   colorCommandSetParser( hue, sat, light ) {

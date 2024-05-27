@@ -133,6 +133,52 @@ class GoveeClient {
     });
   }
 
+  setSegmentColor(segment, color, model, device) {
+    return new Promise((resolve, reject) => {
+      let params = {
+        "requestId": "uuid",
+        "payload": {
+          "sku": model,
+          "device": device,
+          "capability": {
+            "type": "devices.capabilities.segment_color_setting",
+            "instance": "segmentedColorRgb",
+            "value": {
+              "segment":segment,
+              "rgb":color
+            }
+          }
+        }
+      }
+      this.deviceControl(params).then(res => {
+        resolve(res);
+      }).catch(e => {reject(e)});
+    });
+  }
+
+  setSegmentBrightness(segment, brightness, model, device) {
+    return new Promise((resolve, reject) => {
+      let params = {
+        "requestId": "uuid",
+        "payload": {
+          "sku": model,
+          "device": device,
+          "capability": {
+            "type": "devices.capabilities.segment_color_setting",
+            "instance": "segmentedBrightness",
+            "value": {
+              "segment":segment,
+              "brightness":brightness
+            }
+          }
+        }
+      }
+      this.deviceControl(params).then(res => {
+        resolve(res);
+      }).catch(e => {reject(e)});
+    });
+  }
+
   setLightScene(scene, instance, model, device) {
     return new Promise((resolve, reject) => {
       //console.log('attempt to switch device ['+device+':'+model+'] to new mode: '+scene)

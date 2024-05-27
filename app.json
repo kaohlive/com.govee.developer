@@ -195,6 +195,96 @@
         ]
       },
       {
+        "id": "set-segment-color",
+        "title": {
+          "en": "Control the color of a segment of the device"
+        },
+        "hint": {
+          "en": "Sets the segment to a specific color"
+        },
+        "titleFormatted": {
+          "en": "Set the segment [[segmentNr]] or [[segmentArray]] to color [[segmentColor]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-device&capabilities=segmentControlColor"
+          },
+          {
+            "type": "color",
+            "name": "segmentColor",
+            "placeholder": {
+              "en": "Red"
+            }
+          },
+          {
+            "type": "text",
+            "name": "segmentArray",
+            "required": false,
+            "placeholder": {
+              "en": "1,3,5,..."
+            }
+          },
+          {
+            "type": "autocomplete",
+            "name": "segmentNr",
+            "required": false,
+            "placeholder": {
+              "en": "Segment"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set-segment-brightness",
+        "title": {
+          "en": "Control the brightness of a segment of the device"
+        },
+        "hint": {
+          "en": "Sets the segment to a specific brightness"
+        },
+        "titleFormatted": {
+          "en": "Set the segment [[segmentNr]] or [[segmentArray]] to brightness [[segmentBrightness]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-device&capabilities=segmentControlBrightness"
+          },
+          {
+            "type": "autocomplete",
+            "name": "segmentNr",
+            "required": false,
+            "placeholder": {
+              "en": "Segment"
+            }
+          },
+          {
+            "type": "text",
+            "name": "segmentArray",
+            "required": false,
+            "placeholder": {
+              "en": "1,3,5,..."
+            }
+          },
+          {
+            "type": "range",
+            "name": "segmentBrightness",
+            "labelDecimals": 0,
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "%",
+            "labelMultiplier": 1,
+            "placeholder": {
+              "en": "Brightness"
+            }
+          }
+        ]
+      },
+      {
         "id": "activate-snapshot",
         "title": {
           "en": "Activate snapshot"
@@ -229,7 +319,7 @@
           "en": "Activates the music mode in the specified mode and sensitivity"
         },
         "titleFormatted": {
-          "en": "Activate music mode [[musicMode]] with sensitivity [[sensitivity]]%"
+          "en": "Activate music mode [[musicMode]] with sensitivity [[sensitivity]]"
         },
         "args": [
           {
@@ -263,6 +353,9 @@
         "id": "activate-dreamview",
         "title": {
           "en": "Toggle the dream view mode"
+        },
+        "titleFormatted": {
+          "en": "Activate the dreamview mode [[activate]]"
         },
         "titleTrue": {
           "en": "Activate dream view mode"
@@ -358,6 +451,24 @@
       },
       "getable": true,
       "setable": true,
+      "uiComponent": null
+    },
+    "segmentControlBrightness": {
+      "type": "number",
+      "title": {
+        "en": "Segment brightness control"
+      },
+      "getable": false,
+      "setable": false,
+      "uiComponent": null
+    },
+    "segmentControlColor": {
+      "type": "number",
+      "title": {
+        "en": "Segment color control"
+      },
+      "getable": false,
+      "setable": false,
       "uiComponent": null
     },
     "snapshots": {

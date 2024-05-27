@@ -196,16 +196,28 @@ class GoveeDevice extends Device {
   {
     this.log('Start adding dynamic capabilities');
     //Add new feauters
-    // if(this.data.capabilitieslist.find(function(e) { return e.instance == "segmentedColorRgb" })) {
-		//   if(!this.hasCapability('light_hue.segment'))
-		// 	  await this.addCapability('light_hue.segment');
-    // } else if(this.hasCapability('light_hue.segment'))
-    //   await this.removeCapability('light_hue.segment');
     // if(this.data.capabilitieslist.find(function(e) { return e.instance == "gradientToggle" })) {
 		//   if(!this.hasCapability('gradientToggle'))
 		// 	  await this.addCapability('gradientToggle');
     // } else if(this.hasCapability('gradientToggle'))
     //   await this.removeCapability('gradientToggle');
+    //Setup the segment color control capability, flow only
+    if(this.data.capabilitieslist.find(function(e) { return e.instance == "segmentedColorRgb" })) {
+      if(!this.hasCapability('segmentControlColor'))
+        await this.addCapability('segmentControlColor');
+      this.segmentRGBParameters = this.data.capabilitieslist.find(function(e) {return e.instance == "segmentedColorRgb" }).parameters.fields;
+      await this.setupFlowSegmentControlColor();
+    } else if(this.hasCapability('segmentControlColor'))
+      await this.removeCapability('segmentControlColor'); 
+    //Setup the segment brightness control capability, flow only
+    if(this.data.capabilitieslist.find(function(e) { return e.instance == "segmentedBrightness" })) {
+      if(!this.hasCapability('segmentControlBrightness'))
+        await this.addCapability('segmentControlBrightness');
+      this.segmentBrightnessParameters = this.data.capabilitieslist.find(function(e) {return e.instance == "segmentedBrightness" }).parameters.fields;
+      await this.setupFlowSegmentControlBrightness();
+    } else if(this.hasCapability('segmentControlBrightness'))
+      await this.removeCapability('segmentControlBrightness'); 
+    //Now setup the dreamview button
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "dreamViewToggle" })) {
       if(!this.hasCapability('dreamViewToggle'))
         await this.addCapability('dreamViewToggle');
@@ -231,8 +243,6 @@ class GoveeDevice extends Device {
         } else {
           this.lightScenes=modeValues;
         }
-
-
         const modeOptions = {
           "type": "number",
           "title": {
@@ -576,6 +586,112 @@ class GoveeDevice extends Device {
             });
           });
         }
+      });
+  }
+
+  createSegmentCollection(segmentField)
+  {
+    //Convert the segment max into a real array collection with objects.
+    let segmentArray = Array.from(
+      { length: segmentField.elementRange.max }, 
+        (_, i) => i.toString() );
+    //Clone this as base array
+    let segmentRange = segmentArray.map((i) => ({
+      value: i,
+      name: "Segment "+i.toString()
+    })) //Cloned
+    //Add a joined element to easely select them all
+    segmentRange.push({
+      value: segmentArray.join(','),
+      name: `All segments`
+    });
+    //Add the firt halve of the segments
+    segmentRange.push({
+      value: segmentArray.slice(0,Math.floor((segmentField.elementRange.max/2))).join(','),
+      name: `First halve of segments`
+    });
+    //Add the last halve of the segments
+    segmentRange.push({
+      value: segmentArray.slice(Math.floor((segmentField.elementRange.max/2)),segmentField.elementRange.max).join(','),
+      name: `Second halve of segments`
+    });
+    console.log(JSON.stringify(segmentRange));
+    return segmentRange;
+  }
+
+  async setupFlowSegmentControlColor() {
+    this.log('Create the flow for the Segment Color Control capability');
+    //Now setup the flow cards
+    this._setSegmentColor = await this.homey.flow.getActionCard('set-segment-color'); 
+    this._setSegmentColor
+      .registerRunListener(async (args, state) => {
+        return new Promise((resolve, reject) => {
+            let segmentArray=null;
+            if(!args.segmentArray && !args.segmentNr)
+              reject("Select either segment or enter a comma seperated segment nr list");
+            if(args.segmentArray && args.segmentArray!==''  )
+              segmentArray = args.segmentArray.split(',').map(Number);
+            else
+              segmentArray = args.segmentNr.value.split(',').map(Number);
+            this.log('attempt to set a device segment ['+segmentArray+']: color '+args.segmentColor);
+            this.driver.setSegmentColor(segmentArray, args.segmentColor, args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+              resolve(true);
+            }, (_error) => {
+              reject(_error);
+            });
+        });
+      });
+      this._setSegmentColor
+      .registerArgumentAutocompleteListener('segmentNr', async (query, args) => {
+        this.log('attempt to list available segments with ['+query+']');
+        //console.log('segmentParameters: '+JSON.stringify(args.device.segmentRGBParameters));
+        let segmentRange = this.createSegmentCollection(args.device.segmentRGBParameters.find(function(e) {return e.fieldName == "segment" }));
+        let filteredSegments = segmentRange.filter(function(e) { 
+          return e.name.toLowerCase().includes(query.toLowerCase()) 
+        });
+        this.log(JSON.stringify(filteredSegments));
+        return filteredSegments.map((segment) => {
+          segment.formattedName = segment.name;
+          return segment;
+        });
+      });
+  }
+
+  async setupFlowSegmentControlBrightness() {
+    this.log('Create the flow for the Segment Brightness Control capability');
+    //Now setup the flow cards
+    this._setSegmentBrightness = await this.homey.flow.getActionCard('set-segment-brightness'); 
+    this._setSegmentBrightness
+      .registerRunListener(async (args, state) => {
+        return new Promise((resolve, reject) => {
+          let segmentArray=null;
+          if(!args.segmentArray && !args.segmentNr)
+            reject("Select either segment or enter a comma seperated segment nr list");
+          if(args.segmentArray && args.segmentArray!==''  )
+            segmentArray = args.segmentArray.split(',').map(Number);
+          else
+            segmentArray = args.segmentNr.value.split(',').map(Number);
+          this.log('attempt to set a device segment ['+segmentArray+']: brightness '+args.segmentBrightness);
+          this.driver.setSegmentBrightness(segmentArray, args.segmentBrightness, args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+            resolve(true);
+          }, (_error) => {
+            reject(_error);
+          });
+        });
+      });
+      this._setSegmentBrightness
+      .registerArgumentAutocompleteListener('segmentNr', async (query, args) => {
+        this.log('attempt to list available segments with ['+query+']');
+        console.log('segmentParameters: '+JSON.stringify(args.device.segmentBrightnessParameters));
+        let segmentRange = this.createSegmentCollection(args.device.segmentBrightnessParameters.find(function(e) {return e.fieldName == "segment" }));
+        let filteredSegments = segmentRange.filter(function(e) { 
+          return e.name.toLowerCase().includes(query.toLowerCase()) 
+        });
+        this.log(JSON.stringify(filteredSegments));
+        return filteredSegments.map((segment) => {
+          segment.formattedName = segment.name;
+          return segment;
+        });
       });
   }
 

@@ -1,0 +1,9 @@
+{
+  "type": "number",
+  "title": {
+    "en": "Segment color control"
+  },
+  "getable": false,
+  "setable": false,
+  "uiComponent": null
+}
