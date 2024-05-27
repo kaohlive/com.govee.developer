@@ -5,7 +5,7 @@
   },
   "class": "light",
   "platforms": ["local"],
-  "capabilities": ["onoff","dim","light_saturation","light_hue","light_temperature","light_mode","lightScenes","lightDiyScenes","snapshots","musicMode","dreamViewToggle"],
+  "capabilities": ["onoff","dim","light_saturation","light_hue","light_temperature","light_mode","lightScenes","lightDiyScenes","snapshots","musicMode","dreamViewToggle","segmentControlColor","segmentControlBrightness"],
   "images": {
     "small": "/drivers/govee-device/assets/images/small.png",
     "large": "/drivers/govee-device/assets/images/large.png",
