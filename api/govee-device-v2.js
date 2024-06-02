@@ -10,6 +10,7 @@ class GoveeDevice extends Device {
     this.data = await this.getDeviceData();
     //Lets create any missing capability based on the capabilitiesList
     await this.createDynamicCapabilities();
+    await this.cleanOldCapabilities();
     //Now lets hook those capabilities to events
     await this.setupCapabilities();
     this.log('govee.device.'+this.data.model+': '+this.data.name+' of type '+this.goveedevicetype+' has been setup');
@@ -58,10 +59,16 @@ class GoveeDevice extends Device {
 
   async refreshState()
   {
-    this.log('govee.device.'+this.data.model+': '+this.data.name+' device state to be retrieved');
+    this.log('govee.'+this.goveedevicetype+'.'+this.data.model+': '+this.data.name+' device state to be retrieved');
     this.driver.deviceState(this.data.model, this.data.mac, this.data.type).then(currentState => {
       //console.log(JSON.stringify(currentState.capabilitieslist));
       //Now update the capabilities with the actual state
+      if(this.hasCapability('alarm_online.'+this.goveedevicetype))
+        {
+          this.log('Processing the online state');
+          var online = currentState.capabilitieslist.find(function(e) {return e.instance == "online" })
+          this.setCapabilityValue('alarm_online.'+this.goveedevicetype,!online.state.value);
+        }
       if (this.hasCapability('onoff'))
       {
         this.log('Processing the on off toggle state');
@@ -127,6 +134,7 @@ class GoveeDevice extends Device {
           this.setCapabilityValue('light_saturation', null);
         }
       }
+      //The following are more appliance like capabilities
       if(this.hasCapability('mode'))
       {
         this.log('Processing the light mode state');
@@ -141,6 +149,19 @@ class GoveeDevice extends Device {
           this.setCapabilityValue('mode', null);
         }
       }
+      if(this.hasCapability('measure_temperature'))
+      {
+        this.log('Processing the temp sensor state');
+        var temp = currentState.capabilitieslist.find(function(e) {return e.instance == "sensorTemperature" })
+        var celc = (temp.state.value - 32) / 1.8;
+        this.setCapabilityValue('measure_temperature',celc);
+      }
+      if(this.hasCapability('measure_humidity'))
+        {
+          this.log('Processing the humidity sensor state');
+          var hum = currentState.capabilitieslist.find(function(e) {return e.instance == "sensorHumidity" })
+          this.setCapabilityValue('measure_humidity',hum.state.value.currentHumidity);
+        }
     }).catch((err) => this.log('Error calling the state endpoint ['+JSON.stringify(err)+']'));
   }
 
@@ -155,6 +176,8 @@ class GoveeDevice extends Device {
     this.setStoreValue('capabilityList',this.data.capabilitieslist);
     this.setStoreValue('deviceVersion','v2');
     //Now create the capabilties based on the device
+    if(!this.hasCapability('alarm_online.'+this.goveedevicetype))
+      await this.addCapability('alarm_online.'+this.goveedevicetype);
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "powerSwitch" })) {
 		  if(!this.hasCapability('onoff'))
 			  await this.addCapability('onoff');
@@ -186,10 +209,40 @@ class GoveeDevice extends Device {
       if(!this.hasCapability('light_mode'))
         await this.addCapability('light_mode');
     } else if(this.hasCapability('light_mode'))
-      await this.removeCapability('light_mode');  
+      await this.removeCapability('light_mode');
+      
+    //These are more likely to be appliance capabilities
+    if(this.data.capabilitieslist.find(function(e) { return e.instance == "sensorTemperature" })) {
+      if(!this.hasCapability('measure_temperature'))
+        await this.addCapability('measure_temperature'); 
+    } else if(this.hasCapability('measure_temperature'))
+      await this.removeCapability('measure_temperature');
+    if(this.data.capabilitieslist.find(function(e) { return e.instance == "sensorHumidity" })) {
+      if(!this.hasCapability('measure_humidity'))
+        await this.addCapability('measure_humidity'); 
+    } else if(this.hasCapability('measure_humidity'))
+      await this.removeCapability('measure_humidity');    
 
     //Now we need to link our capbilities with the ones we left or added
     await this.setupCapabilities();
+  }
+
+  async cleanOldCapabilities()
+  {
+    if(this.hasCapability('segmentControlColor'))
+      await this.removeCapability('segmentControlColor');
+    if(this.hasCapability('segmentControlBrightness'))
+      await this.removeCapability('segmentControlBrightness');
+    if(this.hasCapability('dreamViewToggle'))
+      await this.removeCapability('dreamViewToggle');
+    if(this.hasCapability('lightScenes'))
+      await this.removeCapability('lightScenes');
+    if(this.hasCapability('lightDiyScenes'))
+      await this.removeCapability('lightDiyScenes');
+    if(this.hasCapability('snapshots'))
+      await this.removeCapability('snapshots');
+    if(this.hasCapability('musicMode'))
+      await this.removeCapability('musicMode');
   }
 
   async createDynamicCapabilities()
@@ -197,40 +250,40 @@ class GoveeDevice extends Device {
     this.log('Start adding dynamic capabilities');
     //Add new feauters
     // if(this.data.capabilitieslist.find(function(e) { return e.instance == "gradientToggle" })) {
-		//   if(!this.hasCapability('gradientToggle'))
-		// 	  await this.addCapability('gradientToggle');
-    // } else if(this.hasCapability('gradientToggle'))
-    //   await this.removeCapability('gradientToggle');
+		//   if(!this.hasCapability('gradientToggle.'+this.goveedevicetype))
+		// 	  await this.addCapability('gradientToggle.'+this.goveedevicetype);
+    // } else if(this.hasCapability('gradientToggle.'+this.goveedevicetype))
+    //   await this.removeCapability('gradientToggle.'+this.goveedevicetype);
     //Setup the segment color control capability, flow only
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "segmentedColorRgb" })) {
-      if(!this.hasCapability('segmentControlColor'))
-        await this.addCapability('segmentControlColor');
+      if(!this.hasCapability('segmentControlColor.'+this.goveedevicetype))
+        await this.addCapability('segmentControlColor.'+this.goveedevicetype);
       this.segmentRGBParameters = this.data.capabilitieslist.find(function(e) {return e.instance == "segmentedColorRgb" }).parameters.fields;
       await this.setupFlowSegmentControlColor();
-    } else if(this.hasCapability('segmentControlColor'))
-      await this.removeCapability('segmentControlColor'); 
+    } else if(this.hasCapability('segmentControlColor.'+this.goveedevicetype))
+      await this.removeCapability('segmentControlColor.'+this.goveedevicetype); 
     //Setup the segment brightness control capability, flow only
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "segmentedBrightness" })) {
-      if(!this.hasCapability('segmentControlBrightness'))
-        await this.addCapability('segmentControlBrightness');
+      if(!this.hasCapability('segmentControlBrightness.'+this.goveedevicetype))
+        await this.addCapability('segmentControlBrightness.'+this.goveedevicetype);
       this.segmentBrightnessParameters = this.data.capabilitieslist.find(function(e) {return e.instance == "segmentedBrightness" }).parameters.fields;
       await this.setupFlowSegmentControlBrightness();
-    } else if(this.hasCapability('segmentControlBrightness'))
-      await this.removeCapability('segmentControlBrightness'); 
+    } else if(this.hasCapability('segmentControlBrightness.'+this.goveedevicetype))
+      await this.removeCapability('segmentControlBrightness.'+this.goveedevicetype); 
     //Now setup the dreamview button
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "dreamViewToggle" })) {
-      if(!this.hasCapability('dreamViewToggle'))
-        await this.addCapability('dreamViewToggle');
+      if(!this.hasCapability('dreamViewToggle.'+this.goveedevicetype))
+        await this.addCapability('dreamViewToggle.'+this.goveedevicetype);
       await this.setupFlowDreamView();
-    } else if(this.hasCapability('dreamViewToggle'))
-      await this.removeCapability('dreamViewToggle'); 
+    } else if(this.hasCapability('dreamViewToggle.'+this.goveedevicetype))
+      await this.removeCapability('dreamViewToggle.'+this.goveedevicetype); 
     //Use the mode capability for Dynamic LightScenes
     if(this.data.capabilitieslist.find(function(e) {return e.instance == "lightScene" }))
     {
-      if(!this.hasCapability('lightScenes')) {
-        await this.addCapability('lightScenes');
+      if(!this.hasCapability('lightScenes.'+this.goveedevicetype)) {
+        await this.addCapability('lightScenes.'+this.goveedevicetype);
       }
-      if(this.hasCapability('lightScenes')) {
+      if(this.hasCapability('lightScenes.'+this.goveedevicetype)) {
         this.log('Adding dynamic options to the light scenes capability');
         //Check if we use the dynamic version or the static ones
         this.lightScenes = null;
@@ -260,23 +313,23 @@ class GoveeDevice extends Device {
         //console.log('Light scenes: '+JSON.stringify(modeOptions));
         if(this.lightScenes.options.length>0){
           //What if there are no lightscenes? then the control is going to give errors
-          await this.setCapabilityOptions('lightScenes', modeOptions);
+          await this.setCapabilityOptions('lightScenes.'+this.goveedevicetype, modeOptions);
           //Register the flow actions
           this.log('Setup the flow for Light scene capability');
           await this.setupFlowSwitchLightScene(); 
         } else {
-          await this.removeCapability('lightScenes'); 
+          await this.removeCapability('lightScenes.'+this.goveedevicetype); 
         }
       }
-    } else if(this.hasCapability('lightScenes'))
-      await this.removeCapability('lightScenes');  
+    } else if(this.hasCapability('lightScenes.'+this.goveedevicetype))
+      await this.removeCapability('lightScenes.'+this.goveedevicetype);  
     //DIY scenes are the ones you can create yourself for the device
     if(this.data.capabilitieslist.find(function(e) {return e.instance == "diyScene" }))
     {
-      if(!this.hasCapability('lightDiyScenes')) {
-        await this.addCapability('lightDiyScenes');
+      if(!this.hasCapability('lightDiyScenes.'+this.goveedevicetype)) {
+        await this.addCapability('lightDiyScenes.'+this.goveedevicetype);
       }
-      if(this.hasCapability('lightDiyScenes')) {
+      if(this.hasCapability('lightDiyScenes.'+this.goveedevicetype)) {
         this.log('Adding dynamic options to the light scenes capability');
         //Check if we use the dynamic version or the static ones
         this.diyScenes = null;
@@ -307,40 +360,40 @@ class GoveeDevice extends Device {
         //Now setup the slider
         //console.log('DIY Light scenes: '+JSON.stringify(modeOptions));
         if(this.diyScenes.options.length>0){
-          await this.setCapabilityOptions('lightDiyScenes', modeOptions);
+          await this.setCapabilityOptions('lightDiyScenes.'+this.goveedevicetype, modeOptions);
           //Register the flow actions
           this.log('Setup the flow for DIY scene capability');
           await this.setupFlowSwitchDiyScene();
         } else {
-          await this.removeCapability('lightDiyScenes'); 
+          await this.removeCapability('lightDiyScenes.'+this.goveedevicetype); 
         }
       }
-    } else if(this.hasCapability('lightDiyScenes'))
-      await this.removeCapability('lightDiyScenes');
+    } else if(this.hasCapability('lightDiyScenes.'+this.goveedevicetype))
+      await this.removeCapability('lightDiyScenes.'+this.goveedevicetype);
     //snapshots
     if(this.data.capabilitieslist.find(function(e) {return e.instance == "snapshot" }))
     {
-      if(!this.hasCapability('snapshots')) {
-        await this.addCapability('snapshots');
+      if(!this.hasCapability('snapshots.'+this.goveedevicetype)) {
+        await this.addCapability('snapshots.'+this.goveedevicetype);
       }
-      if(this.hasCapability('snapshots')) {
+      if(this.hasCapability('snapshots.'+this.goveedevicetype)) {
         this.log('Setting up snapshot capability');
         await this.setupFlowSnapshots();
       }
-    } else if(this.hasCapability('snapshots'))
-      await this.removeCapability('snapshots');
+    } else if(this.hasCapability('snapshots.'+this.goveedevicetype))
+      await this.removeCapability('snapshots.'+this.goveedevicetype);
     //MusicMode
     if(this.data.capabilitieslist.find(function(e) {return e.instance == "musicMode" }))
       {
-        if(!this.hasCapability('musicMode')) {
-          await this.addCapability('musicMode');
+        if(!this.hasCapability('musicMode.'+this.goveedevicetype)) {
+          await this.addCapability('musicMode.'+this.goveedevicetype);
         }
-        if(this.hasCapability('musicMode')) {
+        if(this.hasCapability('musicMode.'+this.goveedevicetype)) {
           this.log('Setting up music mode capability');
           await this.setupFlowMusicMode();
         }
-      } else if(this.hasCapability('musicMode'))
-        await this.removeCapability('musicMode');
+      } else if(this.hasCapability('musicMode.'+this.goveedevicetype))
+        await this.removeCapability('musicMode.'+this.goveedevicetype);
   }
 
   /**
@@ -352,8 +405,8 @@ class GoveeDevice extends Device {
     this.log('Now link capabilities with listeners');
     if (this.hasCapability('onoff'))
       this.registerCapabilityListener('onoff', this.onCapabilityOnoff.bind(this));
-    if (this.hasCapability('dreamViewToggle'))
-      this.registerCapabilityListener('dreamViewToggle', this.onCapabilityDreamview.bind(this));
+    if (this.hasCapability('dreamViewToggle.'+this.goveedevicetype))
+      this.registerCapabilityListener('dreamViewToggle.'+this.goveedevicetype, this.onCapabilityDreamview.bind(this));
     if (this.hasCapability('gradientToggle'))
       this.registerCapabilityListener('gradientToggle', this.onCapabilityGradient.bind(this));
     if (this.hasCapability('dim'))
@@ -371,10 +424,10 @@ class GoveeDevice extends Device {
     }
     if (this.hasCapability('light_mode'))
       this.registerCapabilityListener('light_mode', this.onCapabilityLightMode.bind(this));
-    if (this.hasCapability('lightScenes'))
-      this.registerCapabilityListener('lightScenes', this.onCapabilityLightScenes.bind(this));
-    if (this.hasCapability('lightDiyScenes'))
-      this.registerCapabilityListener('lightDiyScenes', this.onCapabilityDIYLightScenes.bind(this));
+    if (this.hasCapability('lightScenes.'+this.goveedevicetype))
+      this.registerCapabilityListener('lightScenes.'+this.goveedevicetype, this.onCapabilityLightScenes.bind(this));
+    if (this.hasCapability('lightDiyScenes.'+this.goveedevicetype))
+      this.registerCapabilityListener('lightDiyScenes.'+this.goveedevicetype, this.onCapabilityDIYLightScenes.bind(this));
   }
 
   /**
@@ -560,11 +613,12 @@ class GoveeDevice extends Device {
     }
   }
 
+
   //FLOWS SECTION
   async setupFlowDreamView() {
     this.log('Create the flow for the dream view capability');
     //Now setup the flow cards
-    this._activateDreamview = await this.homey.flow.getActionCard('activate-dreamview'); 
+    this._activateDreamview = await this.homey.flow.getActionCard('activate-dreamview.'+this.goveedevicetype); 
     this._activateDreamview
       .registerRunListener(async (args, state) => {
         this.log('attempt to toggle dreamview: '+args.activate);
@@ -622,7 +676,7 @@ class GoveeDevice extends Device {
   async setupFlowSegmentControlColor() {
     this.log('Create the flow for the Segment Color Control capability');
     //Now setup the flow cards
-    this._setSegmentColor = await this.homey.flow.getActionCard('set-segment-color'); 
+    this._setSegmentColor = await this.homey.flow.getActionCard('set-segment-color.'+this.goveedevicetype); 
     this._setSegmentColor
       .registerRunListener(async (args, state) => {
         return new Promise((resolve, reject) => {
@@ -660,7 +714,7 @@ class GoveeDevice extends Device {
   async setupFlowSegmentControlBrightness() {
     this.log('Create the flow for the Segment Brightness Control capability');
     //Now setup the flow cards
-    this._setSegmentBrightness = await this.homey.flow.getActionCard('set-segment-brightness'); 
+    this._setSegmentBrightness = await this.homey.flow.getActionCard('set-segment-brightness.'+this.goveedevicetype); 
     this._setSegmentBrightness
       .registerRunListener(async (args, state) => {
         return new Promise((resolve, reject) => {
@@ -698,7 +752,7 @@ class GoveeDevice extends Device {
   async setupFlowSwitchLightScene() {
     this.log('Create the flow for the Light scene capability');
     //Now setup the flow cards
-    this._switchLightScene = await this.homey.flow.getActionCard('switch-to-light-scene'); 
+    this._switchLightScene = await this.homey.flow.getActionCard('switch-to-light-scene.'+this.goveedevicetype); 
     this._switchLightScene
       .registerRunListener(async (args, state) => {
         this.log('attempt to switch to a Light Scene: '+args.lightScene);
@@ -728,7 +782,7 @@ class GoveeDevice extends Device {
   async setupFlowSwitchDiyScene() {
     //console.log('Create the flow for the DIY Light scene capability');
     //Now setup the flow cards
-    this._switchDiyLightScene = await this.homey.flow.getActionCard('switch-to-diy-light-scene'); 
+    this._switchDiyLightScene = await this.homey.flow.getActionCard('switch-to-diy-light-scene.'+this.goveedevicetype); 
     this._switchDiyLightScene
       .registerRunListener(async (args, state) => {
         this.log('attempt to switch to a DIY Light Scene: '+args.diyScene);
@@ -758,7 +812,7 @@ class GoveeDevice extends Device {
   async setupFlowSnapshots() {
     //console.log('Create the flow for the Snapshots capability');
     //Now setup the flow cards
-    this._activateSnapshot = await this.homey.flow.getActionCard('activate-snapshot'); 
+    this._activateSnapshot = await this.homey.flow.getActionCard('activate-snapshot.'+this.goveedevicetype); 
     this._activateSnapshot
       .registerRunListener(async (args, state) => {
         this.log('attempt to activate snapshot: '+args.snapshot);
@@ -792,7 +846,7 @@ class GoveeDevice extends Device {
   async setupFlowMusicMode() {
     //console.log('Create the flow for the MusicMode capability');
     //Now setup the flow cards
-    this._activateMusicMode = await this.homey.flow.getActionCard('activate-music-mode'); 
+    this._activateMusicMode = await this.homey.flow.getActionCard('activate-music-mode.'+this.goveedevicetype); 
     this._activateMusicMode
       .registerRunListener(async (args, state) => {
         this.log('attempt to activate music mode: '+args.musicMode);

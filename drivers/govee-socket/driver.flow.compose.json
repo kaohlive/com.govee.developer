@@ -1,0 +1,24 @@
+{
+    "triggers": [
+      {
+        "id": "alarm_online.socket_false",
+        "title": {
+          "en": "The socket is online again"
+        },
+        "hint": {
+          "en": "When the socket is reported back online"
+        },
+        "$filter": "capabilities=alarm_online.socket"
+      },
+      {
+        "id": "alarm_online.socket_true",
+        "title": {
+          "en": "The socket went offline"
+        },
+        "hint": {
+          "en": "When the socket is reported to be offline"
+        },
+        "$filter": "capabilities=alarm_online.socket"
+      }
+    ]
+}

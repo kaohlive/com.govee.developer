@@ -1,11 +1,12 @@
 {
   "id": "govee-device",
   "name": {
-    "en": "Cloud API Devices"
+    "en": "Lights"
   },
   "class": "light",
   "platforms": ["local"],
-  "capabilities": ["onoff","dim","light_saturation","light_hue","light_temperature","light_mode","lightScenes","lightDiyScenes","snapshots","musicMode","dreamViewToggle","segmentControlColor","segmentControlBrightness"],
+  "connectivity": [ "cloud" ],
+  "capabilities": ["alarm_online.light", "onoff","dim","light_saturation","light_hue","light_temperature","light_mode","lightScenes.light","lightDiyScenes.light","snapshots.light","musicMode.light","dreamViewToggle.light","segmentControlColor.light","segmentControlBrightness.light"],
   "images": {
     "small": "/drivers/govee-device/assets/images/small.png",
     "large": "/drivers/govee-device/assets/images/large.png",

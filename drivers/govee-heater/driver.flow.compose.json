@@ -1,0 +1,24 @@
+{
+    "triggers": [
+      {
+        "id": "alarm_online.heater_false",
+        "title": {
+          "en": "The heater is online again"
+        },
+        "hint": {
+          "en": "When the heater is reported back online"
+        },
+        "$filter": "capabilities=alarm_online.heater"
+      },
+      {
+        "id": "alarm_online.heater_true",
+        "title": {
+          "en": "The heater went offline"
+        },
+        "hint": {
+          "en": "When the heater is reported to be offline"
+        },
+        "$filter": "capabilities=alarm_online.heater"
+      }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+  "id": "govee-thermometer",
+  "name": {
+    "en": "Thermometer"
+  },
+  "class": "sensor",
+  "icon": "default.svg",
+  "platforms": ["local"],
+  "connectivity": [ "cloud" ],
+  "capabilities": ["alarm_online.thermometer", "measure_temperature", "measure_humidity"],
+  "images": {
+    "small": "/drivers/govee-thermometer/assets/images/small.png",
+    "large": "/drivers/govee-thermometer/assets/images/large.png",
+    "xlarge": "/drivers/govee-thermometer/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "options": {
+        "singular": false
+      },
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+    "triggers": [
+      {
+        "id": "alarm_online.appliance_false",
+        "title": {
+          "en": "The appliance is online again"
+        },
+        "hint": {
+          "en": "When the appliance is reported back online"
+        },
+        "$filter": "capabilities=alarm_online.appliance"
+      },
+      {
+        "id": "alarm_online.appliance_true",
+        "title": {
+          "en": "The appliance went offline"
+        },
+        "hint": {
+          "en": "When the appliance is reported to be offline"
+        },
+        "$filter": "capabilities=alarm_online.appliance"
+      }
+    ],
+    "actions": [
+      {
+        "id": "activate-music-mode.appliance",
+        "title": {
+          "en": "Activate music mode"
+        },
+        "hint": {
+          "en": "Activates the music mode in the specified mode and sensitivity"
+        },
+        "titleFormatted": {
+          "en": "Activate music mode [[musicMode]] with sensitivity [[sensitivity]]"
+        },
+        "$filter": "capabilities=musicMode.appliance",
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "musicMode",
+            "title": {
+              "en": "Music mode"
+            },
+            "placeholder": {
+              "en": "Music mode"
+            }
+          },
+          {
+            "type": "range",
+            "name": "sensitivity",
+            "title": {
+              "en": "Sensituvity"
+            },
+            "placeholder": {
+              "en": "Sensitivity"
+            },
+            "labelDecimals": 0,
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "%",
+            "labelMultiplier": 1
+          }
+        ]
+      },
+      {
+        "id": "activate-snapshot.appliance",
+        "title": {
+            "en": "Activate snapshot"
+        },
+        "hint": {
+            "en": "Activates a previously created snapshot for yor appliance configuration"
+        },
+        "titleFormatted": {
+            "en": "Activate snapshot [[snapshot]]"
+        },
+        "$filter": "capabilities=snapshots.appliance",
+        "args": [
+            {
+                "type": "autocomplete",
+                "name": "snapshot",
+                "title": {
+                "en": "Snapshot"
+                },
+                "placeholder": {
+                "en": "game setup"
+                }
+            }
+        ]
+      }
+    ]
+}

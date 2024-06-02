@@ -1,17 +1,17 @@
 {
-  "id": "govee-appliance",
+  "id": "govee-humidifier",
   "name": {
-    "en": "Appliance"
+    "en": "Humidifier"
   },
   "class": "other",
   "icon": "default.svg",
   "platforms": ["local"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.appliance", "onoff", "measure_temperature", "measure_humidity","snapshots.appliance","musicMode.appliance"],
+  "capabilities": ["alarm_online.humidifier", "onoff"],
   "images": {
-    "small": "/drivers/govee-appliance/assets/images/small.png",
-    "large": "/drivers/govee-appliance/assets/images/large.png",
-    "xlarge": "/drivers/govee-appliance/assets/images/xlarge.png"
+    "small": "/drivers/govee-humidifier/assets/images/small.png",
+    "large": "/drivers/govee-humidifier/assets/images/large.png",
+    "xlarge": "/drivers/govee-humidifier/assets/images/xlarge.png"
   },
   "pair": [
     {

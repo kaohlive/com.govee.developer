@@ -1,17 +1,17 @@
 {
-  "id": "govee-appliance",
+  "id": "govee-aromadiffuser",
   "name": {
-    "en": "Appliance"
+    "en": "Aroma diffuser"
   },
   "class": "other",
   "icon": "default.svg",
   "platforms": ["local"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.appliance", "onoff", "measure_temperature", "measure_humidity","snapshots.appliance","musicMode.appliance"],
+  "capabilities": ["alarm_online.aroma_diffuser", "onoff"],
   "images": {
-    "small": "/drivers/govee-appliance/assets/images/small.png",
-    "large": "/drivers/govee-appliance/assets/images/large.png",
-    "xlarge": "/drivers/govee-appliance/assets/images/xlarge.png"
+    "small": "/drivers/govee-aromadiffuser/assets/images/small.png",
+    "large": "/drivers/govee-aromadiffuser/assets/images/large.png",
+    "xlarge": "/drivers/govee-aromadiffuser/assets/images/xlarge.png"
   },
   "pair": [
     {

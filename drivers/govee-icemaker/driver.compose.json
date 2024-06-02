@@ -1,17 +1,17 @@
 {
-  "id": "govee-appliance",
+  "id": "govee-icemaker",
   "name": {
-    "en": "Appliance"
+    "en": "Ice maker"
   },
   "class": "other",
   "icon": "default.svg",
   "platforms": ["local"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.appliance", "onoff", "measure_temperature", "measure_humidity","snapshots.appliance","musicMode.appliance"],
+  "capabilities": ["alarm_online.ice_maker", "onoff"],
   "images": {
-    "small": "/drivers/govee-appliance/assets/images/small.png",
-    "large": "/drivers/govee-appliance/assets/images/large.png",
-    "xlarge": "/drivers/govee-appliance/assets/images/xlarge.png"
+    "small": "/drivers/govee-icemaker/assets/images/small.png",
+    "large": "/drivers/govee-icemaker/assets/images/large.png",
+    "xlarge": "/drivers/govee-icemaker/assets/images/xlarge.png"
   },
   "pair": [
     {

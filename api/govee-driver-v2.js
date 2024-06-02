@@ -58,12 +58,14 @@ class GoveeDriver extends Driver {
     });
     //Now we filter on types
     var filteredDevices=null;
-    if (type=='device')
-      filteredDevices = devices.filter(n => n.data.type === 'devices.types.light');
+    if (type=='device' || type=='appliance')
+      if(type=='device')
+        filteredDevices = devices.filter(n => n.data.type === 'devices.types.light');
+      else         
+        filteredDevices = devices.filter(n => n.data.type !== 'devices.types.light');
     else         
-      filteredDevices = devices.filter(n => n.data.type !== 'devices.types.light');
-
-      this.log ('listed: '+filteredDevices.length+' govee '+type);
+      filteredDevices = devices.filter(n => n.data.type === 'devices.types.'+type);
+    this.log ('listed: '+filteredDevices.length+' govee '+type);
     return filteredDevices;
   }
 

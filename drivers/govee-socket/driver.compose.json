@@ -1,0 +1,32 @@
+{
+  "id": "govee-socket",
+  "name": {
+    "en": "Socket"
+  },
+  "class": "socket",
+  "icon": "default.svg",
+  "platforms": ["local"],
+  "connectivity": [ "cloud" ],
+  "capabilities": ["alarm_online.socket", "onoff"],
+  "images": {
+    "small": "/drivers/govee-socket/assets/images/small.png",
+    "large": "/drivers/govee-socket/assets/images/large.png",
+    "xlarge": "/drivers/govee-socket/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "options": {
+        "singular": false
+      },
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}

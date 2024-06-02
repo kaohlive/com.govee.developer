@@ -1,0 +1,24 @@
+{
+    "triggers": [
+      {
+        "id": "alarm_online.air_purifier_false",
+        "title": {
+          "en": "The air purifier is online again"
+        },
+        "hint": {
+          "en": "When the air purifier is reported back online"
+        },
+        "$filter": "capabilities=alarm_online.air_purifier"
+      },
+      {
+        "id": "alarm_online.air_purifier_true",
+        "title": {
+          "en": "The air purifier went offline"
+        },
+        "hint": {
+          "en": "When the air purifier is reported to be offline"
+        },
+        "$filter": "capabilities=alarm_online.air_purifier"
+      }
+    ]
+}

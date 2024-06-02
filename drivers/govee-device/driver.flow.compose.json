@@ -1,190 +1,29 @@
 {
+  "triggers": [
+    {
+      "id": "alarm_online.light_false",
+      "title": {
+        "en": "The light is online again"
+      },
+      "hint": {
+        "en": "When the light is reported back online"
+      },
+      "$filter": "capabilities=alarm_online.light"
+    },
+    {
+      "id": "alarm_online.light_true",
+      "title": {
+        "en": "The light went offline"
+      },
+      "hint": {
+        "en": "When the light is reported to be offline"
+      },
+      "$filter": "capabilities=alarm_online.light"
+    }
+  ],
   "actions": [
     {
-      "id": "switch-to-light-scene",
-      "title": {
-        "en": "Switch to light scene"
-      },
-      "hint": {
-        "en": "Switches to the selected light scene (and turns on the device if off)"
-      },
-      "titleFormatted": {
-        "en": "Switch to light scene [[lightScene]]"
-      },
-      "$filter": "capabilities=lightScenes",
-      "args": [
-        {
-          "type": "autocomplete",
-          "name": "lightScene",
-          "placeholder": {
-            "en": "Sunset glow"
-          }
-        }
-      ]
-    },
-    {
-      "id": "switch-to-diy-light-scene",
-      "title": {
-        "en": "Switch to diy scene"
-      },
-      "hint": {
-        "en": "Switches to the selected DIY scene (and turns on the device if off)"
-      },
-      "titleFormatted": {
-        "en": "Switch to DIY scene [[diyScene]]"
-      },
-      "$filter": "capabilities=lightDiyScenes",
-      "args": [
-        {
-          "type": "autocomplete",
-          "name": "diyScene",
-          "placeholder": {
-            "en": "Valantine special"
-          }
-        }
-      ]
-    },
-    {
-      "id": "set-segment-color",
-      "title": {
-        "en": "Control the color of a segment of the device"
-      },
-      "hint": {
-        "en": "Sets the segment to a specific color"
-      },
-      "titleFormatted": {
-        "en": "Set the segment [[segmentNr]] or [[segmentArray]] to color [[segmentColor]]"
-      },
-      "$filter": "capabilities=segmentControlColor",
-      "args": [
-        {
-          "type": "color",
-          "name": "segmentColor",
-          "placeholder": {
-            "en": "Red"
-          }
-        },
-        {
-          "type": "text",
-          "name": "segmentArray",
-          "required": false,
-          "placeholder": {
-            "en": "1,3,5,..."
-          }
-        },
-        {
-          "type": "autocomplete",
-          "name": "segmentNr",
-          "required": false,
-          "placeholder": {
-            "en": "Segment"
-          }
-        }
-      ]
-    },
-    {
-      "id": "set-segment-brightness",
-      "title": {
-        "en": "Control the brightness of a segment of the device"
-      },
-      "hint": {
-        "en": "Sets the segment to a specific brightness"
-      },
-      "titleFormatted": {
-        "en": "Set the segment [[segmentNr]] or [[segmentArray]] to brightness [[segmentBrightness]]"
-      },
-      "$filter": "capabilities=segmentControlBrightness",
-      "args": [
-        {
-          "type": "autocomplete",
-          "name": "segmentNr",
-          "required": false,
-          "placeholder": {
-            "en": "Segment"
-          }
-        },
-        {
-          "type": "text",
-          "name": "segmentArray",
-          "required": false,
-          "placeholder": {
-            "en": "1,3,5,..."
-          }
-        },
-        {
-          "type": "range",
-          "name": "segmentBrightness",
-          "labelDecimals": 0,
-          "min": 0,
-          "max": 100,
-          "step": 1,
-          "label": "%",
-          "labelMultiplier": 1,
-          "placeholder": {
-            "en": "Brightness"
-          }
-        }
-      ]
-    },
-    {
-      "id": "activate-snapshot",
-      "title": {
-        "en": "Activate snapshot"
-      },
-      "hint": {
-        "en": "Activates a previously created snapshot for yor device configuration"
-      },
-      "titleFormatted": {
-        "en": "Activate snapshot [[snapshot]]"
-      },
-      "$filter": "capabilities=snapshots",
-      "args": [
-        {
-          "type": "autocomplete",
-          "name": "snapshot",
-          "placeholder": {
-            "en": "game setup"
-          }
-        }
-      ]
-    },
-    {
-      "id": "activate-music-mode",
-      "title": {
-        "en": "Activate music mode"
-      },
-      "hint": {
-        "en": "Activates the music mode in the specified mode and sensitivity"
-      },
-      "titleFormatted": {
-        "en": "Activate music mode [[musicMode]] with sensitivity [[sensitivity]]"
-      },
-      "$filter": "capabilities=musicMode",
-      "args": [
-        {
-          "type": "autocomplete",
-          "name": "musicMode",
-          "placeholder": {
-            "en": "Music mode"
-          }
-        },
-        {
-          "type": "range",
-          "name": "sensitivity",
-          "placeholder": {
-            "en": "Sensitivity"
-          },
-          "labelDecimals": 0,
-          "min": 0,
-          "max": 100,
-          "step": 1,
-          "label": "%",
-          "labelMultiplier": 1
-        }
-      ]
-    },
-    {
-      "id": "activate-dreamview",
+      "id":"activate-dreamview.light",
       "title": {
         "en": "Toggle the dream view mode"
       },
@@ -204,19 +43,237 @@
         "en": "Dream view mode was deactivated"
       },      
       "hint": {
-        "en": "Activates or deactivates the dream view mode that is supported by the device (music or video)"
+        "en": "Activates or deactivates the dream view mode that is supported by the light (music or video)"
       },
-      "$filter": "capabilities=dreamViewToggle",
+      "$filter": "capabilities=dreamViewToggle.light",
       "args": [
         {
           "type": "checkbox",
           "name": "activate",
+          "title": {
+            "en": "Activate"
+          },
           "placeholder": {
             "en": "Activate"
           }
         }
       ]
+    },
+    {
+      "id": "activate-music-mode.light",
+      "title": {
+        "en": "Activate music mode"
+      },
+      "hint": {
+        "en": "Activates the music mode in the specified mode and sensitivity"
+      },
+      "titleFormatted": {
+        "en": "Activate music mode [[musicMode]] with sensitivity [[sensitivity]]"
+      },
+      "$filter": "capabilities=musicMode.light",
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "musicMode",
+          "title": {
+            "en": "Music mode"
+          },
+          "placeholder": {
+            "en": "Music mode"
+          }
+        },
+        {
+          "type": "range",
+          "name": "sensitivity",
+          "title": {
+            "en": "Sensituvity"
+          },
+          "placeholder": {
+            "en": "Sensitivity"
+          },
+          "labelDecimals": 0,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "label": "%",
+          "labelMultiplier": 1
+        }
+      ]
+    },
+    {
+      "id": "activate-snapshot.light",
+      "title": {
+          "en": "Activate snapshot"
+      },
+      "hint": {
+          "en": "Activates a previously created snapshot for yor light configuration"
+      },
+      "titleFormatted": {
+          "en": "Activate snapshot [[snapshot]]"
+      },
+      "$filter": "capabilities=snapshots.light",
+      "args": [
+          {
+              "type": "autocomplete",
+              "name": "snapshot",
+              "title": {
+              "en": "Snapshot"
+              },
+              "placeholder": {
+              "en": "game setup"
+              }
+          }
+      ]
+    },
+    {
+      "id":"set-segment-brightness.light",
+      "title": {
+        "en": "Control the brightness of a segment of the light"
+      },
+      "hint": {
+        "en": "Sets the segment to a specific brightness"
+      },
+      "titleFormatted": {
+        "en": "Set the segment [[segmentNr]] or [[segmentArray]] to brightness [[segmentBrightness]]"
+      },
+      "$filter": "capabilities=segmentControlBrightness.light",
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "segmentNr",
+          "title": {
+            "en": "Segment"
+          },
+          "required": false,
+          "placeholder": {
+            "en": "Segment"
+          }
+        },
+        {
+          "type": "text",
+          "name": "segmentArray",
+          "title": {
+            "en": "Segment list"
+          },
+          "required": false,
+          "placeholder": {
+            "en": "1,3,5,..."
+          }
+        },
+        {
+          "type": "range",
+          "name": "segmentBrightness",
+          "title": {
+            "en": "Segment brightness"
+          },
+          "labelDecimals": 0,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "label": "%",
+          "labelMultiplier": 1,
+          "placeholder": {
+            "en": "Brightness"
+          }
+        }
+      ]
+    },
+    {
+      "id":"set-segment-color.light",
+      "title": {
+        "en": "Control the color of a segment of the light"
+      },
+      "hint": {
+        "en": "Sets the segment to a specific color"
+      },
+      "titleFormatted": {
+        "en": "Set the segment [[segmentNr]] or [[segmentArray]] to color [[segmentColor]]"
+      },
+      "$filter": "capabilities=segmentControlColor.light",
+      "args": [
+        {
+          "type": "color",
+          "name": "segmentColor",
+          "title": {
+            "en": "Segment color"
+          },
+          "placeholder": {
+            "en": "Red"
+          }
+        },
+        {
+          "type": "text",
+          "name": "segmentArray",
+          "title": {
+            "en": "Segment list"
+          },
+          "required": false,
+          "placeholder": {
+            "en": "1,3,5,..."
+          }
+        },
+        {
+          "type": "autocomplete",
+          "name": "segmentNr",
+          "title": {
+            "en": "Segment"
+          },
+          "required": false,
+          "placeholder": {
+            "en": "Segment"
+          }
+        }
+      ]
+    },
+    {
+      "id": "switch-to-diy-light-scene.light",
+      "title": {
+        "en": "Switch to diy scene"
+      },
+      "hint": {
+        "en": "Switches to the selected DIY scene (and turns on the light if off)"
+      },
+      "titleFormatted": {
+        "en": "Switch to DIY scene [[diyScene]]"
+      },
+      "$filter": "capabilities=lightDiyScenes.light",
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "diyScene",
+          "title": {
+            "en": "DIY Scene"
+          },
+          "placeholder": {
+            "en": "Valantine special"
+          }
+        }
+      ]
+    },
+    {
+      "id": "switch-to-light-scene.light",
+      "title": {
+        "en": "Switch to light scene"
+      },
+      "hint": {
+        "en": "Switches to the selected light scene (and turns on the light if off)"
+      },
+      "titleFormatted": {
+        "en": "Switch to light scene [[lightScene]]"
+      },
+      "$filter": "capabilities=lightScenes.light",
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "lightScene",
+          "title": {
+            "en": "Scene"
+          },
+          "placeholder": {
+            "en": "Sunset glow"
+          }
+        }
+      ]
     }
-    
   ]
 }

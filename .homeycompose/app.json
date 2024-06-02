@@ -16,7 +16,8 @@
   "homeyCommunityTopicId": 50660,
   "source": "https://github.com/kaohlive/com.govee.developer",
   "category": [
-    "lights"
+    "lights",
+    "appliances"
   ],
   "permissions": [],
   "images": {
@@ -27,5 +28,6 @@
   "author": {
     "name": "Kaoh",
     "email": "kaoh@kaoh.nl"
-  }
+  },
+  "support": "mailto:vincent+govee@vdboer.nl"
 }

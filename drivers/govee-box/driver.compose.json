@@ -1,17 +1,17 @@
 {
+  "id": "govee-box",
   "name": {
-    "en": "Local API devices"
+    "en": "Box"
   },
-  "class": "light",
+  "class": "other",
+  "icon": "default.svg",
   "platforms": ["local"],
-  "capabilities": [
-    "onoff"
-  ],
-  "connectivity": [ "lan" ],
+  "connectivity": [ "cloud" ],
+  "capabilities": ["alarm_online.box", "onoff"],
   "images": {
-    "small": "{{driverAssetsPath}}/images/small.png",
-    "large": "{{driverAssetsPath}}/images/large.png",
-    "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+    "small": "/drivers/govee-box/assets/images/small.png",
+    "large": "/drivers/govee-box/assets/images/large.png",
+    "xlarge": "/drivers/govee-box/assets/images/xlarge.png"
   },
   "pair": [
     {

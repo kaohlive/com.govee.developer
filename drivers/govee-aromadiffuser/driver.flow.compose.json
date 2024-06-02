@@ -1,0 +1,24 @@
+{
+    "triggers": [
+      {
+        "id": "alarm_online.aroma_diffuser_false",
+        "title": {
+          "en": "The aroma diffuser is online again"
+        },
+        "hint": {
+          "en": "When the aroma diffuser is reported back online"
+        },
+        "$filter": "capabilities=alarm_online.aroma_diffuser"
+      },
+      {
+        "id": "alarm_online.aroma_diffuser_true",
+        "title": {
+          "en": "The aroma diffuser went offline"
+        },
+        "hint": {
+          "en": "When the aroma diffuser is reported to be offline"
+        },
+        "$filter": "capabilities=alarm_online.aroma_diffuser"
+      }
+    ]
+}

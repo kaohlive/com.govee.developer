@@ -2,16 +2,16 @@
 
 const GoveeDevice = require('../../api/govee-device-v2')
 
-class goveeAppliance extends GoveeDevice {
+class goveeHeater extends GoveeDevice {
   /**
    * onInit is called when the device is initialized.
    */
   async onInit() {
     //Setup the matching capaciltities of this device
-    this.goveedevicetype='appliance';
+    this.goveedevicetype='heater';
     await this.setupDevice();
   }
 
 }
 
-module.exports = goveeAppliance;
+module.exports = goveeHeater;

@@ -1,17 +1,17 @@
 {
-  "id": "govee-appliance",
+  "id": "govee-airpurifier",
   "name": {
-    "en": "Appliance"
+    "en": "Air purifier"
   },
   "class": "other",
   "icon": "default.svg",
   "platforms": ["local"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.appliance", "onoff", "measure_temperature", "measure_humidity","snapshots.appliance","musicMode.appliance"],
+  "capabilities": ["alarm_online.air_purifier", "onoff"],
   "images": {
-    "small": "/drivers/govee-appliance/assets/images/small.png",
-    "large": "/drivers/govee-appliance/assets/images/large.png",
-    "xlarge": "/drivers/govee-appliance/assets/images/xlarge.png"
+    "small": "/drivers/govee-airpurifier/assets/images/small.png",
+    "large": "/drivers/govee-airpurifier/assets/images/large.png",
+    "xlarge": "/drivers/govee-airpurifier/assets/images/xlarge.png"
   },
   "pair": [
     {

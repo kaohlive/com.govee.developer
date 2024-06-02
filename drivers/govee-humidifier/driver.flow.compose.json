@@ -1,0 +1,24 @@
+{
+    "triggers": [
+      {
+        "id": "alarm_online.humidifier_false",
+        "title": {
+          "en": "The humidifier is online again"
+        },
+        "hint": {
+          "en": "When the humidifier is reported back online"
+        },
+        "$filter": "capabilities=alarm_online.humidifier"
+      },
+      {
+        "id": "alarm_online.humidifier_true",
+        "title": {
+          "en": "The humidifier went offline"
+        },
+        "hint": {
+          "en": "When the humidifier is reported to be offline"
+        },
+        "$filter": "capabilities=alarm_online.humidifier"
+      }
+    ]
+}

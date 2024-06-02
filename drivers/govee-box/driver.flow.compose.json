@@ -1,0 +1,24 @@
+{
+    "triggers": [
+      {
+        "id": "alarm_online.box_false",
+        "title": {
+          "en": "The box is online again"
+        },
+        "hint": {
+          "en": "When the box is reported back online"
+        },
+        "$filter": "capabilities=alarm_online.box"
+      },
+      {
+        "id": "alarm_online.box_true",
+        "title": {
+          "en": "The box went offline"
+        },
+        "hint": {
+          "en": "When the box is reported to be offline"
+        },
+        "$filter": "capabilities=alarm_online.box"
+      }
+    ]
+}

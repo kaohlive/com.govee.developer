@@ -1,17 +1,17 @@
 {
-  "id": "govee-appliance",
+  "id": "govee-dehumidifier",
   "name": {
-    "en": "Appliance"
+    "en": "Dehumidifier"
   },
   "class": "other",
   "icon": "default.svg",
   "platforms": ["local"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.appliance", "onoff", "measure_temperature", "measure_humidity","snapshots.appliance","musicMode.appliance"],
+  "capabilities": ["alarm_online.dehumidifier", "onoff"],
   "images": {
-    "small": "/drivers/govee-appliance/assets/images/small.png",
-    "large": "/drivers/govee-appliance/assets/images/large.png",
-    "xlarge": "/drivers/govee-appliance/assets/images/xlarge.png"
+    "small": "/drivers/govee-dehumidifier/assets/images/small.png",
+    "large": "/drivers/govee-dehumidifier/assets/images/large.png",
+    "xlarge": "/drivers/govee-dehumidifier/assets/images/xlarge.png"
   },
   "pair": [
     {
