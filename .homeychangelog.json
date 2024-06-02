@@ -85,5 +85,8 @@
   },
   "2.6.4": {
     "en": "Added support for segment control through flow"
+  },
+  "2.7.0": {
+    "en": "Rewrite to API v2 now includes appliances"
   }
 }

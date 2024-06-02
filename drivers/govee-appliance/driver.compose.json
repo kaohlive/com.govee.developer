@@ -6,6 +6,7 @@
   "class": "other",
   "icon": "default.svg",
   "platforms": ["local"],
+  "deprecated": true,
   "connectivity": [ "cloud" ],
   "capabilities": ["alarm_online.appliance", "onoff", "measure_temperature", "measure_humidity","snapshots.appliance","musicMode.appliance"],
   "images": {
