@@ -4,32 +4,34 @@
   </head>
   <body>
 
-    <h1 data-i18n="settings.title">
-        <!--
-        This field will automatically be filled by a translated string with key 'settings.title'.
-        Read more about translations at Internationalization.
-        -->
-    </h1>
-    <p data-i18n="settings.subtitle">
-        <!--
-        This field will also be translated
-        -->
+    <header class="homey-header">
+      <h1 class="homey-title">
+       Govee Cloud API
+      </h1>
+      <p class="homey-subtitle">
+          To be able to pair Govee Cloud API devices you need to provide Homey with your Govee API key.
+          If you did not do so already follow <a href="https://developer.govee.com/reference/apply-you-govee-api-key" target="_blank">this procedure</a> from Govee.
+          Once you have done so, and you received your API key, provide your API key here.
+      </p>
+      <p class="homey-subtitle">
+        If you do not provide this API key, you are still able to add the Local Lights device class.
     </p>
+    </header>
 
-    <fieldset>
-        <legend>Govee API Settings</legend>
+    <fieldset class="homey-form-fieldset">
+      <legend class="homey-form-legend">Govee Cloud API Settings</legend>
+      
+      <div class="homey-form-group">
+          <label class="homey-form-label" for="apikey">Your API Key</label>
+          <input class="homey-form-input" id="apikey" type="text" value="" />
+      </div>
+      <div class="homey-form-group">
+        <label class="homey-form-label" for="pollinterval">Device state poll interval (in ms), increase this if your devices stop working due to rate limiting. Minimum setting is 60 seconds</label>
+        <input class="homey-form-input" id="pollinterval" type="text" value="60000" />
+      </div>
+  </fieldset>
 
-        <div class="field row">
-            <label for="apikey">Your API Key</label>
-            <input id="apikey" type="text" value="" />
-        </div>
-        <div class="field row">
-          <label for="pollinterval">Device state poll interval (in ms), increase this if your devices stop working due to rate limiting. Minimum setting is 60 seconds</label>
-          <input id="pollinterval" type="text" value="60000" />
-        </div>
-        <button id="save" class="right">Save settings</button>
-    </fieldset>
-
+    <button class="homey-button-primary-full" id="save" class="right">Save</button>
 
     <script type="text/javascript">
 

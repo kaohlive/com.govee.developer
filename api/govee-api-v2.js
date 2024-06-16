@@ -74,6 +74,7 @@ class GoveeClient {
       method: 'POST',
       body: JSON.stringify(body)
     };
+    console.log('request created with config '+config)
     return this.request('/device/scenes', config);
   }
 
@@ -102,6 +103,7 @@ class GoveeClient {
   }
 
   lightModes(model, device) {
+    console.log('will retrieve light modes')
     return new Promise((resolve, reject) => {
         //console.log('attempt to retrieve light modes for device ['+device+':'+model+']');
         let params = {
@@ -111,6 +113,7 @@ class GoveeClient {
               "device": device
           }
         };
+        console.log('request created with '+params)
         this.postDynamicScenesRequest(params).then(res => {
             resolve(res.payload);
         }).catch(e => {reject(e)});

@@ -15,6 +15,9 @@
   },
   "pair": [
     {
+      "id": "api_settings"
+    },
+    {
       "id": "list_devices",
       "template": "list_devices",
       "options": {

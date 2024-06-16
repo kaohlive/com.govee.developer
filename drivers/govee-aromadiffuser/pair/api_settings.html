@@ -1,0 +1,54 @@
+
+    <header class="homey-header">
+        <h1 class="homey-title">
+          Requires Govee Cloud API
+        </h1>
+        <p class="homey-subtitle">
+            To be able to pair Govee Cloud API devices you need to provide Homey with your Govee API key.
+            If you did not do so already follow <a href="https://developer.govee.com/reference/apply-you-govee-api-key" target="_blank">this procedure</a> from Govee.
+            Once you have done so, and you received your API key, provide your API key here.
+        </p>
+      </header>
+
+    <fieldset class="homey-form-fieldset">
+        <legend class="homey-form-legend">Govee Cloud API Settings</legend>
+        
+        <div class="homey-form-group">
+            <label class="homey-form-label" for="apikey">Your API Key</label>
+            <input class="homey-form-input" id="apikey" type="text" value="" />
+        </div>
+    </fieldset>
+    <button class="homey-button-primary-full" id="save" class="right">Next</button>
+
+
+    <script type="text/javascript">
+        const regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
+        // Tell Homey we're ready to be displayed
+        Homey.ready();
+
+        var keyElement = document.getElementById('apikey');
+        var saveElement = document.getElementById('save');
+        
+        saveElement.addEventListener('click', function(e) {
+            if(!regex.test(keyElement.value))
+            {
+                Homey.alert('Key should be a Guid');
+                return;
+            }
+            Homey.showLoadingOverlay();
+            Homey.emit('storekey', { 'apikey':keyElement.value }).then(function (result) {
+                Homey.hideLoadingOverlay();
+            });
+            Homey.showView('list_devices');
+        });
+
+        Homey.on('loadapikey', function(apikey, callback){
+            keyElement.value = apikey;
+            
+            if(regex.test(apikey))
+                Homey.showView('list_devices');
+        });
+
+    </script>
+
+</body>

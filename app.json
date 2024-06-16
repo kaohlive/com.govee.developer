@@ -801,6 +801,9 @@
       },
       "pair": [
         {
+          "id": "api_settings"
+        },
+        {
           "id": "list_devices",
           "template": "list_devices",
           "options": {
@@ -845,6 +848,9 @@
       },
       "pair": [
         {
+          "id": "api_settings"
+        },
+        {
           "id": "list_devices",
           "template": "list_devices",
           "options": {
@@ -883,6 +889,9 @@
         "xlarge": "/drivers/govee-aromadiffuser/assets/images/xlarge.png"
       },
       "pair": [
+        {
+          "id": "api_settings"
+        },
         {
           "id": "list_devices",
           "template": "list_devices",
@@ -923,6 +932,9 @@
       },
       "pair": [
         {
+          "id": "api_settings"
+        },
+        {
           "id": "list_devices",
           "template": "list_devices",
           "options": {
@@ -961,6 +973,9 @@
         "xlarge": "/drivers/govee-dehumidifier/assets/images/xlarge.png"
       },
       "pair": [
+        {
+          "id": "api_settings"
+        },
         {
           "id": "list_devices",
           "template": "list_devices",
@@ -1012,6 +1027,9 @@
       },
       "pair": [
         {
+          "id": "api_settings"
+        },
+        {
           "id": "list_devices",
           "template": "list_devices",
           "options": {
@@ -1050,6 +1068,9 @@
         "xlarge": "/drivers/govee-heater/assets/images/xlarge.png"
       },
       "pair": [
+        {
+          "id": "api_settings"
+        },
         {
           "id": "list_devices",
           "template": "list_devices",
@@ -1090,6 +1111,9 @@
       },
       "pair": [
         {
+          "id": "api_settings"
+        },
+        {
           "id": "list_devices",
           "template": "list_devices",
           "options": {
@@ -1128,6 +1152,9 @@
         "xlarge": "/drivers/govee-icemaker/assets/images/xlarge.png"
       },
       "pair": [
+        {
+          "id": "api_settings"
+        },
         {
           "id": "list_devices",
           "template": "list_devices",
@@ -1204,6 +1231,9 @@
       },
       "pair": [
         {
+          "id": "api_settings"
+        },
+        {
           "id": "list_devices",
           "template": "list_devices",
           "options": {
@@ -1242,6 +1272,9 @@
         "xlarge": "/drivers/govee-socket/assets/images/xlarge.png"
       },
       "pair": [
+        {
+          "id": "api_settings"
+        },
         {
           "id": "list_devices",
           "template": "list_devices",
@@ -1282,6 +1315,9 @@
         "xlarge": "/drivers/govee-thermometer/assets/images/xlarge.png"
       },
       "pair": [
+        {
+          "id": "api_settings"
+        },
         {
           "id": "list_devices",
           "template": "list_devices",

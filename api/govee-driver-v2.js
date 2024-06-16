@@ -24,7 +24,29 @@ class GoveeDriver extends Driver {
     this.log('govee.driver has been re-initialized');
   }
 
-
+  async onPair(session) {
+    session.setHandler('showView', async (viewId)=>{
+        //These actions send data to the custom views
+        
+        if(viewId === 'api_settings') {
+            
+            //Send the stored credentials to the 
+            var apikey = this.homey.settings.get('api_key');
+            session.emit('loadapikey', apikey);
+            this.log('API settings of pairing is showing, send stored key');
+        };
+    });
+    session.setHandler('storekey', async ( data ) => {
+      this.log('Received new API key from user');
+      //Store the provided credentials, but hash and salt it first
+      this.homey.settings.set('api_key',data.apikey);
+      return true;
+    });
+    session.setHandler('list_devices', async (data) => {
+      this.log('Provide user list of discovered govee cloud devices to choose from of type '+this.goveedrivertype);
+      return await this.ListDevices(this.goveedrivertype);
+    });
+  }
 
   /**
    * onPairListDevices is called when a user is adding a device and the 'list_devices' view is called.
