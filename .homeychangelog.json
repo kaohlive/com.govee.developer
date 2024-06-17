@@ -94,5 +94,8 @@
   },
   "2.8.1": {
     "en": "local device upgrade fix"
+  },
+  "2.8.2": {
+    "en": "Added support for Homey cloud/bridge for the cloud devices"
   }
 }
