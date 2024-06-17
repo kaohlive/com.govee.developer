@@ -199,6 +199,7 @@ class GoveeLocalDevice extends Device {
     if(changedKeys.includes('cloud_enhance'))
     {
       //Rebuild the device
+      await this.driver.cloudInit();
       this.cloudEnhance=newSettings.cloud_enhance;
       this.data = await this.getDeviceData();
       this.log('Now (de)register the cloud capabilitities');
