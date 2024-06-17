@@ -1,0 +1,26 @@
+[
+    {
+    "type": "group",
+    "label": { "en": "Cloud enhance" },
+    "children": [
+      {
+        "id": "cloud_enhance_label",
+        "type": "label",
+        "label": { "en": "Explanation" },
+        "value": "When you enable this option, the advanced features (like light modes or snapshots) will become available for this local device. This is done by calling the cloud API. All local features reamin local."
+      },
+      {
+        "id": "cloud_enhance_warning",
+        "type": "label",
+        "label": { "en": "Warning" },
+        "value": "When you change this setting you need to resart the Govee app to get the full result. Disabling this feature may break any workflows that use such cloud features."
+      },
+      {
+        "id": "cloud_enhance",
+        "type": "checkbox",
+        "value": false,
+        "label": { "en": "Cloud API enhance this local device" }
+      }
+    ]
+  }
+]

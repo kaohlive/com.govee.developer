@@ -773,6 +773,287 @@
             }
           }
         ]
+      },
+      {
+        "id": "activate-dreamview.localdevice",
+        "title": {
+          "en": "Toggle the dream view mode"
+        },
+        "titleFormatted": {
+          "en": "Activate the dreamview mode [[activate]]"
+        },
+        "titleTrue": {
+          "en": "Activate dream view mode"
+        },
+        "titleFalse": {
+          "en": "Deactivate dream view mode"
+        },
+        "insightsTitleTrue": {
+          "en": "Dream view mode was activated"
+        },
+        "insightsTitleTFalse": {
+          "en": "Dream view mode was deactivated"
+        },
+        "hint": {
+          "en": "Activates or deactivates the dream view mode that is supported by the light (music or video)"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-local-device&capabilities=dreamViewToggle.localdevice"
+          },
+          {
+            "type": "checkbox",
+            "name": "activate",
+            "title": {
+              "en": "Activate"
+            },
+            "placeholder": {
+              "en": "Activate"
+            }
+          }
+        ]
+      },
+      {
+        "id": "activate-music-mode.localdevice",
+        "title": {
+          "en": "Activate music mode"
+        },
+        "hint": {
+          "en": "Activates the music mode in the specified mode and sensitivity"
+        },
+        "titleFormatted": {
+          "en": "Activate music mode [[musicMode]] with sensitivity [[sensitivity]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-local-device&capabilities=musicMode.localdevice"
+          },
+          {
+            "type": "autocomplete",
+            "name": "musicMode",
+            "title": {
+              "en": "Music mode"
+            },
+            "placeholder": {
+              "en": "Music mode"
+            }
+          },
+          {
+            "type": "range",
+            "name": "sensitivity",
+            "title": {
+              "en": "Sensituvity"
+            },
+            "placeholder": {
+              "en": "Sensitivity"
+            },
+            "labelDecimals": 0,
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "%",
+            "labelMultiplier": 1
+          }
+        ]
+      },
+      {
+        "id": "activate-snapshot.localdevice",
+        "title": {
+          "en": "Activate snapshot"
+        },
+        "hint": {
+          "en": "Activates a previously created snapshot for yor light configuration"
+        },
+        "titleFormatted": {
+          "en": "Activate snapshot [[snapshot]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-local-device&capabilities=snapshots.localdevice"
+          },
+          {
+            "type": "autocomplete",
+            "name": "snapshot",
+            "title": {
+              "en": "Snapshot"
+            },
+            "placeholder": {
+              "en": "game setup"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set-segment-brightness.localdevice",
+        "title": {
+          "en": "Control the brightness of a segment of the light"
+        },
+        "hint": {
+          "en": "Sets the segment to a specific brightness"
+        },
+        "titleFormatted": {
+          "en": "Set the segment [[segmentNr]] or [[segmentArray]] to brightness [[segmentBrightness]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-local-device&capabilities=segmentControlBrightness.localdevice"
+          },
+          {
+            "type": "autocomplete",
+            "name": "segmentNr",
+            "title": {
+              "en": "Segment"
+            },
+            "required": false,
+            "placeholder": {
+              "en": "Segment"
+            }
+          },
+          {
+            "type": "text",
+            "name": "segmentArray",
+            "title": {
+              "en": "Segment list"
+            },
+            "required": false,
+            "placeholder": {
+              "en": "1,3,5,..."
+            }
+          },
+          {
+            "type": "range",
+            "name": "segmentBrightness",
+            "title": {
+              "en": "Segment brightness"
+            },
+            "labelDecimals": 0,
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "label": "%",
+            "labelMultiplier": 1,
+            "placeholder": {
+              "en": "Brightness"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set-segment-color.localdevice",
+        "title": {
+          "en": "Control the color of a segment of the light"
+        },
+        "hint": {
+          "en": "Sets the segment to a specific color"
+        },
+        "titleFormatted": {
+          "en": "Set the segment [[segmentNr]] or [[segmentArray]] to color [[segmentColor]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-local-device&capabilities=segmentControlColor.localdevice"
+          },
+          {
+            "type": "color",
+            "name": "segmentColor",
+            "title": {
+              "en": "Segment color"
+            },
+            "placeholder": {
+              "en": "Red"
+            }
+          },
+          {
+            "type": "text",
+            "name": "segmentArray",
+            "title": {
+              "en": "Segment list"
+            },
+            "required": false,
+            "placeholder": {
+              "en": "1,3,5,..."
+            }
+          },
+          {
+            "type": "autocomplete",
+            "name": "segmentNr",
+            "title": {
+              "en": "Segment"
+            },
+            "required": false,
+            "placeholder": {
+              "en": "Segment"
+            }
+          }
+        ]
+      },
+      {
+        "id": "switch-to-diy-light-scene.localdevice",
+        "title": {
+          "en": "Switch to diy scene"
+        },
+        "hint": {
+          "en": "Switches to the selected DIY scene (and turns on the light if off)"
+        },
+        "titleFormatted": {
+          "en": "Switch to DIY scene [[diyScene]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-local-device&capabilities=lightDiyScenes.localdevice"
+          },
+          {
+            "type": "autocomplete",
+            "name": "diyScene",
+            "title": {
+              "en": "DIY Scene"
+            },
+            "placeholder": {
+              "en": "Valantine special"
+            }
+          }
+        ]
+      },
+      {
+        "id": "switch-to-light-scene.localdevice",
+        "title": {
+          "en": "Switch to light scene"
+        },
+        "hint": {
+          "en": "Switches to the selected light scene (and turns on the light if off)"
+        },
+        "titleFormatted": {
+          "en": "Switch to light scene [[lightScene]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-local-device&capabilities=lightScenes.localdevice"
+          },
+          {
+            "type": "autocomplete",
+            "name": "lightScene",
+            "title": {
+              "en": "Scene"
+            },
+            "placeholder": {
+              "en": "Sunset glow"
+            }
+          }
+        ]
       }
     ]
   },
@@ -1180,7 +1461,19 @@
         "local"
       ],
       "capabilities": [
-        "onoff"
+        "onoff",
+        "dim",
+        "light_saturation",
+        "light_hue",
+        "light_temperature",
+        "light_mode",
+        "lightScenes.localdevice",
+        "lightDiyScenes.localdevice",
+        "snapshots.localdevice",
+        "musicMode.localdevice",
+        "dreamViewToggle.localdevice",
+        "segmentControlColor.localdevice",
+        "segmentControlBrightness.localdevice"
       ],
       "connectivity": [
         "lan"
@@ -1206,7 +1499,41 @@
           "template": "add_devices"
         }
       ],
-      "id": "govee-local-device"
+      "id": "govee-local-device",
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Cloud enhance"
+          },
+          "children": [
+            {
+              "id": "cloud_enhance_label",
+              "type": "label",
+              "label": {
+                "en": "Explanation"
+              },
+              "value": "When you enable this option, the advanced features (like light modes or snapshots) will become available for this local device. This is done by calling the cloud API. All local features reamin local."
+            },
+            {
+              "id": "cloud_enhance_warning",
+              "type": "label",
+              "label": {
+                "en": "Warning"
+              },
+              "value": "When you change this setting you need to resart the Govee app to get the full result. Disabling this feature may break any workflows that use such cloud features."
+            },
+            {
+              "id": "cloud_enhance",
+              "type": "checkbox",
+              "value": false,
+              "label": {
+                "en": "Cloud API enhance this local device"
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "govee-sensor",

@@ -1,17 +1,29 @@
 'use strict';
 
 const { Device } = require('homey');
+const GoveeSharedDevice = require('./govee-shared-device');
 
 class GoveeLocalDevice extends Device {
   /**
    * onInit is called when the device is initialized.
    */
   async setupDevice() {
-    this.data = this.getData();
-    this.setupCapabilities();
+    this.sharedDevice = new GoveeSharedDevice.SharedDevice();
+    this.cloudEnhance=await this.getSetting('cloud_enhance');
+    //Enable the cloud api if we will use it
+    if(this.cloudEnhance) {
+      this.log('Device is cloud enhanced, lets setup the cloud api');
+      await this.driver.cloudInit();
+    }
+    //Now lets do our device setup
+    this.data = await this.getDeviceData();
+    //console.log(JSON.stringify(this.data))
+    await this.setupCapabilities();
+    this.log('Now (de)register the cloud capabilitities');
+    await this.sharedDevice.createDynamicCapabilities(this.data.model,this.data.id,this.data.cloudcapabilitieslist,this);
     this.log('govee.device.'+this.data.model+': '+this.data.id+' of type '+this.goveedevicetype+' has been setup');
     this.setWarning('Discovering the device....');
-    this.setUnavailable();
+    this.setUnavailable('Discovering the device....');
     //Register the update event
     //We need to wait for this device to be discovered
     this.start_update_loop();
@@ -38,6 +50,37 @@ class GoveeLocalDevice extends Device {
           clearInterval(this._timer);
         }
     }, 1000);
+  }
+
+  async getDeviceData()
+  {
+    //Lets get the device data object
+    let deviceData = this.getData();
+    //Lets see if we want to cloud enhance this device
+    if(this.cloudEnhance) {
+      deviceData.mac = deviceData.id;
+      let deviceVersion = await this.getStoreValue('deviceVersion');
+      //See if we already retrieved its capabilities earlier
+      if(deviceVersion==='v2'){
+        deviceData.cloudcapabilitieslist=await this.getStoreValue('capabilityList');
+        return deviceData;
+      }
+      //Lets retrive the v2 capabilities of this device from the API
+      var devicelist = await this.driver.coudapi.deviceList();
+      var thisdevice = devicelist.data.find(function(e) { return e.device === deviceData.mac })
+      if(thisdevice!=null){
+        this.log('Device '+deviceData.mac+' needs to be upgraded, retrieved its capabilities');
+        console.log(JSON.stringify(thisdevice.capabilities));
+        //Now make sure we store these, so we can consider the device upgraded
+        this.setStoreValue('capabilityList',thisdevice.capabilities);
+        this.setStoreValue('deviceVersion','v2');
+        deviceData.cloudcapabilitieslist=thisdevice.capabilities;
+        return deviceData;
+      }
+    } else {
+      deviceData.cloudcapabilitieslist=[];
+      return deviceData;
+    }
   }
 
   async refreshState(newState,stateChanged)
@@ -133,6 +176,14 @@ class GoveeLocalDevice extends Device {
       if (this.hasCapability('light_hue'))
         this.registerCapabilityListener('light_hue', this.onCapabilityHue.bind(this));
     }
+    //Cloud enhanced capabilities
+    //Do we need to unregister if we loose them?
+    if (this.hasCapability('light_mode'))
+      this.registerCapabilityListener('light_mode', this.onCapabilityLightMode.bind(this));
+    if (this.hasCapability('lightScenes.'+this.goveedevicetype))
+      this.registerCapabilityListener('lightScenes.'+this.goveedevicetype, this.onCapabilityLightScenes.bind(this));
+    if (this.hasCapability('lightDiyScenes.'+this.goveedevicetype))
+      this.registerCapabilityListener('lightDiyScenes.'+this.goveedevicetype, this.onCapabilityDIYLightScenes.bind(this));
   }
 
   /**
@@ -145,6 +196,14 @@ class GoveeLocalDevice extends Device {
    */
   async onSettings({ oldSettings, newSettings, changedKeys }) {
     this.log('govee.device.'+this.data.model+': '+this.data.name+' settings where changed');
+    if(changedKeys.includes('cloud_enhance'))
+    {
+      //Rebuild the device
+      this.cloudEnhance=newSettings.cloud_enhance;
+      this.data = await this.getDeviceData();
+      this.log('Now (de)register the cloud capabilitities');
+      await this.sharedDevice.createDynamicCapabilities(this.data.model,this.data.id,this.data.cloudcapabilitieslist,this);
+    }
   }
 
   /**
@@ -268,6 +327,36 @@ class GoveeLocalDevice extends Device {
         this.log('Attempt to set cap ['+cap+'] on device '+this.data.model+':'+this.data.name+' but it is not available');
     }
   }
+
+  /**
+   * Special cloud enhanced capabilities
+   */
+
+  /**
+   * Switches the device to a different light scene
+   * @param {string} value the scene value of the device
+   * @param {*} opts 
+   */
+  async onCapabilityLightScenes( value, opts ) {
+    //We need to check if this device uses dynamic light scenes
+    this.setWarning('Will switch to scene '+this.lightScenes.options[value].name);
+    this.log('Mode switched to item '+value+' that results in scene '+JSON.stringify(this.lightScenes.options[value]));
+    await this.driver.setLightScene(this.lightScenes.options[value].value, "lightScene", this.data.model, this.data.mac, this.goveedevicetype);
+    this.unsetWarning();
+  }
+
+  /**
+   * Switches the device to a different DIY light scene
+   * @param {string} value the scene value of the device
+   * @param {*} opts 
+   */
+  async onCapabilityDIYLightScenes( value, opts ) {
+    this.setWarning('Will switch to diy scene '+this.diyScenes.options[value].name);
+    this.log('Mode switched to item '+value+' that results in diy scene '+JSON.stringify(this.diyScenes.options[value]));
+    await this.driver.setLightScene(this.diyScenes.options[value].value, "diyScene", this.data.model, this.data.mac, this.goveedevicetype);
+    this.unsetWarning();
+  }
+  
 }
 
 module.exports = GoveeLocalDevice;

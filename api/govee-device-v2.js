@@ -1,15 +1,18 @@
 'use strict';
 
 const { Device } = require('homey');
+const GoveeSharedDevice = require('./govee-shared-device');
 
 class GoveeDevice extends Device {
   /**
    * onInit is called when the device is initialized.
    */
   async setupDevice() {
+    this.sharedDevice = new GoveeSharedDevice.SharedDevice();
     this.data = await this.getDeviceData();
     //Lets create any missing capability based on the capabilitiesList
-    await this.createDynamicCapabilities();
+    await this.sharedDevice.createDynamicCapabilities(this.data.model,this.data.mac,this.data.capabilitieslist,this);
+    //await this.createDynamicCapabilities();
     await this.cleanOldCapabilities();
     //Now lets hook those capabilities to events
     await this.setupCapabilities();
@@ -245,157 +248,6 @@ class GoveeDevice extends Device {
       await this.removeCapability('musicMode');
   }
 
-  async createDynamicCapabilities()
-  {
-    this.log('Start adding dynamic capabilities');
-    //Add new feauters
-    // if(this.data.capabilitieslist.find(function(e) { return e.instance == "gradientToggle" })) {
-		//   if(!this.hasCapability('gradientToggle.'+this.goveedevicetype))
-		// 	  await this.addCapability('gradientToggle.'+this.goveedevicetype);
-    // } else if(this.hasCapability('gradientToggle.'+this.goveedevicetype))
-    //   await this.removeCapability('gradientToggle.'+this.goveedevicetype);
-    //Setup the segment color control capability, flow only
-    if(this.data.capabilitieslist.find(function(e) { return e.instance == "segmentedColorRgb" })) {
-      if(!this.hasCapability('segmentControlColor.'+this.goveedevicetype))
-        await this.addCapability('segmentControlColor.'+this.goveedevicetype);
-      this.segmentRGBParameters = this.data.capabilitieslist.find(function(e) {return e.instance == "segmentedColorRgb" }).parameters.fields;
-      await this.setupFlowSegmentControlColor();
-    } else if(this.hasCapability('segmentControlColor.'+this.goveedevicetype))
-      await this.removeCapability('segmentControlColor.'+this.goveedevicetype); 
-    //Setup the segment brightness control capability, flow only
-    if(this.data.capabilitieslist.find(function(e) { return e.instance == "segmentedBrightness" })) {
-      if(!this.hasCapability('segmentControlBrightness.'+this.goveedevicetype))
-        await this.addCapability('segmentControlBrightness.'+this.goveedevicetype);
-      this.segmentBrightnessParameters = this.data.capabilitieslist.find(function(e) {return e.instance == "segmentedBrightness" }).parameters.fields;
-      await this.setupFlowSegmentControlBrightness();
-    } else if(this.hasCapability('segmentControlBrightness.'+this.goveedevicetype))
-      await this.removeCapability('segmentControlBrightness.'+this.goveedevicetype); 
-    //Now setup the dreamview button
-    if(this.data.capabilitieslist.find(function(e) { return e.instance == "dreamViewToggle" })) {
-      if(!this.hasCapability('dreamViewToggle.'+this.goveedevicetype))
-        await this.addCapability('dreamViewToggle.'+this.goveedevicetype);
-      await this.setupFlowDreamView();
-    } else if(this.hasCapability('dreamViewToggle.'+this.goveedevicetype))
-      await this.removeCapability('dreamViewToggle.'+this.goveedevicetype); 
-    //Use the mode capability for Dynamic LightScenes
-    if(this.data.capabilitieslist.find(function(e) {return e.instance == "lightScene" }))
-    {
-      if(!this.hasCapability('lightScenes.'+this.goveedevicetype)) {
-        await this.addCapability('lightScenes.'+this.goveedevicetype);
-      }
-      if(this.hasCapability('lightScenes.'+this.goveedevicetype)) {
-        this.log('Adding dynamic options to the light scenes capability');
-        //Check if we use the dynamic version or the static ones
-        this.lightScenes = null;
-        let modeValues = this.data.capabilitieslist.find(function(e) {return e.instance == "lightScene" }).parameters;
-        if(modeValues.options.length==0)
-        {
-          this.lightScenes=await this.driver.deviceLightModes(this.data.model, this.data.mac, this.data.type).then(device => {
-            return device.capabilitieslist.find(function(e) {return e.instance == "lightScene" }).parameters;
-          });
-        } else {
-          this.lightScenes=modeValues;
-        }
-        const modeOptions = {
-          "type": "number",
-          "title": {
-            "en": "Light Scenes"
-          },
-          "getable": true,
-          "setable": true,
-          "uiComponent": "slider",
-          "decimals": 0,
-          "min": 0,
-          "max": (this.lightScenes.options.length-1),
-          "step": 1
-        }
-        //console.log(JSON.stringify(this.lightScenes))
-        //console.log('Light scenes: '+JSON.stringify(modeOptions));
-        if(this.lightScenes.options.length>0){
-          //What if there are no lightscenes? then the control is going to give errors
-          await this.setCapabilityOptions('lightScenes.'+this.goveedevicetype, modeOptions);
-          //Register the flow actions
-          this.log('Setup the flow for Light scene capability');
-          await this.setupFlowSwitchLightScene(); 
-        } else {
-          await this.removeCapability('lightScenes.'+this.goveedevicetype); 
-        }
-      }
-    } else if(this.hasCapability('lightScenes.'+this.goveedevicetype))
-      await this.removeCapability('lightScenes.'+this.goveedevicetype);  
-    //DIY scenes are the ones you can create yourself for the device
-    if(this.data.capabilitieslist.find(function(e) {return e.instance == "diyScene" }))
-    {
-      if(!this.hasCapability('lightDiyScenes.'+this.goveedevicetype)) {
-        await this.addCapability('lightDiyScenes.'+this.goveedevicetype);
-      }
-      if(this.hasCapability('lightDiyScenes.'+this.goveedevicetype)) {
-        this.log('Adding dynamic options to the light scenes capability');
-        //Check if we use the dynamic version or the static ones
-        this.diyScenes = null;
-        let modeValues = this.data.capabilitieslist.find(function(e) {return e.instance == "diyScene" }).parameters;
-        if(modeValues.options.length==0)
-        {
-          this.diyScenes=await this.driver.deviceDiyLightModes(this.data.model, this.data.mac, this.data.type).then(device => {
-            return device.capabilitieslist.find(function(e) {return e.instance == "diyScene" }).parameters;
-          });
-        } else {
-          this.diyScenes=modeValues;
-        }
-
-        const modeOptions = {
-          "type": "number",
-          "title": {
-            "en": "DIY Scenes"
-          },
-          "getable": true,
-          "setable": true,
-          "uiComponent": "slider",
-          "decimals": 0,
-          "min": 0,
-          "max": (this.diyScenes.options.length-1),
-          "step": 1
-        }
-        //console.log(JSON.stringify(this.diyScenes))
-        //Now setup the slider
-        //console.log('DIY Light scenes: '+JSON.stringify(modeOptions));
-        if(this.diyScenes.options.length>0){
-          await this.setCapabilityOptions('lightDiyScenes.'+this.goveedevicetype, modeOptions);
-          //Register the flow actions
-          this.log('Setup the flow for DIY scene capability');
-          await this.setupFlowSwitchDiyScene();
-        } else {
-          await this.removeCapability('lightDiyScenes.'+this.goveedevicetype); 
-        }
-      }
-    } else if(this.hasCapability('lightDiyScenes.'+this.goveedevicetype))
-      await this.removeCapability('lightDiyScenes.'+this.goveedevicetype);
-    //snapshots
-    if(this.data.capabilitieslist.find(function(e) {return e.instance == "snapshot" }))
-    {
-      if(!this.hasCapability('snapshots.'+this.goveedevicetype)) {
-        await this.addCapability('snapshots.'+this.goveedevicetype);
-      }
-      if(this.hasCapability('snapshots.'+this.goveedevicetype)) {
-        this.log('Setting up snapshot capability');
-        await this.setupFlowSnapshots();
-      }
-    } else if(this.hasCapability('snapshots.'+this.goveedevicetype))
-      await this.removeCapability('snapshots.'+this.goveedevicetype);
-    //MusicMode
-    if(this.data.capabilitieslist.find(function(e) {return e.instance == "musicMode" }))
-      {
-        if(!this.hasCapability('musicMode.'+this.goveedevicetype)) {
-          await this.addCapability('musicMode.'+this.goveedevicetype);
-        }
-        if(this.hasCapability('musicMode.'+this.goveedevicetype)) {
-          this.log('Setting up music mode capability');
-          await this.setupFlowMusicMode();
-        }
-      } else if(this.hasCapability('musicMode.'+this.goveedevicetype))
-        await this.removeCapability('musicMode.'+this.goveedevicetype);
-  }
-
   /**
    * Ensure we setup the listeners of the registered capabities.
    * Since we add capbilities based on the govee API this should create a full dynamic device
@@ -588,22 +440,22 @@ class GoveeDevice extends Device {
     }
   }
 
-    /**
+  /**
    * Sets the Light mode for color or tempurature
    * @param {string} value The light mode from the enum color,temperature
    * @param {*} opts 
    */
-    async onCapabilityLightMode( value, opts ) {
-      this.log("Capability trigger: Switch light modes");
-      this.setIfHasCapability('light_mode', value);
-      if(value=='temperature'){
-        var colorTemp = this.getCapabilityValue('light_temperature');
-        await this.onCapabilityLightTemperature(colorTemp);
-      } else if (value=='color'){
-        var hue = this.getState().light_hue;  
-        await this.onCapabilityHue(hue);
-      }
+  async onCapabilityLightMode( value, opts ) {
+    this.log("Capability trigger: Switch light modes");
+    this.setIfHasCapability('light_mode', value);
+    if(value=='temperature'){
+      var colorTemp = this.getCapabilityValue('light_temperature');
+      await this.onCapabilityLightTemperature(colorTemp);
+    } else if (value=='color'){
+      var hue = this.getState().light_hue;  
+      await this.onCapabilityHue(hue);
     }
+  }
 
   setIfHasCapability(cap, value) {
     if (this.hasCapability(cap)) {
@@ -614,266 +466,266 @@ class GoveeDevice extends Device {
   }
 
 
-  //FLOWS SECTION
-  async setupFlowDreamView() {
-    this.log('Create the flow for the dream view capability');
-    //Now setup the flow cards
-    this._activateDreamview = await this.homey.flow.getActionCard('activate-dreamview.'+this.goveedevicetype); 
-    this._activateDreamview
-      .registerRunListener(async (args, state) => {
-        this.log('attempt to toggle dreamview: '+args.activate);
-        this.setIfHasCapability('dreamViewToggle', args.activate);
-        if(args.activate){
-          return new Promise((resolve, reject) => {
-            this.driver.toggle(1, 'dreamViewToggle', args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
-              resolve(true);
-            }, (_error) => {
-              reject(_error);
-            });
-          });
-        } else {
-          return new Promise((resolve, reject) => {
-            this.driver.toggle(0, 'dreamViewToggle', args.device.data.model,args.device.data.mac, args.device.goveedevicetype).then(() => {
-              resolve(true);
-            }, (_error) => {
-              reject(_error);
-            });
-          });
-        }
-      });
-  }
+  // //FLOWS SECTION
+  // async setupFlowDreamView() {
+  //   this.log('Create the flow for the dream view capability');
+  //   //Now setup the flow cards
+  //   this._activateDreamview = await this.homey.flow.getActionCard('activate-dreamview.'+this.goveedevicetype); 
+  //   this._activateDreamview
+  //     .registerRunListener(async (args, state) => {
+  //       this.log('attempt to toggle dreamview: '+args.activate);
+  //       this.setIfHasCapability('dreamViewToggle', args.activate);
+  //       if(args.activate){
+  //         return new Promise((resolve, reject) => {
+  //           this.driver.toggle(1, 'dreamViewToggle', args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+  //             resolve(true);
+  //           }, (_error) => {
+  //             reject(_error);
+  //           });
+  //         });
+  //       } else {
+  //         return new Promise((resolve, reject) => {
+  //           this.driver.toggle(0, 'dreamViewToggle', args.device.data.model,args.device.data.mac, args.device.goveedevicetype).then(() => {
+  //             resolve(true);
+  //           }, (_error) => {
+  //             reject(_error);
+  //           });
+  //         });
+  //       }
+  //     });
+  // }
 
-  createSegmentCollection(segmentField)
-  {
-    //Convert the segment max into a real array collection with objects.
-    let segmentArray = Array.from(
-      { length: segmentField.elementRange.max }, 
-        (_, i) => i.toString() );
-    //Clone this as base array
-    let segmentRange = segmentArray.map((i) => ({
-      value: i,
-      name: "Segment "+i.toString()
-    })) //Cloned
-    //Add a joined element to easely select them all
-    segmentRange.push({
-      value: segmentArray.join(','),
-      name: `All segments`
-    });
-    //Add the firt halve of the segments
-    segmentRange.push({
-      value: segmentArray.slice(0,Math.floor((segmentField.elementRange.max/2))).join(','),
-      name: `First halve of segments`
-    });
-    //Add the last halve of the segments
-    segmentRange.push({
-      value: segmentArray.slice(Math.floor((segmentField.elementRange.max/2)),segmentField.elementRange.max).join(','),
-      name: `Second halve of segments`
-    });
-    console.log(JSON.stringify(segmentRange));
-    return segmentRange;
-  }
+  // createSegmentCollection(segmentField)
+  // {
+  //   //Convert the segment max into a real array collection with objects.
+  //   let segmentArray = Array.from(
+  //     { length: segmentField.elementRange.max }, 
+  //       (_, i) => i.toString() );
+  //   //Clone this as base array
+  //   let segmentRange = segmentArray.map((i) => ({
+  //     value: i,
+  //     name: "Segment "+i.toString()
+  //   })) //Cloned
+  //   //Add a joined element to easely select them all
+  //   segmentRange.push({
+  //     value: segmentArray.join(','),
+  //     name: `All segments`
+  //   });
+  //   //Add the firt halve of the segments
+  //   segmentRange.push({
+  //     value: segmentArray.slice(0,Math.floor((segmentField.elementRange.max/2))).join(','),
+  //     name: `First halve of segments`
+  //   });
+  //   //Add the last halve of the segments
+  //   segmentRange.push({
+  //     value: segmentArray.slice(Math.floor((segmentField.elementRange.max/2)),segmentField.elementRange.max).join(','),
+  //     name: `Second halve of segments`
+  //   });
+  //   console.log(JSON.stringify(segmentRange));
+  //   return segmentRange;
+  // }
 
-  async setupFlowSegmentControlColor() {
-    this.log('Create the flow for the Segment Color Control capability');
-    //Now setup the flow cards
-    this._setSegmentColor = await this.homey.flow.getActionCard('set-segment-color.'+this.goveedevicetype); 
-    this._setSegmentColor
-      .registerRunListener(async (args, state) => {
-        return new Promise((resolve, reject) => {
-            let segmentArray=null;
-            if(!args.segmentArray && !args.segmentNr)
-              reject("Select either segment or enter a comma seperated segment nr list");
-            if(args.segmentArray && args.segmentArray!==''  )
-              segmentArray = args.segmentArray.split(',').map(Number);
-            else
-              segmentArray = args.segmentNr.value.split(',').map(Number);
-            this.log('attempt to set a device segment ['+segmentArray+']: color '+args.segmentColor);
-            this.driver.setSegmentColor(segmentArray, args.segmentColor, args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
-              resolve(true);
-            }, (_error) => {
-              reject(_error);
-            });
-        });
-      });
-      this._setSegmentColor
-      .registerArgumentAutocompleteListener('segmentNr', async (query, args) => {
-        this.log('attempt to list available segments with ['+query+']');
-        //console.log('segmentParameters: '+JSON.stringify(args.device.segmentRGBParameters));
-        let segmentRange = this.createSegmentCollection(args.device.segmentRGBParameters.find(function(e) {return e.fieldName == "segment" }));
-        let filteredSegments = segmentRange.filter(function(e) { 
-          return e.name.toLowerCase().includes(query.toLowerCase()) 
-        });
-        this.log(JSON.stringify(filteredSegments));
-        return filteredSegments.map((segment) => {
-          segment.formattedName = segment.name;
-          return segment;
-        });
-      });
-  }
+  // async setupFlowSegmentControlColor() {
+  //   this.log('Create the flow for the Segment Color Control capability');
+  //   //Now setup the flow cards
+  //   this._setSegmentColor = await this.homey.flow.getActionCard('set-segment-color.'+this.goveedevicetype); 
+  //   this._setSegmentColor
+  //     .registerRunListener(async (args, state) => {
+  //       return new Promise((resolve, reject) => {
+  //           let segmentArray=null;
+  //           if(!args.segmentArray && !args.segmentNr)
+  //             reject("Select either segment or enter a comma seperated segment nr list");
+  //           if(args.segmentArray && args.segmentArray!==''  )
+  //             segmentArray = args.segmentArray.split(',').map(Number);
+  //           else
+  //             segmentArray = args.segmentNr.value.split(',').map(Number);
+  //           this.log('attempt to set a device segment ['+segmentArray+']: color '+args.segmentColor);
+  //           this.driver.setSegmentColor(segmentArray, args.segmentColor, args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+  //             resolve(true);
+  //           }, (_error) => {
+  //             reject(_error);
+  //           });
+  //       });
+  //     });
+  //     this._setSegmentColor
+  //     .registerArgumentAutocompleteListener('segmentNr', async (query, args) => {
+  //       this.log('attempt to list available segments with ['+query+']');
+  //       //console.log('segmentParameters: '+JSON.stringify(args.device.segmentRGBParameters));
+  //       let segmentRange = this.createSegmentCollection(args.device.segmentRGBParameters.find(function(e) {return e.fieldName == "segment" }));
+  //       let filteredSegments = segmentRange.filter(function(e) { 
+  //         return e.name.toLowerCase().includes(query.toLowerCase()) 
+  //       });
+  //       this.log(JSON.stringify(filteredSegments));
+  //       return filteredSegments.map((segment) => {
+  //         segment.formattedName = segment.name;
+  //         return segment;
+  //       });
+  //     });
+  // }
 
-  async setupFlowSegmentControlBrightness() {
-    this.log('Create the flow for the Segment Brightness Control capability');
-    //Now setup the flow cards
-    this._setSegmentBrightness = await this.homey.flow.getActionCard('set-segment-brightness.'+this.goveedevicetype); 
-    this._setSegmentBrightness
-      .registerRunListener(async (args, state) => {
-        return new Promise((resolve, reject) => {
-          let segmentArray=null;
-          if(!args.segmentArray && !args.segmentNr)
-            reject("Select either segment or enter a comma seperated segment nr list");
-          if(args.segmentArray && args.segmentArray!==''  )
-            segmentArray = args.segmentArray.split(',').map(Number);
-          else
-            segmentArray = args.segmentNr.value.split(',').map(Number);
-          this.log('attempt to set a device segment ['+segmentArray+']: brightness '+args.segmentBrightness);
-          this.driver.setSegmentBrightness(segmentArray, args.segmentBrightness, args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
-            resolve(true);
-          }, (_error) => {
-            reject(_error);
-          });
-        });
-      });
-      this._setSegmentBrightness
-      .registerArgumentAutocompleteListener('segmentNr', async (query, args) => {
-        this.log('attempt to list available segments with ['+query+']');
-        console.log('segmentParameters: '+JSON.stringify(args.device.segmentBrightnessParameters));
-        let segmentRange = this.createSegmentCollection(args.device.segmentBrightnessParameters.find(function(e) {return e.fieldName == "segment" }));
-        let filteredSegments = segmentRange.filter(function(e) { 
-          return e.name.toLowerCase().includes(query.toLowerCase()) 
-        });
-        this.log(JSON.stringify(filteredSegments));
-        return filteredSegments.map((segment) => {
-          segment.formattedName = segment.name;
-          return segment;
-        });
-      });
-  }
+  // async setupFlowSegmentControlBrightness() {
+  //   this.log('Create the flow for the Segment Brightness Control capability');
+  //   //Now setup the flow cards
+  //   this._setSegmentBrightness = await this.homey.flow.getActionCard('set-segment-brightness.'+this.goveedevicetype); 
+  //   this._setSegmentBrightness
+  //     .registerRunListener(async (args, state) => {
+  //       return new Promise((resolve, reject) => {
+  //         let segmentArray=null;
+  //         if(!args.segmentArray && !args.segmentNr)
+  //           reject("Select either segment or enter a comma seperated segment nr list");
+  //         if(args.segmentArray && args.segmentArray!==''  )
+  //           segmentArray = args.segmentArray.split(',').map(Number);
+  //         else
+  //           segmentArray = args.segmentNr.value.split(',').map(Number);
+  //         this.log('attempt to set a device segment ['+segmentArray+']: brightness '+args.segmentBrightness);
+  //         this.driver.setSegmentBrightness(segmentArray, args.segmentBrightness, args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+  //           resolve(true);
+  //         }, (_error) => {
+  //           reject(_error);
+  //         });
+  //       });
+  //     });
+  //     this._setSegmentBrightness
+  //     .registerArgumentAutocompleteListener('segmentNr', async (query, args) => {
+  //       this.log('attempt to list available segments with ['+query+']');
+  //       console.log('segmentParameters: '+JSON.stringify(args.device.segmentBrightnessParameters));
+  //       let segmentRange = this.createSegmentCollection(args.device.segmentBrightnessParameters.find(function(e) {return e.fieldName == "segment" }));
+  //       let filteredSegments = segmentRange.filter(function(e) { 
+  //         return e.name.toLowerCase().includes(query.toLowerCase()) 
+  //       });
+  //       this.log(JSON.stringify(filteredSegments));
+  //       return filteredSegments.map((segment) => {
+  //         segment.formattedName = segment.name;
+  //         return segment;
+  //       });
+  //     });
+  // }
 
-  async setupFlowSwitchLightScene() {
-    this.log('Create the flow for the Light scene capability');
-    //Now setup the flow cards
-    this._switchLightScene = await this.homey.flow.getActionCard('switch-to-light-scene.'+this.goveedevicetype); 
-    this._switchLightScene
-      .registerRunListener(async (args, state) => {
-        this.log('attempt to switch to a Light Scene: '+args.lightScene);
-        return new Promise((resolve, reject) => {
-          this.log('now send the light scene capability command');
-            this.driver.setLightScene(args.lightScene.value, "lightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
-              resolve(true);
-            }, (_error) => {
-              reject(_error);
-            });
-        });
-      });
-    this._switchLightScene
-      .registerArgumentAutocompleteListener('lightScene', async (query, args) => {
-        this.log('attempt to list available light scenes matching filter ['+query+']');
-        let filteredScenes = args.device.lightScenes.options.filter(function(e) { 
-          return e.name.toLowerCase().includes(query.toLowerCase()) 
-        });
-        this.log(JSON.stringify(filteredScenes));
-        return filteredScenes.map((scene) => {
-          scene.formattedName = scene.name;
-          return scene;
-        });
-      });
-  }
+  // async setupFlowSwitchLightScene() {
+  //   this.log('Create the flow for the Light scene capability');
+  //   //Now setup the flow cards
+  //   this._switchLightScene = await this.homey.flow.getActionCard('switch-to-light-scene.'+this.goveedevicetype); 
+  //   this._switchLightScene
+  //     .registerRunListener(async (args, state) => {
+  //       this.log('attempt to switch to a Light Scene: '+args.lightScene);
+  //       return new Promise((resolve, reject) => {
+  //         this.log('now send the light scene capability command');
+  //           this.driver.setLightScene(args.lightScene.value, "lightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+  //             resolve(true);
+  //           }, (_error) => {
+  //             reject(_error);
+  //           });
+  //       });
+  //     });
+  //   this._switchLightScene
+  //     .registerArgumentAutocompleteListener('lightScene', async (query, args) => {
+  //       this.log('attempt to list available light scenes matching filter ['+query+']');
+  //       let filteredScenes = args.device.lightScenes.options.filter(function(e) { 
+  //         return e.name.toLowerCase().includes(query.toLowerCase()) 
+  //       });
+  //       this.log(JSON.stringify(filteredScenes));
+  //       return filteredScenes.map((scene) => {
+  //         scene.formattedName = scene.name;
+  //         return scene;
+  //       });
+  //     });
+  // }
 
-  async setupFlowSwitchDiyScene() {
-    //console.log('Create the flow for the DIY Light scene capability');
-    //Now setup the flow cards
-    this._switchDiyLightScene = await this.homey.flow.getActionCard('switch-to-diy-light-scene.'+this.goveedevicetype); 
-    this._switchDiyLightScene
-      .registerRunListener(async (args, state) => {
-        this.log('attempt to switch to a DIY Light Scene: '+args.diyScene);
-        return new Promise((resolve, reject) => {
-          this.log('now send the DIY light scene capability command');
-          this.driver.setLightScene(args.diyScene.value, "diyScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
-            resolve(true);
-          }, (_error) => {
-            reject(_error);
-          });
-        });
-      });
-    this._switchDiyLightScene
-      .registerArgumentAutocompleteListener('diyScene', async (query, args) => {
-        this.log('attempt to list available DIY light scenes matching filter ['+query+']');
-        let filteredScenes = args.device.diyScenes.options.filter(function(e) { 
-          return e.name.toLowerCase().includes(query.toLowerCase()) 
-        });
-        this.log(JSON.stringify(filteredScenes));
-        return filteredScenes.map((scene) => {
-          scene.formattedName = scene.name;
-          return scene;
-        });
-      });
-  }
+  // async setupFlowSwitchDiyScene() {
+  //   //console.log('Create the flow for the DIY Light scene capability');
+  //   //Now setup the flow cards
+  //   this._switchDiyLightScene = await this.homey.flow.getActionCard('switch-to-diy-light-scene.'+this.goveedevicetype); 
+  //   this._switchDiyLightScene
+  //     .registerRunListener(async (args, state) => {
+  //       this.log('attempt to switch to a DIY Light Scene: '+args.diyScene);
+  //       return new Promise((resolve, reject) => {
+  //         this.log('now send the DIY light scene capability command');
+  //         this.driver.setLightScene(args.diyScene.value, "diyScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+  //           resolve(true);
+  //         }, (_error) => {
+  //           reject(_error);
+  //         });
+  //       });
+  //     });
+  //   this._switchDiyLightScene
+  //     .registerArgumentAutocompleteListener('diyScene', async (query, args) => {
+  //       this.log('attempt to list available DIY light scenes matching filter ['+query+']');
+  //       let filteredScenes = args.device.diyScenes.options.filter(function(e) { 
+  //         return e.name.toLowerCase().includes(query.toLowerCase()) 
+  //       });
+  //       this.log(JSON.stringify(filteredScenes));
+  //       return filteredScenes.map((scene) => {
+  //         scene.formattedName = scene.name;
+  //         return scene;
+  //       });
+  //     });
+  // }
 
-  async setupFlowSnapshots() {
-    //console.log('Create the flow for the Snapshots capability');
-    //Now setup the flow cards
-    this._activateSnapshot = await this.homey.flow.getActionCard('activate-snapshot.'+this.goveedevicetype); 
-    this._activateSnapshot
-      .registerRunListener(async (args, state) => {
-        this.log('attempt to activate snapshot: '+args.snapshot);
-        return new Promise((resolve, reject) => {
-          this.log('now send the DIY light scene capability command');
-          this.driver.setLightScene(args.snapshot.value, "snapshot", args.device.data.model, args.device.data.mac, this.goveedevicetype).then(() => {
-            resolve(true);
-          }, (_error) => {
-            reject(_error);
-          });
-        });
-      });
-    this._activateSnapshot
-      .registerArgumentAutocompleteListener('snapshot', async (query, args) => {
-        this.log('attempt to list available snapshots matching filter ['+query+']');
-        var devicelist = await this.driver.api.deviceList();
-        var thisdevice = devicelist.data.find(function(e) { return e.device === args.device.data.mac })
-        console.log("device "+args.device.data.mac+"|"+JSON.stringify(thisdevice));
-        let snaphotList = thisdevice.capabilities.find(function(e) { return e.instance === "snapshot" })
-        let filteredSnapshots = snaphotList.parameters.options.filter(function(e) { 
-          return e.name.toLowerCase().includes(query.toLowerCase()) 
-        });
-        this.log(JSON.stringify(filteredSnapshots));
-        return filteredSnapshots.map((snapshot) => {
-          snapshot.formattedName = snapshot.name;
-          return snapshot;
-        });
-      });
-  }
+  // async setupFlowSnapshots() {
+  //   //console.log('Create the flow for the Snapshots capability');
+  //   //Now setup the flow cards
+  //   this._activateSnapshot = await this.homey.flow.getActionCard('activate-snapshot.'+this.goveedevicetype); 
+  //   this._activateSnapshot
+  //     .registerRunListener(async (args, state) => {
+  //       this.log('attempt to activate snapshot: '+args.snapshot);
+  //       return new Promise((resolve, reject) => {
+  //         this.log('now send the DIY light scene capability command');
+  //         this.driver.setLightScene(args.snapshot.value, "snapshot", args.device.data.model, args.device.data.mac, this.goveedevicetype).then(() => {
+  //           resolve(true);
+  //         }, (_error) => {
+  //           reject(_error);
+  //         });
+  //       });
+  //     });
+  //   this._activateSnapshot
+  //     .registerArgumentAutocompleteListener('snapshot', async (query, args) => {
+  //       this.log('attempt to list available snapshots matching filter ['+query+']');
+  //       var devicelist = await this.driver.api.deviceList();
+  //       var thisdevice = devicelist.data.find(function(e) { return e.device === args.device.data.mac })
+  //       console.log("device "+args.device.data.mac+"|"+JSON.stringify(thisdevice));
+  //       let snaphotList = thisdevice.capabilities.find(function(e) { return e.instance === "snapshot" })
+  //       let filteredSnapshots = snaphotList.parameters.options.filter(function(e) { 
+  //         return e.name.toLowerCase().includes(query.toLowerCase()) 
+  //       });
+  //       this.log(JSON.stringify(filteredSnapshots));
+  //       return filteredSnapshots.map((snapshot) => {
+  //         snapshot.formattedName = snapshot.name;
+  //         return snapshot;
+  //       });
+  //     });
+  // }
 
-  async setupFlowMusicMode() {
-    //console.log('Create the flow for the MusicMode capability');
-    //Now setup the flow cards
-    this._activateMusicMode = await this.homey.flow.getActionCard('activate-music-mode.'+this.goveedevicetype); 
-    this._activateMusicMode
-      .registerRunListener(async (args, state) => {
-        this.log('attempt to activate music mode: '+args.musicMode);
-        return new Promise((resolve, reject) => {
-          this.log('now send the music mode capability command');
-          this.driver.setMusicMode(args.musicMode.value, args.sensitivity, args.device.data.model, args.device.data.mac).then(() => {
-            resolve(true);
-          }, (_error) => {
-            reject(_error);
-          });
-        });
-      });
-    this._activateMusicMode
-      .registerArgumentAutocompleteListener('musicMode', async (query, args) => {
-        this.log('attempt to list available musicModes matching filter ['+query+']');
-        let musicModeCapa = args.device.data.capabilitieslist.find(function(e) { return e.instance == "musicMode" });
-        let musicModes = musicModeCapa.parameters.fields.find(function(e) { return e.fieldName == "musicMode" });
-        let filteredModes = musicModes.options.filter(function(e) { 
-          return e.name.toLowerCase().includes(query.toLowerCase()) 
-        });
-        this.log(JSON.stringify(filteredModes));
-        return filteredModes.map((musicModes) => {
-          musicModes.formattedName = musicModes.name;
-          return musicModes;
-        });
-      });
-  }
+  // async setupFlowMusicMode() {
+  //   //console.log('Create the flow for the MusicMode capability');
+  //   //Now setup the flow cards
+  //   this._activateMusicMode = await this.homey.flow.getActionCard('activate-music-mode.'+this.goveedevicetype); 
+  //   this._activateMusicMode
+  //     .registerRunListener(async (args, state) => {
+  //       this.log('attempt to activate music mode: '+args.musicMode);
+  //       return new Promise((resolve, reject) => {
+  //         this.log('now send the music mode capability command');
+  //         this.driver.setMusicMode(args.musicMode.value, args.sensitivity, args.device.data.model, args.device.data.mac).then(() => {
+  //           resolve(true);
+  //         }, (_error) => {
+  //           reject(_error);
+  //         });
+  //       });
+  //     });
+  //   this._activateMusicMode
+  //     .registerArgumentAutocompleteListener('musicMode', async (query, args) => {
+  //       this.log('attempt to list available musicModes matching filter ['+query+']');
+  //       let musicModeCapa = args.device.data.capabilitieslist.find(function(e) { return e.instance == "musicMode" });
+  //       let musicModes = musicModeCapa.parameters.fields.find(function(e) { return e.fieldName == "musicMode" });
+  //       let filteredModes = musicModes.options.filter(function(e) { 
+  //         return e.name.toLowerCase().includes(query.toLowerCase()) 
+  //       });
+  //       this.log(JSON.stringify(filteredModes));
+  //       return filteredModes.map((musicModes) => {
+  //         musicModes.formattedName = musicModes.name;
+  //         return musicModes;
+  //       });
+  //     });
+  // }
 
 }
 
