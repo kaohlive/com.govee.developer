@@ -4,7 +4,7 @@
     "en": "Lights"
   },
   "class": "light",
-  "platforms": ["local"],
+  "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
   "capabilities": ["alarm_online.light", "onoff","dim","light_saturation","light_hue","light_temperature","light_mode","lightScenes.light","lightDiyScenes.light","snapshots.light","musicMode.light","dreamViewToggle.light","segmentControlColor.light","segmentControlBrightness.light"],
   "images": {

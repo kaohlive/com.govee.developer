@@ -5,7 +5,7 @@
   },
   "class": "other",
   "icon": "default.svg",
-  "platforms": ["local"],
+  "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
   "capabilities": ["alarm_online.dehumidifier", "onoff"],
   "images": {
