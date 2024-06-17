@@ -91,5 +91,8 @@
   },
   "2.8.0": {
     "en": "Improved pairing and added cloud enhanced local device support"
+  },
+  "2.8.1": {
+    "en": "local device upgrade fix"
   }
 }
