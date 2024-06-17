@@ -88,5 +88,8 @@
   },
   "2.7.0": {
     "en": "Rewrite to API v2 now includes appliances"
+  },
+  "2.8.0": {
+    "en": "Improved pairing and added cloud enhanced local device support"
   }
 }
