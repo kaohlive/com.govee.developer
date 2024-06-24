@@ -97,5 +97,8 @@
   },
   "2.8.2": {
     "en": "Added support for Homey cloud/bridge for the cloud devices"
+  },
+  "2.8.3": {
+    "en": "Fix on hue, saturation flow support"
   }
 }

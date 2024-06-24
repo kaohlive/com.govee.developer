@@ -416,9 +416,17 @@ class GoveeDevice extends Device {
   async onCapabilityHueSaturation( newValues, opts ) {
     var light = 1;
     this.log("Capability trigger: Hue & Saturation [hue:"+newValues.light_hue+" - saturation: "+newValues.light_saturation);
-    await this.driver.color(newValues.light_hue,newValues.light_saturation,light,this.data.model, this.data.mac);
-    this.setIfHasCapability('light_hue', newValues.light_hue);
-    this.setIfHasCapability('light_saturation', newValues.light_saturation);
+    let sat = newValues.light_saturation;
+    let hue = newValues.light_hue;
+    //Sometimes we do not get both values, in case of a set random color for example.
+    if (sat==undefined) 
+      return this.onCapabilityHue(hue);
+    if(hue==undefined)
+      return this.onCapabilitySaturation(sat);
+    //Else we got both
+    await this.driver.color(hue,sat,light,this.data.model, this.data.mac);
+    this.setIfHasCapability('light_hue', hue);
+    this.setIfHasCapability('light_saturation', sat);
   }
 
   /**
@@ -448,13 +456,13 @@ class GoveeDevice extends Device {
   async onCapabilityLightMode( value, opts ) {
     this.log("Capability trigger: Switch light modes");
     this.setIfHasCapability('light_mode', value);
-    if(value=='temperature'){
-      var colorTemp = this.getCapabilityValue('light_temperature');
-      await this.onCapabilityLightTemperature(colorTemp);
-    } else if (value=='color'){
-      var hue = this.getState().light_hue;  
-      await this.onCapabilityHue(hue);
-    }
+    // if(value=='temperature'){
+    //   var colorTemp = this.getCapabilityValue('light_temperature');
+    //   await this.onCapabilityLightTemperature(colorTemp);
+    // } else if (value=='color'){
+    //   var hue = this.getState().light_hue;  
+    //   await this.onCapabilityHue(hue);
+    // }
   }
 
   setIfHasCapability(cap, value) {
