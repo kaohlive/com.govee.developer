@@ -100,5 +100,8 @@
   },
   "2.8.3": {
     "en": "Fix on hue, saturation flow support"
+  },
+  "2.8.4": {
+    "en": "Minor improvments, added set random scene action card"
   }
 }

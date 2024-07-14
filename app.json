@@ -2,7 +2,7 @@
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.govee.developer",
   "brandColor": "#00ACE7",
-  "version": "2.8.3",
+  "version": "2.8.4",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -37,10 +37,10 @@
       {
         "id": "alarm_online.air_purifier_false",
         "title": {
-          "en": "The air purifier is online again"
+          "en": "The air purifier is online"
         },
         "hint": {
-          "en": "When the air purifier is reported back online"
+          "en": "When the air purifier is reported online"
         },
         "args": [
           {
@@ -53,7 +53,7 @@
       {
         "id": "alarm_online.air_purifier_true",
         "title": {
-          "en": "The air purifier went offline"
+          "en": "The air purifier is offline"
         },
         "hint": {
           "en": "When the air purifier is reported to be offline"
@@ -69,10 +69,10 @@
       {
         "id": "alarm_online.appliance_false",
         "title": {
-          "en": "The appliance is online again"
+          "en": "The appliance is online"
         },
         "hint": {
-          "en": "When the appliance is reported back online"
+          "en": "When the appliance is reported online"
         },
         "args": [
           {
@@ -85,7 +85,7 @@
       {
         "id": "alarm_online.appliance_true",
         "title": {
-          "en": "The appliance went offline"
+          "en": "The appliance is offline"
         },
         "hint": {
           "en": "When the appliance is reported to be offline"
@@ -101,10 +101,10 @@
       {
         "id": "alarm_online.aroma_diffuser_false",
         "title": {
-          "en": "The aroma diffuser is online again"
+          "en": "The aroma diffuser is online"
         },
         "hint": {
-          "en": "When the aroma diffuser is reported back online"
+          "en": "When the aroma diffuser is online"
         },
         "args": [
           {
@@ -117,7 +117,7 @@
       {
         "id": "alarm_online.aroma_diffuser_true",
         "title": {
-          "en": "The aroma diffuser went offline"
+          "en": "The aroma diffuser is offline"
         },
         "hint": {
           "en": "When the aroma diffuser is reported to be offline"
@@ -133,10 +133,10 @@
       {
         "id": "alarm_online.box_false",
         "title": {
-          "en": "The box is online again"
+          "en": "The box is online"
         },
         "hint": {
-          "en": "When the box is reported back online"
+          "en": "When the box is reported online"
         },
         "args": [
           {
@@ -149,7 +149,7 @@
       {
         "id": "alarm_online.box_true",
         "title": {
-          "en": "The box went offline"
+          "en": "The box is offline"
         },
         "hint": {
           "en": "When the box is reported to be offline"
@@ -165,10 +165,10 @@
       {
         "id": "alarm_online.dehumidifier_false",
         "title": {
-          "en": "The dehumidifier is online again"
+          "en": "The dehumidifier is online"
         },
         "hint": {
-          "en": "When the dehumidifier is reported back online"
+          "en": "When the dehumidifier is reported online"
         },
         "args": [
           {
@@ -181,7 +181,7 @@
       {
         "id": "alarm_online.dehumidifier_true",
         "title": {
-          "en": "The dehumidifier went offline"
+          "en": "The dehumidifier is offline"
         },
         "hint": {
           "en": "When the dehumidifier is reported to be offline"
@@ -197,10 +197,10 @@
       {
         "id": "alarm_online.light_false",
         "title": {
-          "en": "The light is online again"
+          "en": "The light is online"
         },
         "hint": {
-          "en": "When the light is reported back online"
+          "en": "When the light is reported online"
         },
         "args": [
           {
@@ -213,7 +213,7 @@
       {
         "id": "alarm_online.light_true",
         "title": {
-          "en": "The light went offline"
+          "en": "The light is offline"
         },
         "hint": {
           "en": "When the light is reported to be offline"
@@ -229,10 +229,10 @@
       {
         "id": "alarm_online.heater_false",
         "title": {
-          "en": "The heater is online again"
+          "en": "The heater is online"
         },
         "hint": {
-          "en": "When the heater is reported back online"
+          "en": "When the heater is reported online"
         },
         "args": [
           {
@@ -245,7 +245,7 @@
       {
         "id": "alarm_online.heater_true",
         "title": {
-          "en": "The heater went offline"
+          "en": "The heater is offline"
         },
         "hint": {
           "en": "When the heater is reported to be offline"
@@ -261,10 +261,10 @@
       {
         "id": "alarm_online.humidifier_false",
         "title": {
-          "en": "The humidifier is online again"
+          "en": "The humidifier is online"
         },
         "hint": {
-          "en": "When the humidifier is reported back online"
+          "en": "When the humidifier is reported online"
         },
         "args": [
           {
@@ -277,7 +277,7 @@
       {
         "id": "alarm_online.humidifier_true",
         "title": {
-          "en": "The humidifier went offline"
+          "en": "The humidifier is offline"
         },
         "hint": {
           "en": "When the humidifier is reported to be offline"
@@ -293,10 +293,10 @@
       {
         "id": "alarm_online.ice_maker_false",
         "title": {
-          "en": "The ice maker is online again"
+          "en": "The ice maker is online"
         },
         "hint": {
-          "en": "When the ice maker is reported back online"
+          "en": "When the ice maker is reported online"
         },
         "args": [
           {
@@ -309,7 +309,7 @@
       {
         "id": "alarm_online.ice_maker_true",
         "title": {
-          "en": "The ice maker went offline"
+          "en": "The ice maker is offline"
         },
         "hint": {
           "en": "When the ice maker is reported to be offline"
@@ -325,10 +325,10 @@
       {
         "id": "alarm_online.sensor_false",
         "title": {
-          "en": "The sensor is online again"
+          "en": "The sensor is online"
         },
         "hint": {
-          "en": "When the sensor is reported back online"
+          "en": "When the sensor is reported online"
         },
         "args": [
           {
@@ -341,7 +341,7 @@
       {
         "id": "alarm_online.sensor_true",
         "title": {
-          "en": "The sensor went offline"
+          "en": "The sensor is offline"
         },
         "hint": {
           "en": "When the sensor is reported to be offline"
@@ -357,10 +357,10 @@
       {
         "id": "alarm_online.socket_false",
         "title": {
-          "en": "The socket is online again"
+          "en": "The socket is online"
         },
         "hint": {
-          "en": "When the socket is reported back online"
+          "en": "When the socket is reported online"
         },
         "args": [
           {
@@ -373,7 +373,7 @@
       {
         "id": "alarm_online.socket_true",
         "title": {
-          "en": "The socket went offline"
+          "en": "The socket is offline"
         },
         "hint": {
           "en": "When the socket is reported to be offline"
@@ -389,10 +389,10 @@
       {
         "id": "alarm_online.thermometer_false",
         "title": {
-          "en": "The thermometer is online again"
+          "en": "The thermometer is online"
         },
         "hint": {
-          "en": "When the thermometer is reported back online"
+          "en": "When the thermometer is reported online"
         },
         "args": [
           {
@@ -405,7 +405,7 @@
       {
         "id": "alarm_online.thermometer_true",
         "title": {
-          "en": "The thermometer went offline"
+          "en": "The thermometer is offline"
         },
         "hint": {
           "en": "When the thermometer is reported to be offline"
@@ -776,6 +776,25 @@
         ]
       },
       {
+        "id": "switch-to-random-light-scene.light",
+        "title": {
+          "en": "Switch to random light scene"
+        },
+        "hint": {
+          "en": "Switches to a random light scene (and turns on the light if off)"
+        },
+        "titleFormatted": {
+          "en": "Switch to random light scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-device&capabilities=lightScenes.light"
+          }
+        ]
+      },
+      {
         "id": "activate-dreamview.localdevice",
         "title": {
           "en": "Toggle the dream view mode"
@@ -1053,6 +1072,25 @@
             "placeholder": {
               "en": "Sunset glow"
             }
+          }
+        ]
+      },
+      {
+        "id": "switch-to-random-light-scene.localdevice",
+        "title": {
+          "en": "Switch to random light scene"
+        },
+        "hint": {
+          "en": "Switches to a random light scene (and turns on the light if off)"
+        },
+        "titleFormatted": {
+          "en": "Switch to random light scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-local-device&capabilities=lightScenes.localdevice"
           }
         ]
       }
