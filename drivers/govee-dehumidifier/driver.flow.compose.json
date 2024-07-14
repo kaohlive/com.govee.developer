@@ -3,17 +3,17 @@
       {
         "id": "alarm_online.dehumidifier_false",
         "title": {
-          "en": "The dehumidifier is online again"
+          "en": "The dehumidifier is online"
         },
         "hint": {
-          "en": "When the dehumidifier is reported back online"
+          "en": "When the dehumidifier is reported online"
         },
         "$filter": "capabilities=alarm_online.dehumidifier"
       },
       {
         "id": "alarm_online.dehumidifier_true",
         "title": {
-          "en": "The dehumidifier went offline"
+          "en": "The dehumidifier is offline"
         },
         "hint": {
           "en": "When the dehumidifier is reported to be offline"

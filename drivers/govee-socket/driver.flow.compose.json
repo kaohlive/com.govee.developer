@@ -3,17 +3,17 @@
       {
         "id": "alarm_online.socket_false",
         "title": {
-          "en": "The socket is online again"
+          "en": "The socket is online"
         },
         "hint": {
-          "en": "When the socket is reported back online"
+          "en": "When the socket is reported online"
         },
         "$filter": "capabilities=alarm_online.socket"
       },
       {
         "id": "alarm_online.socket_true",
         "title": {
-          "en": "The socket went offline"
+          "en": "The socket is offline"
         },
         "hint": {
           "en": "When the socket is reported to be offline"

@@ -3,17 +3,17 @@
       {
         "id": "alarm_online.aroma_diffuser_false",
         "title": {
-          "en": "The aroma diffuser is online again"
+          "en": "The aroma diffuser is online"
         },
         "hint": {
-          "en": "When the aroma diffuser is reported back online"
+          "en": "When the aroma diffuser is online"
         },
         "$filter": "capabilities=alarm_online.aroma_diffuser"
       },
       {
         "id": "alarm_online.aroma_diffuser_true",
         "title": {
-          "en": "The aroma diffuser went offline"
+          "en": "The aroma diffuser is offline"
         },
         "hint": {
           "en": "When the aroma diffuser is reported to be offline"

@@ -3,17 +3,17 @@
       {
         "id": "alarm_online.air_purifier_false",
         "title": {
-          "en": "The air purifier is online again"
+          "en": "The air purifier is online"
         },
         "hint": {
-          "en": "When the air purifier is reported back online"
+          "en": "When the air purifier is reported online"
         },
         "$filter": "capabilities=alarm_online.air_purifier"
       },
       {
         "id": "alarm_online.air_purifier_true",
         "title": {
-          "en": "The air purifier went offline"
+          "en": "The air purifier is offline"
         },
         "hint": {
           "en": "When the air purifier is reported to be offline"

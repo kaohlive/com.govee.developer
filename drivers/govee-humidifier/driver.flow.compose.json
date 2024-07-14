@@ -3,17 +3,17 @@
       {
         "id": "alarm_online.humidifier_false",
         "title": {
-          "en": "The humidifier is online again"
+          "en": "The humidifier is online"
         },
         "hint": {
-          "en": "When the humidifier is reported back online"
+          "en": "When the humidifier is reported online"
         },
         "$filter": "capabilities=alarm_online.humidifier"
       },
       {
         "id": "alarm_online.humidifier_true",
         "title": {
-          "en": "The humidifier went offline"
+          "en": "The humidifier is offline"
         },
         "hint": {
           "en": "When the humidifier is reported to be offline"

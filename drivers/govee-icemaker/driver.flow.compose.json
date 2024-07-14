@@ -3,17 +3,17 @@
       {
         "id": "alarm_online.ice_maker_false",
         "title": {
-          "en": "The ice maker is online again"
+          "en": "The ice maker is online"
         },
         "hint": {
-          "en": "When the ice maker is reported back online"
+          "en": "When the ice maker is reported online"
         },
         "$filter": "capabilities=alarm_online.ice_maker"
       },
       {
         "id": "alarm_online.ice_maker_true",
         "title": {
-          "en": "The ice maker went offline"
+          "en": "The ice maker is offline"
         },
         "hint": {
           "en": "When the ice maker is reported to be offline"

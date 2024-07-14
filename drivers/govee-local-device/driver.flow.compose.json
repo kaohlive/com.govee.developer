@@ -254,6 +254,19 @@
           }
         }
       ]
+    },
+    {
+      "id": "switch-to-random-light-scene.localdevice",
+      "title": {
+        "en": "Switch to random light scene"
+      },
+      "hint": {
+        "en": "Switches to a random light scene (and turns on the light if off)"
+      },
+      "titleFormatted": {
+        "en": "Switch to random light scene"
+      },
+      "$filter": "capabilities=lightScenes.localdevice"
     }
   ]
 }

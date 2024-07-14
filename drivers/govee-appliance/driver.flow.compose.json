@@ -3,17 +3,17 @@
       {
         "id": "alarm_online.appliance_false",
         "title": {
-          "en": "The appliance is online again"
+          "en": "The appliance is online"
         },
         "hint": {
-          "en": "When the appliance is reported back online"
+          "en": "When the appliance is reported online"
         },
         "$filter": "capabilities=alarm_online.appliance"
       },
       {
         "id": "alarm_online.appliance_true",
         "title": {
-          "en": "The appliance went offline"
+          "en": "The appliance is offline"
         },
         "hint": {
           "en": "When the appliance is reported to be offline"

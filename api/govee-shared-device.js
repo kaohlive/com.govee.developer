@@ -32,10 +32,10 @@ class GoveeSharedDeviceClient {
         //Use the mode capability for Dynamic LightScenes
         if(capabilitieslist.find(function(e) {return e.instance == "lightScene" }))
         {
-        if(!device.hasCapability('lightScenes.'+device.goveedevicetype)) {
-            await device.addCapability('lightScenes.'+device.goveedevicetype);
-        }
-        if(device.hasCapability('lightScenes.'+device.goveedevicetype)) {
+          if(!device.hasCapability('lightScenes.'+device.goveedevicetype)) {
+              await device.addCapability('lightScenes.'+device.goveedevicetype);
+          }
+          if(device.hasCapability('lightScenes.'+device.goveedevicetype)) {
             device.log('Adding dynamic options to the light scenes capability');
             //Check if we use the dynamic version or the static ones
             device.lightScenes = null;
@@ -64,35 +64,35 @@ class GoveeSharedDeviceClient {
             //console.log(JSON.stringify(device.lightScenes))
             //console.log('Light scenes: '+JSON.stringify(modeOptions));
             if(device.lightScenes.options.length>0){
-            //What if there are no lightscenes? then the control is going to give errors
-            await device.setCapabilityOptions('lightScenes.'+device.goveedevicetype, modeOptions);
-            //Register the flow actions
-            device.log('Setup the flow for Light scene capability');
-            await this.setupFlowSwitchLightScene(device); 
+              //What if there are no lightscenes? then the control is going to give errors
+              await device.setCapabilityOptions('lightScenes.'+device.goveedevicetype, modeOptions);
+              //Register the flow actions
+              device.log('Setup the flow for Light scene capability');
+              await this.setupFlowSwitchLightScene(device); 
             } else {
-            await device.removeCapability('lightScenes.'+device.goveedevicetype); 
+              await device.removeCapability('lightScenes.'+device.goveedevicetype); 
             }
-        }
+          }
         } else if(device.hasCapability('lightScenes.'+device.goveedevicetype))
-        await device.removeCapability('lightScenes.'+device.goveedevicetype);  
+            await device.removeCapability('lightScenes.'+device.goveedevicetype);  
         //DIY scenes are the ones you can create yourself for the device
         if(capabilitieslist.find(function(e) {return e.instance == "diyScene" }))
         {
-        if(!device.hasCapability('lightDiyScenes.'+device.goveedevicetype)) {
+          if(!device.hasCapability('lightDiyScenes.'+device.goveedevicetype)) {
             await device.addCapability('lightDiyScenes.'+device.goveedevicetype);
-        }
-        if(device.hasCapability('lightDiyScenes.'+device.goveedevicetype)) {
+          }
+          if(device.hasCapability('lightDiyScenes.'+device.goveedevicetype)) {
             device.log('Adding dynamic options to the light scenes capability');
             //Check if we use the dynamic version or the static ones
             device.diyScenes = null;
             let modeValues = capabilitieslist.find(function(e) {return e.instance == "diyScene" }).parameters;
             if(modeValues.options.length==0)
             {
-            device.diyScenes=await device.driver.deviceDiyLightModes(model, mac, device.goveedevicetype).then(device => {
-                return device.capabilitieslist.find(function(e) {return e.instance == "diyScene" }).parameters;
+              device.diyScenes=await device.driver.deviceDiyLightModes(model, mac, device.goveedevicetype).then(device => {
+              return device.capabilitieslist.find(function(e) {return e.instance == "diyScene" }).parameters;
             });
             } else {
-            device.diyScenes=modeValues;
+              device.diyScenes=modeValues;
             }
 
             const modeOptions = {
@@ -112,38 +112,38 @@ class GoveeSharedDeviceClient {
             //Now setup the slider
             //console.log('DIY Light scenes: '+JSON.stringify(modeOptions));
             if(device.diyScenes.options.length>0){
-            await device.setCapabilityOptions('lightDiyScenes.'+device.goveedevicetype, modeOptions);
-            //Register the flow actions
-            device.log('Setup the flow for DIY scene capability');
-            await this.setupFlowSwitchDiyScene(device);
+              await device.setCapabilityOptions('lightDiyScenes.'+device.goveedevicetype, modeOptions);
+              //Register the flow actions
+              device.log('Setup the flow for DIY scene capability');
+              await this.setupFlowSwitchDiyScene(device);
             } else {
-            await device.removeCapability('lightDiyScenes.'+device.goveedevicetype); 
+              await device.removeCapability('lightDiyScenes.'+device.goveedevicetype); 
             }
-        }
+          }
         } else if(device.hasCapability('lightDiyScenes.'+device.goveedevicetype))
-        await device.removeCapability('lightDiyScenes.'+device.goveedevicetype);
+          await device.removeCapability('lightDiyScenes.'+device.goveedevicetype);
         //snapshots
         if(capabilitieslist.find(function(e) {return e.instance == "snapshot" }))
         {
-        if(!device.hasCapability('snapshots.'+device.goveedevicetype)) {
-            await device.addCapability('snapshots.'+device.goveedevicetype);
-        }
-        if(device.hasCapability('snapshots.'+device.goveedevicetype)) {
-            device.log('Setting up snapshot capability');
-            await this.setupFlowSnapshots(device);
-        }
+          if(!device.hasCapability('snapshots.'+device.goveedevicetype)) {
+              await device.addCapability('snapshots.'+device.goveedevicetype);
+          }
+          if(device.hasCapability('snapshots.'+device.goveedevicetype)) {
+              device.log('Setting up snapshot capability');
+              await this.setupFlowSnapshots(device);
+          }
         } else if(device.hasCapability('snapshots.'+device.goveedevicetype))
-        await device.removeCapability('snapshots.'+device.goveedevicetype);
+          await device.removeCapability('snapshots.'+device.goveedevicetype);
         //MusicMode
         if(capabilitieslist.find(function(e) {return e.instance == "musicMode" }))
         {
-            if(!device.hasCapability('musicMode.'+device.goveedevicetype)) {
+          if(!device.hasCapability('musicMode.'+device.goveedevicetype)) {
             await device.addCapability('musicMode.'+device.goveedevicetype);
-            }
-            if(device.hasCapability('musicMode.'+device.goveedevicetype)) {
+          }
+          if(device.hasCapability('musicMode.'+device.goveedevicetype)) {
             device.log('Setting up music mode capability');
             await this.setupFlowMusicMode(device);
-            }
+          }
         } else if(device.hasCapability('musicMode.'+device.goveedevicetype))
             await device.removeCapability('musicMode.'+device.goveedevicetype);
     }
@@ -176,6 +176,22 @@ class GoveeSharedDeviceClient {
               return scene;
             });
           });
+          device._switchRandomLightScene = await device.homey.flow.getActionCard('switch-to-random-light-scene.'+device.goveedevicetype); 
+          device._switchRandomLightScene
+            .registerRunListener(async (args, state) => {
+              device.log('collection length '+args.device.lightScenes.options.length+'- Random nr: '+Math.random())
+              let randomIndex = Math.floor(Math.random() * args.device.lightScenes.options.length);
+              let randomScene = args.device.lightScenes.options[randomIndex];
+              device.log('attempt to switch to a random Light Scene on index ('+randomIndex+'): '+randomScene);
+              return new Promise((resolve, reject) => {
+                  device.log('now send the light scene capability command');
+                  device.driver.setLightScene(randomScene.value, "lightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+                    resolve(true);
+                  }, (_error) => {
+                    reject(_error);
+                  });
+              });
+            });
     }
 
 createSegmentCollection(segmentField)

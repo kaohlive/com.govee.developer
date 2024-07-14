@@ -3,17 +3,17 @@
       {
         "id": "alarm_online.sensor_false",
         "title": {
-          "en": "The sensor is online again"
+          "en": "The sensor is online"
         },
         "hint": {
-          "en": "When the sensor is reported back online"
+          "en": "When the sensor is reported online"
         },
         "$filter": "capabilities=alarm_online.sensor"
       },
       {
         "id": "alarm_online.sensor_true",
         "title": {
-          "en": "The sensor went offline"
+          "en": "The sensor is offline"
         },
         "hint": {
           "en": "When the sensor is reported to be offline"

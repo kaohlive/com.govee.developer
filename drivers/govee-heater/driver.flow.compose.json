@@ -3,17 +3,17 @@
       {
         "id": "alarm_online.heater_false",
         "title": {
-          "en": "The heater is online again"
+          "en": "The heater is online"
         },
         "hint": {
-          "en": "When the heater is reported back online"
+          "en": "When the heater is reported online"
         },
         "$filter": "capabilities=alarm_online.heater"
       },
       {
         "id": "alarm_online.heater_true",
         "title": {
-          "en": "The heater went offline"
+          "en": "The heater is offline"
         },
         "hint": {
           "en": "When the heater is reported to be offline"

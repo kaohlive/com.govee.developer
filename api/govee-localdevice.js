@@ -87,11 +87,11 @@ class GoveeLocalDevice extends Device {
   {
     //console.log(JSON.stringify(stateChanged));
     //console.log(JSON.stringify(newState));
-    this.log('govee.device.'+this.data.model+': '+this.data.id+' device state to be retrieved');
+    this.log('govee.device.'+this.data.model+': '+this.data.id+' device state to be updated');
     //Now update the capabilities with the actual state
     if (this.hasCapability('onoff') && stateChanged.includes('onOff'))
     {
-      this.log('New power state is '+(newState.isOn==1));
+      this.log('New power state is ('+JSON.stringify(newState.isOn)+'): '+(newState.isOn==1));
       this.setCapabilityValue('onoff', (newState.isOn==1));
     }
     if (this.hasCapability('dim') && stateChanged.includes('brightness'))

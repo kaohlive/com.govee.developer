@@ -3,17 +3,17 @@
       {
         "id": "alarm_online.thermometer_false",
         "title": {
-          "en": "The thermometer is online again"
+          "en": "The thermometer is online"
         },
         "hint": {
-          "en": "When the thermometer is reported back online"
+          "en": "When the thermometer is reported online"
         },
         "$filter": "capabilities=alarm_online.thermometer"
       },
       {
         "id": "alarm_online.thermometer_true",
         "title": {
-          "en": "The thermometer went offline"
+          "en": "The thermometer is offline"
         },
         "hint": {
           "en": "When the thermometer is reported to be offline"

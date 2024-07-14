@@ -3,17 +3,17 @@
       {
         "id": "alarm_online.box_false",
         "title": {
-          "en": "The box is online again"
+          "en": "The box is online"
         },
         "hint": {
-          "en": "When the box is reported back online"
+          "en": "When the box is reported online"
         },
         "$filter": "capabilities=alarm_online.box"
       },
       {
         "id": "alarm_online.box_true",
         "title": {
-          "en": "The box went offline"
+          "en": "The box is offline"
         },
         "hint": {
           "en": "When the box is reported to be offline"

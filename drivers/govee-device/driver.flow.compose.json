@@ -3,17 +3,17 @@
     {
       "id": "alarm_online.light_false",
       "title": {
-        "en": "The light is online again"
+        "en": "The light is online"
       },
       "hint": {
-        "en": "When the light is reported back online"
+        "en": "When the light is reported online"
       },
       "$filter": "capabilities=alarm_online.light"
     },
     {
       "id": "alarm_online.light_true",
       "title": {
-        "en": "The light went offline"
+        "en": "The light is offline"
       },
       "hint": {
         "en": "When the light is reported to be offline"
@@ -274,6 +274,19 @@
           }
         }
       ]
+    },
+    {
+      "id": "switch-to-random-light-scene.light",
+      "title": {
+        "en": "Switch to random light scene"
+      },
+      "hint": {
+        "en": "Switches to a random light scene (and turns on the light if off)"
+      },
+      "titleFormatted": {
+        "en": "Switch to random light scene"
+      },
+      "$filter": "capabilities=lightScenes.light"
     }
   ]
 }
