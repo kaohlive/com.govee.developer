@@ -1,7 +1,7 @@
 {
   "id": "govee-device",
   "name": {
-    "en": "Lights"
+    "en": "Light"
   },
   "class": "light",
   "platforms": ["local","cloud"],

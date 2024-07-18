@@ -377,7 +377,7 @@ createSegmentCollection(segmentField)
       device._activateSnapshot
       .registerArgumentAutocompleteListener('snapshot', async (query, args) => {
         device.log('attempt to list available snapshots matching filter ['+query+']');
-        var devicelist = await device.driver.coudapi.deviceList();
+        var devicelist = await args.device.driver.coudapi.deviceList();
         var thisdevice = devicelist.data.find(function(e) { return e.device === args.device.data.mac })
         console.log("device "+args.device.data.mac+"|"+JSON.stringify(thisdevice));
         let snaphotList = thisdevice.capabilities.find(function(e) { return e.instance === "snapshot" })
