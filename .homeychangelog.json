@@ -103,5 +103,8 @@
   },
   "2.8.4": {
     "en": "Minor improvments, added set random scene action card"
+  },
+  "2.8.5": {
+    "en": "Minor bug fix on snapshot"
   }
 }

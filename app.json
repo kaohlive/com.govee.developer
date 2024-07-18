@@ -2,7 +2,7 @@
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.govee.developer",
   "brandColor": "#00ACE7",
-  "version": "2.8.4",
+  "version": "2.8.5",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
