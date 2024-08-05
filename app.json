@@ -2,8 +2,8 @@
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.govee.developer",
   "brandColor": "#00ACE7",
-  "version": "2.8.5",
-  "compatibility": ">=5.0.0",
+  "version": "2.8.6",
+  "compatibility": ">=12.0.0",
   "sdk": 3,
   "platforms": [
     "local",
@@ -747,6 +747,25 @@
         ]
       },
       {
+        "id": "switch-to-random-diy-light-scene",
+        "title": {
+          "en": "Switch to random diy scene"
+        },
+        "hint": {
+          "en": "Switches to a random diy scene (and turns on the light if off)"
+        },
+        "titleFormatted": {
+          "en": "Switch to random diy scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-device&capabilities=lightDiyScenes.light"
+          }
+        ]
+      },
+      {
         "id": "switch-to-light-scene.light",
         "title": {
           "en": "Switch to light scene"
@@ -791,6 +810,134 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=govee-device&capabilities=lightScenes.light"
+          }
+        ]
+      },
+      {
+        "id": "set-work-mode.humidifier",
+        "title": {
+          "en": "Select work mode"
+        },
+        "hint": {
+          "en": "Sets the work mode of the humidifier"
+        },
+        "titleFormatted": {
+          "en": "Set the work mode to [[workMode]] with option [[modeValue]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-humidifier&capabilities=workMode.humidifier"
+          },
+          {
+            "type": "autocomplete",
+            "name": "workMode",
+            "title": {
+              "en": "Work mode"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          },
+          {
+            "type": "autocomplete",
+            "name": "modeValue",
+            "title": {
+              "en": "Option"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          }
+        ]
+      },
+      {
+        "id": "activate-nightlight.humidifier",
+        "title": {
+          "en": "Toggle the nightlight"
+        },
+        "titleFormatted": {
+          "en": "Activate the nightlight [[activate]]"
+        },
+        "titleTrue": {
+          "en": "Activate nightlight"
+        },
+        "titleFalse": {
+          "en": "Deactivate nightlight"
+        },
+        "insightsTitleTrue": {
+          "en": "Nightlight was activated"
+        },
+        "insightsTitleTFalse": {
+          "en": "Nightlight was deactivated"
+        },
+        "hint": {
+          "en": "Activates or deactivates the nightlight"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-humidifier&capabilities=nightlightToggle.humidifier"
+          },
+          {
+            "type": "checkbox",
+            "name": "activate",
+            "title": {
+              "en": "Activate"
+            },
+            "placeholder": {
+              "en": "Activate"
+            }
+          }
+        ]
+      },
+      {
+        "id": "switch-to-nightlight-scene.humidifier",
+        "title": {
+          "en": "Switch to light scene"
+        },
+        "hint": {
+          "en": "Switches to the selected light scene (and turns on the light if off)"
+        },
+        "titleFormatted": {
+          "en": "Switch to light scene [[nightlightScene]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-humidifier&capabilities=nightlightScenes.humidifier"
+          },
+          {
+            "type": "autocomplete",
+            "name": "nightlightScene",
+            "title": {
+              "en": "Scene"
+            },
+            "placeholder": {
+              "en": "Sunset glow"
+            }
+          }
+        ]
+      },
+      {
+        "id": "switch-to-random-nightlight-scene.humidifier",
+        "title": {
+          "en": "Switch to random light scene"
+        },
+        "hint": {
+          "en": "Switches to a random light scene (and turns on the light if off)"
+        },
+        "titleFormatted": {
+          "en": "Switch to random light scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-humidifier&capabilities=nightlightScenes.humidifier"
           }
         ]
       },
@@ -1102,7 +1249,7 @@
       "name": {
         "en": "Air purifier"
       },
-      "class": "other",
+      "class": "airpurifier",
       "icon": "default.svg",
       "platforms": [
         "local",
@@ -1193,7 +1340,7 @@
       "name": {
         "en": "Aroma diffuser"
       },
-      "class": "other",
+      "class": "diffuser",
       "icon": "default.svg",
       "platforms": [
         "local",
@@ -1279,7 +1426,7 @@
       "name": {
         "en": "Dehumidifier"
       },
-      "class": "other",
+      "class": "dehumidifier",
       "icon": "default.svg",
       "platforms": [
         "local",
@@ -1320,7 +1467,7 @@
     {
       "id": "govee-device",
       "name": {
-        "en": "Lights"
+        "en": "Light"
       },
       "class": "light",
       "platforms": [
@@ -1419,7 +1566,7 @@
       "name": {
         "en": "Humidifier"
       },
-      "class": "other",
+      "class": "humidifier",
       "icon": "default.svg",
       "platforms": [
         "local",
@@ -1430,7 +1577,10 @@
       ],
       "capabilities": [
         "alarm_online.humidifier",
-        "onoff"
+        "onoff",
+        "workMode.humidifier",
+        "nightlightToggle.humidifier",
+        "nightlightScenes.humidifier"
       ],
       "images": {
         "small": "/drivers/govee-humidifier/assets/images/small.png",
@@ -1788,6 +1938,28 @@
       "setable": true,
       "uiComponent": null
     },
+    "nightlightScenes": {
+      "type": "number",
+      "title": {
+        "en": "Light Scenes"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "slider",
+      "decimals": 0,
+      "min": 0,
+      "max": 1,
+      "step": 1
+    },
+    "nightlightToggle": {
+      "type": "boolean",
+      "title": {
+        "en": "Nightlight"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "button"
+    },
     "segmentControlBrightness": {
       "type": "number",
       "title": {
@@ -1818,6 +1990,15 @@
       "min": 0,
       "max": 1,
       "step": 1
+    },
+    "workMode": {
+      "type": "string",
+      "title": {
+        "en": "Work mode"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": null
     }
   }
 }

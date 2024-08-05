@@ -106,5 +106,8 @@
   },
   "2.8.5": {
     "en": "Minor bug fix on snapshot"
+  },
+  "2.8.6": {
+    "en": "Improved support for humidifier devices"
   }
 }
