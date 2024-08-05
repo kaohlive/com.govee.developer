@@ -3,7 +3,7 @@
   "name": {
     "en": "Air purifier"
   },
-  "class": "other",
+  "class": "airpurifier",
   "icon": "default.svg",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],

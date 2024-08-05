@@ -129,9 +129,19 @@ class GoveeDriver extends Driver {
     return this.api.setLightScene(scene, instance, model, device);
   }
 
+  async setMode(scene, instance, model, device, type) {
+		this.log('device mode requested ['+scene+'] for intance '+instance);
+    return this.api.setMode(scene, instance, model, device);
+  }
+
   async setMusicMode(musicMode, sensitivity, model, device) {
 		this.log('device music mode requested ['+musicMode+'|'+sensitivity+']');
     return this.api.setMusicMode(musicMode, sensitivity, model, device);
+  }
+
+  async setWorkMode(workMode, modeValue, model, device) {
+		this.log('device work mode requested ['+workMode.name+'|'+modeValue.value+']');
+    return this.api.setWorkMode(workMode.value, modeValue.value, model, device);
   }
 
   async setSegmentColor(segment, colorHex, mode, model, device, type) {

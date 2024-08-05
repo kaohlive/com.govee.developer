@@ -3,7 +3,7 @@
   "name": {
     "en": "Aroma diffuser"
   },
-  "class": "other",
+  "class": "diffuser",
   "icon": "default.svg",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],

@@ -251,6 +251,19 @@
       ]
     },
     {
+      "id": "switch-to-random-diy-light-scene",
+      "title": {
+        "en": "Switch to random diy scene"
+      },
+      "hint": {
+        "en": "Switches to a random diy scene (and turns on the light if off)"
+      },
+      "titleFormatted": {
+        "en": "Switch to random diy scene"
+      },
+      "$filter": "capabilities=lightDiyScenes.light"
+    },
+    {
       "id": "switch-to-light-scene.light",
       "title": {
         "en": "Switch to light scene"

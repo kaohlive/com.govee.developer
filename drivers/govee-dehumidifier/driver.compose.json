@@ -3,7 +3,7 @@
   "name": {
     "en": "Dehumidifier"
   },
-  "class": "other",
+  "class": "dehumidifier",
   "icon": "default.svg",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],

@@ -20,5 +20,117 @@
         },
         "$filter": "capabilities=alarm_online.humidifier"
       }
+    ],
+    "actions": [
+      {
+        "id": "set-work-mode.humidifier",
+        "title": {
+          "en": "Select work mode"
+        },
+        "hint": {
+          "en": "Sets the work mode of the humidifier"
+        },
+        "titleFormatted": {
+          "en": "Set the work mode to [[workMode]] with option [[modeValue]]"
+        },
+        "$filter": "capabilities=workMode.humidifier",
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "workMode",
+            "title": {
+              "en": "Work mode"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          },
+          {
+            "type": "autocomplete",
+            "name": "modeValue",
+            "title": {
+              "en": "Option"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          }
+        ]
+      },
+      {
+        "id":"activate-nightlight.humidifier",
+        "title": {
+          "en": "Toggle the nightlight"
+        },
+        "titleFormatted": {
+          "en": "Activate the nightlight [[activate]]"
+        },
+        "titleTrue": {
+          "en": "Activate nightlight"
+        },
+        "titleFalse": {
+          "en": "Deactivate nightlight"
+        },
+        "insightsTitleTrue": {
+          "en": "Nightlight was activated"
+        },
+        "insightsTitleTFalse": {
+          "en": "Nightlight was deactivated"
+        },      
+        "hint": {
+          "en": "Activates or deactivates the nightlight"
+        },
+        "$filter": "capabilities=nightlightToggle.humidifier",
+        "args": [
+          {
+            "type": "checkbox",
+            "name": "activate",
+            "title": {
+              "en": "Activate"
+            },
+            "placeholder": {
+              "en": "Activate"
+            }
+          }
+        ]
+      },
+      {
+        "id": "switch-to-nightlight-scene.humidifier",
+        "title": {
+          "en": "Switch to light scene"
+        },
+        "hint": {
+          "en": "Switches to the selected light scene (and turns on the light if off)"
+        },
+        "titleFormatted": {
+          "en": "Switch to light scene [[nightlightScene]]"
+        },
+        "$filter": "capabilities=nightlightScenes.humidifier",
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "nightlightScene",
+            "title": {
+              "en": "Scene"
+            },
+            "placeholder": {
+              "en": "Sunset glow"
+            }
+          }
+        ]
+      },
+      {
+        "id": "switch-to-random-nightlight-scene.humidifier",
+        "title": {
+          "en": "Switch to random light scene"
+        },
+        "hint": {
+          "en": "Switches to a random light scene (and turns on the light if off)"
+        },
+        "titleFormatted": {
+          "en": "Switch to random light scene"
+        },
+        "$filter": "capabilities=nightlightScenes.humidifier"
+      }
     ]
 }

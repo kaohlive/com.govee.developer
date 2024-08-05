@@ -64,7 +64,11 @@ class GoveeDevice extends Device {
   {
     this.log('govee.'+this.goveedevicetype+'.'+this.data.model+': '+this.data.name+' device state to be retrieved');
     this.driver.deviceState(this.data.model, this.data.mac, this.data.type).then(currentState => {
-      //console.log(JSON.stringify(currentState.capabilitieslist));
+      console.log(JSON.stringify(currentState.capabilitieslist));
+
+      //Lets refresh our dynamic capabilities
+      this.sharedDevice.refreshDynamicCapabilities(currentState, this);
+
       //Now update the capabilities with the actual state
       if(this.hasCapability('alarm_online.'+this.goveedevicetype))
         {
@@ -137,6 +141,7 @@ class GoveeDevice extends Device {
           this.setCapabilityValue('light_saturation', null);
         }
       }
+
       //The following are more appliance like capabilities
       if(this.hasCapability('mode'))
       {
@@ -259,6 +264,8 @@ class GoveeDevice extends Device {
       this.registerCapabilityListener('onoff', this.onCapabilityOnoff.bind(this));
     if (this.hasCapability('dreamViewToggle.'+this.goveedevicetype))
       this.registerCapabilityListener('dreamViewToggle.'+this.goveedevicetype, this.onCapabilityDreamview.bind(this));
+    if (this.hasCapability('nightlightToggle.'+this.goveedevicetype))
+      this.registerCapabilityListener('nightlightToggle.'+this.goveedevicetype, this.onCapabilityNightlight.bind(this));
     if (this.hasCapability('gradientToggle'))
       this.registerCapabilityListener('gradientToggle', this.onCapabilityGradient.bind(this));
     if (this.hasCapability('dim'))
@@ -280,6 +287,8 @@ class GoveeDevice extends Device {
       this.registerCapabilityListener('lightScenes.'+this.goveedevicetype, this.onCapabilityLightScenes.bind(this));
     if (this.hasCapability('lightDiyScenes.'+this.goveedevicetype))
       this.registerCapabilityListener('lightDiyScenes.'+this.goveedevicetype, this.onCapabilityDIYLightScenes.bind(this));
+    if (this.hasCapability('nightlightScenes.'+this.goveedevicetype))
+      this.registerCapabilityListener('nightlightScenes.'+this.goveedevicetype, this.onCapabilityNightlightScenes.bind(this));
   }
 
   /**
@@ -336,6 +345,15 @@ class GoveeDevice extends Device {
     this.setIfHasCapability('dreamViewToggle', value);
   }
 
+  async onCapabilityNightlight( value, opts ) {
+    if(value){
+      await this.driver.toggle(1, 'nightlightToggle', this.data.model, this.data.mac, this.goveedevicetype);
+    } else {
+      await this.driver.toggle(0, 'nightlightToggle', this.data.model,this.data.mac, this.goveedevicetype);
+    }
+    this.setIfHasCapability('nightlightToggle', value);
+  }
+
   async onCapabilityGradient( value, opts ) {
     if(value){
       await this.driver.toggle(1, 'gradientToggle', this.data.model, this.data.mac, this.goveedevicetype);
@@ -369,6 +387,19 @@ class GoveeDevice extends Device {
         await this.driver.setLightScene(this.diyScenes.options[value].value, "diyScene", this.data.model, this.data.mac, this.goveedevicetype);
         this.unsetWarning();
       }
+
+  /**
+   * Switches the device to a different nightlight scene
+   * @param {string} value the scene value of the device
+   * @param {*} opts 
+   */
+        async onCapabilityNightlightScenes( value, opts ) {
+          this.setWarning('Will switch to nightlight scene '+this.nightlightScenes.options[value].name);
+          this.log('Mode switched to item '+value+' that results in diy scene '+JSON.stringify(this.nightlightScenes.options[value]));
+          await this.driver.setMode(this.nightlightScenes.options[value].value, "nightlightScene", this.data.model, this.data.mac, this.goveedevicetype);
+          this.unsetWarning();
+        }
+  
 
   /**
    * Sets the device to the desired brightness level

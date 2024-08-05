@@ -2,38 +2,57 @@ class GoveeSharedDeviceClient {
     constructor() {
     }
 
+    async refreshDynamicCapabilities(currentState,device)
+    {
+      //nightlightToggle
+      if(device.hasCapability('nightlightToggle.'+device.goveedevicetype))
+        {
+          device.log('Processing the nightlight state');
+          var nightlight = currentState.capabilitieslist.find(function(e) {return e.instance == "nightlightToggle" })
+          device.log(JSON.stringify(nightlight))
+          device.setCapabilityValue('nightlightToggle.'+device.goveedevicetype, (nightlight.state.value == 1));
+        }
+    }
+
     async createDynamicCapabilities(model,mac,capabilitieslist,device)
     {
         device.log('Start adding dynamic cloud capabilities');
         //Add new feauters
         //Setup the segment color control capability, flow only
         if(capabilitieslist.find(function(e) { return e.instance == "segmentedColorRgb" })) {
-        if(!device.hasCapability('segmentControlColor.'+device.goveedevicetype))
+          if(!device.hasCapability('segmentControlColor.'+device.goveedevicetype))
             await device.addCapability('segmentControlColor.'+device.goveedevicetype);
-        device.segmentRGBParameters = capabilitieslist.find(function(e) {return e.instance == "segmentedColorRgb" }).parameters.fields;
-        await this.setupFlowSegmentControlColor(device);
+          device.segmentRGBParameters = capabilitieslist.find(function(e) {return e.instance == "segmentedColorRgb" }).parameters.fields;
+          await this.setupFlowSegmentControlColor(device);
         } else if(device.hasCapability('segmentControlColor.'+device.goveedevicetype))
-        await device.removeCapability('segmentControlColor.'+device.goveedevicetype); 
+          await device.removeCapability('segmentControlColor.'+device.goveedevicetype); 
         //Setup the segment brightness control capability, flow only
         if(capabilitieslist.find(function(e) { return e.instance == "segmentedBrightness" })) {
-        if(!device.hasCapability('segmentControlBrightness.'+device.goveedevicetype))
+          if(!device.hasCapability('segmentControlBrightness.'+device.goveedevicetype))
             await device.addCapability('segmentControlBrightness.'+device.goveedevicetype);
-        device.segmentBrightnessParameters = capabilitieslist.find(function(e) {return e.instance == "segmentedBrightness" }).parameters.fields;
-        await this.setupFlowSegmentControlBrightness(device);
+          device.segmentBrightnessParameters = capabilitieslist.find(function(e) {return e.instance == "segmentedBrightness" }).parameters.fields;
+          await this.setupFlowSegmentControlBrightness(device);
         } else if(device.hasCapability('segmentControlBrightness.'+device.goveedevicetype))
-        await device.removeCapability('segmentControlBrightness.'+device.goveedevicetype); 
+          await device.removeCapability('segmentControlBrightness.'+device.goveedevicetype); 
+        //Now setup the NightLight button
+        if(capabilitieslist.find(function(e) { return e.instance == "nightlightToggle" })) {
+          if(!device.hasCapability('nightlightToggle.'+device.goveedevicetype))
+            await device.addCapability('nightlightToggle.'+device.goveedevicetype);
+          await this.setupFlowNightLight(device);
+        } else if(device.hasCapability('nightlightToggle.'+device.goveedevicetype))
+          await device.removeCapability('nightlightToggle.'+device.goveedevicetype); 
         //Now setup the dreamview button
         if(capabilitieslist.find(function(e) { return e.instance == "dreamViewToggle" })) {
-        if(!device.hasCapability('dreamViewToggle.'+device.goveedevicetype))
+          if(!device.hasCapability('dreamViewToggle.'+device.goveedevicetype))
             await device.addCapability('dreamViewToggle.'+device.goveedevicetype);
-        await this.setupFlowDreamView(device);
+          await this.setupFlowDreamView(device);
         } else if(device.hasCapability('dreamViewToggle.'+device.goveedevicetype))
-        await device.removeCapability('dreamViewToggle.'+device.goveedevicetype); 
+          await device.removeCapability('dreamViewToggle.'+device.goveedevicetype); 
         //Use the mode capability for Dynamic LightScenes
         if(capabilitieslist.find(function(e) {return e.instance == "lightScene" }))
         {
           if(!device.hasCapability('lightScenes.'+device.goveedevicetype)) {
-              await device.addCapability('lightScenes.'+device.goveedevicetype);
+            await device.addCapability('lightScenes.'+device.goveedevicetype);
           }
           if(device.hasCapability('lightScenes.'+device.goveedevicetype)) {
             device.log('Adding dynamic options to the light scenes capability');
@@ -42,8 +61,8 @@ class GoveeSharedDeviceClient {
             let modeValues = capabilitieslist.find(function(e) {return e.instance == "lightScene" }).parameters;
             if(modeValues.options.length==0)
             {
-            device.lightScenes=await device.driver.deviceLightModes(model, mac, device.goveedevicetype).then(device => {
-                return device.capabilitieslist.find(function(e) {return e.instance == "lightScene" }).parameters;
+              device.lightScenes=await device.driver.deviceLightModes(model, mac, device.goveedevicetype).then(device => {
+              return device.capabilitieslist.find(function(e) {return e.instance == "lightScene" }).parameters;
             });
             } else {
             device.lightScenes=modeValues;
@@ -74,7 +93,7 @@ class GoveeSharedDeviceClient {
             }
           }
         } else if(device.hasCapability('lightScenes.'+device.goveedevicetype))
-            await device.removeCapability('lightScenes.'+device.goveedevicetype);  
+          await device.removeCapability('lightScenes.'+device.goveedevicetype);  
         //DIY scenes are the ones you can create yourself for the device
         if(capabilitieslist.find(function(e) {return e.instance == "diyScene" }))
         {
@@ -122,6 +141,52 @@ class GoveeSharedDeviceClient {
           }
         } else if(device.hasCapability('lightDiyScenes.'+device.goveedevicetype))
           await device.removeCapability('lightDiyScenes.'+device.goveedevicetype);
+        //Use the mode capability for nightLightScenes
+        if(capabilitieslist.find(function(e) {return e.instance == "nightlightScene" }))
+          {
+            if(!device.hasCapability('nightlightScenes.'+device.goveedevicetype)) {
+              await device.addCapability('nightlightScenes.'+device.goveedevicetype);
+            }
+            if(device.hasCapability('nightlightScenes.'+device.goveedevicetype)) {
+              device.log('Adding dynamic options to the nightlight scenes capability');
+              //Check if we use the dynamic version or the static ones
+              device.nightlightScenes = null;
+              let modeValues = capabilitieslist.find(function(e) {return e.instance == "nightlightScene" }).parameters;
+              if(modeValues.options.length==0)
+              {
+                device.nightlightScenes=await device.driver.deviceLightModes(model, mac, device.goveedevicetype).then(device => {
+                return device.capabilitieslist.find(function(e) {return e.instance == "nightlightScene" }).parameters;
+              });
+              } else {
+              device.nightlightScenes=modeValues;
+              }
+              const modeOptions = {
+              "type": "number",
+              "title": {
+                  "en": "Light Scenes"
+              },
+              "getable": true,
+              "setable": true,
+              "uiComponent": "slider",
+              "decimals": 0,
+              "min": 0,
+              "max": (device.nightlightScenes.options.length-1),
+              "step": 1
+              }
+              //console.log(JSON.stringify(device.nightlightScenes))
+              //console.log('Light scenes: '+JSON.stringify(modeOptions));
+              if(device.nightlightScenes.options.length>0){
+                //What if there are no lightscenes? then the control is going to give errors
+                await device.setCapabilityOptions('nightlightScenes.'+device.goveedevicetype, modeOptions);
+                //Register the flow actions
+                device.log('Setup the flow for Light scene capability');
+                await this.setupFlowSwitchNightlightScene(device); 
+              } else {
+                await device.removeCapability('nightlightScenes.'+device.goveedevicetype); 
+              }
+            }
+          } else if(device.hasCapability('nightlightScenes.'+device.goveedevicetype))
+            await device.removeCapability('nightlightScenes.'+device.goveedevicetype); 
         //snapshots
         if(capabilitieslist.find(function(e) {return e.instance == "snapshot" }))
         {
@@ -145,7 +210,19 @@ class GoveeSharedDeviceClient {
             await this.setupFlowMusicMode(device);
           }
         } else if(device.hasCapability('musicMode.'+device.goveedevicetype))
-            await device.removeCapability('musicMode.'+device.goveedevicetype);
+          await device.removeCapability('musicMode.'+device.goveedevicetype);
+        //workMode
+        if(capabilitieslist.find(function(e) {return e.instance == "workMode" }))
+        {
+          if(!device.hasCapability('workMode.'+device.goveedevicetype)) {
+            await device.addCapability('workMode.'+device.goveedevicetype);
+          }
+          if(device.hasCapability('workMode.'+device.goveedevicetype)) {
+            device.log('Setting up work mode capability');
+            await this.setupFlowWorkMode(device);
+          }
+        } else if(device.hasCapability('workMode.'+device.goveedevicetype))
+          await device.removeCapability('workMode.'+device.goveedevicetype);
     }
 
     async setupFlowSwitchLightScene(device) {
@@ -193,6 +270,52 @@ class GoveeSharedDeviceClient {
               });
             });
     }
+
+    async setupFlowSwitchNightlightScene(device) {
+      device.log('Create the flow for the Nightlight scene capability');
+      //Now setup the flow cards
+      device._switchNightlightScene = await device.homey.flow.getActionCard('switch-to-nightlight-scene.'+device.goveedevicetype); 
+      device._switchNightlightScene
+        .registerRunListener(async (args, state) => {
+          device.log('attempt to switch to a Nightlight Scene: '+args.nightlightScene);
+          return new Promise((resolve, reject) => {
+              device.log('now send the nightlight scene capability command');
+              device.driver.setMode(args.nightlightScene.value, "nightlightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+                resolve(true);
+              }, (_error) => {
+                reject(_error);
+              });
+          });
+        });
+        device._switchNightlightScene
+        .registerArgumentAutocompleteListener('nightlightScene', async (query, args) => {
+          device.log('attempt to list available light scenes matching filter ['+query+']');
+          let filteredScenes = args.device.nightlightScenes.options.filter(function(e) { 
+            return e.name.toLowerCase().includes(query.toLowerCase()) 
+          });
+          device.log(JSON.stringify(filteredScenes));
+          return filteredScenes.map((scene) => {
+            scene.formattedName = scene.name;
+            return scene;
+          });
+        });
+        device._switchRandomNightlightScene = await device.homey.flow.getActionCard('switch-to-random-nightlight-scene.'+device.goveedevicetype); 
+        device._switchRandomNightlightScene
+          .registerRunListener(async (args, state) => {
+            device.log('collection length '+args.device.nightlightScenes.options.length+'- Random nr: '+Math.random())
+            let randomIndex = Math.floor(Math.random() * args.device.nightlightScenes.options.length);
+            let randomScene = args.device.nightlightScenes.options[randomIndex];
+            device.log('attempt to switch to a random Nightlight Scene on index ('+randomIndex+'): '+randomScene);
+            return new Promise((resolve, reject) => {
+                device.log('now send the nightlight scene capability command');
+                device.driver.setMode(randomScene.value, "nightlightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+                  resolve(true);
+                }, (_error) => {
+                  reject(_error);
+                });
+            });
+          });
+  }
 
 createSegmentCollection(segmentField)
 {
@@ -328,6 +451,34 @@ createSegmentCollection(segmentField)
       });
   }
 
+  async setupFlowNightLight(device) {
+    device.log('Create the flow for the nightlight capability');
+    //Now setup the flow cards
+    device._activateNightlight = await device.homey.flow.getActionCard('activate-nightlight.'+device.goveedevicetype); 
+    device._activateNightlight
+      .registerRunListener(async (args, state) => {
+        device.log('attempt to toggle nightlight: '+args.activate);
+        device.setIfHasCapability('nightlightToggle', args.activate);
+        if(args.activate){
+          return new Promise((resolve, reject) => {
+            device.driver.toggle(1, 'nightlightToggle', args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+              resolve(true);
+            }, (_error) => {
+              reject(_error);
+            });
+          });
+        } else {
+          return new Promise((resolve, reject) => {
+            device.driver.toggle(0, 'nightlightToggle', args.device.data.model,args.device.data.mac, args.device.goveedevicetype).then(() => {
+              resolve(true);
+            }, (_error) => {
+              reject(_error);
+            });
+          });
+        }
+      });
+  }
+
   async setupFlowSwitchDiyScene(device) {
     //console.log('Create the flow for the DIY Light scene capability');
     //Now setup the flow cards
@@ -356,6 +507,22 @@ createSegmentCollection(segmentField)
           return scene;
         });
       });
+      device._switchRandomDiyLightScene = await device.homey.flow.getActionCard('switch-to-random-diy-light-scene.'+device.goveedevicetype); 
+          device._switchRandomDiyLightScene
+            .registerRunListener(async (args, state) => {
+              device.log('collection length '+args.device.diyScenes.options.length+'- Random nr: '+Math.random())
+              let randomIndex = Math.floor(Math.random() * args.device.diyScenes.options.length);
+              let randomScene = args.device.diyScenes.options[randomIndex];
+              device.log('attempt to switch to a random Diy Light Scene on index ('+randomIndex+'): '+randomScene);
+              return new Promise((resolve, reject) => {
+                  device.log('now send the light scene capability command');
+                  device.driver.setLightScene(randomScene.value, "diyScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+                    resolve(true);
+                  }, (_error) => {
+                    reject(_error);
+                  });
+              });
+            });
   }
 
   async setupFlowSnapshots(device) {
@@ -421,6 +588,72 @@ createSegmentCollection(segmentField)
           musicModes.formattedName = musicModes.name;
           return musicModes;
         });
+      });
+  }
+
+  async setupFlowWorkMode(device) {
+    //console.log('Create the flow for the WorkcMode capability');
+    //Now setup the flow cards
+    device._setWorkMode = await device.homey.flow.getActionCard('set-work-mode.'+device.goveedevicetype); 
+    device._setWorkMode
+      .registerRunListener(async (args, state) => {
+        device.log('attempt to set work mode: '+JSON.stringify(args.workMode)+' with value '+JSON.stringify(args.modeValue));
+        return new Promise((resolve, reject) => {
+            device.log('now send the work mode capability command');
+            device.driver.setWorkMode(args.workMode, args.modeValue, args.device.data.model, args.device.data.mac).then(() => {
+            resolve(true);
+          }, (_error) => {
+            reject(_error);
+          });
+        });
+      });
+      device._setWorkMode
+      .registerArgumentAutocompleteListener('workMode', async (query, args) => {
+        device.log('attempt to list available workModes matching filter ['+query+']');
+        let workModeCapa = args.device.data.capabilitieslist.find(function(e) { return e.instance == "workMode" });
+        let workModes = workModeCapa.parameters.fields.find(function(e) { return e.fieldName == "workMode" });
+        let filteredModes = workModes.options.filter(function(e) { 
+          return e.name.toLowerCase().includes(query.toLowerCase()) 
+        });
+        device.log(JSON.stringify(filteredModes));
+        return filteredModes.map((workModes) => {
+          workModes.formattedName = workModes.name;
+          return workModes;
+        });
+      });
+      device._setWorkMode
+      .registerArgumentAutocompleteListener('modeValue', async (query, args) => {
+        device.log('attempt to list available modeValues matching filter ['+query+']');
+        let workModeCapa = args.device.data.capabilitieslist.find(function(e) { return e.instance == "workMode" });
+        let modeValuesOptions = workModeCapa.parameters.fields.find(function(e) { return e.fieldName == "modeValue" });
+        device.log(JSON.stringify(modeValuesOptions));
+        let modeValues = modeValuesOptions.options.find(function(e) { return e.name == args.workMode.name });
+        device.log(JSON.stringify(modeValues));
+        if(modeValues.hasOwnProperty('options'))
+        {
+          let filteredModes = modeValues.options.filter(function(e) {
+            if (typeof e.value === 'string') {
+              return e.value.toLowerCase().includes(query.toLowerCase()) 
+            } else {
+              return e;
+            }
+          });
+          device.log(JSON.stringify(filteredModes));
+          return filteredModes.map((modeValues) => {
+            modeValues.formattedName = modeValues.value.toString();
+            modeValues.name = modeValues.value.toString();
+            return modeValues;
+          });
+        } else {
+          const defaultOption = 
+          [{ 
+            "name": modeValues.name,
+            "formattedName": modeValues.name,
+            "value": modeValues.defaultValue
+          }]
+          return defaultOption 
+        }
+        
       });
   }
 }

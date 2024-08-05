@@ -203,6 +203,27 @@ class GoveeClient {
       });
   }
 
+  setMode(scene, instance, model, device) {
+    return new Promise((resolve, reject) => {
+      //console.log('attempt to switch device ['+device+':'+model+'] to new mode: '+scene)
+      let params = {
+        "requestId": "uuid",
+        "payload": {
+          "sku": model,
+          "device": device,
+          "capability": {
+            "type": "devices.capabilities.mode",
+            "instance": instance,
+            "value": scene
+            }
+          }
+        }
+        this.deviceControl(params).then(res => {
+          resolve(res);
+        }).catch(e => {reject(e)});
+      });
+  }
+
   setMusicMode(musicMode, sensitivity, model, device) {
     return new Promise((resolve, reject) => {
       //console.log('attempt to switch device ['+device+':'+model+'] to new mode: '+scene)
@@ -217,6 +238,30 @@ class GoveeClient {
             "value": {
               "musicMode":musicMode,
               "sensitivity":sensitivity
+            }
+            }
+          }
+        }
+        this.deviceControl(params).then(res => {
+          resolve(res);
+        }).catch(e => {reject(e)});
+      });
+  }
+
+  setWorkMode(workMode, modeValue, model, device) {
+    return new Promise((resolve, reject) => {
+      //console.log('attempt to switch device ['+device+':'+model+'] to new mode: '+modeValue)
+      let params = {
+        "requestId": "uuid",
+        "payload": {
+          "sku": model,
+          "device": device,
+          "capability": {
+            "type": "devices.capabilities.work_mode",
+            "instance": "workMode",
+            "value": {
+              "workMode":workMode,
+              "modeValue":modeValue
             }
             }
           }
