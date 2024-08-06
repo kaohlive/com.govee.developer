@@ -747,7 +747,7 @@
         ]
       },
       {
-        "id": "switch-to-random-diy-light-scene",
+        "id": "switch-to-random-diy-light-scene.light",
         "title": {
           "en": "Switch to random diy scene"
         },
@@ -1190,6 +1190,25 @@
             "placeholder": {
               "en": "Valantine special"
             }
+          }
+        ]
+      },
+      {
+        "id": "switch-to-random-diy-light-scene.localdevice",
+        "title": {
+          "en": "Switch to random diy scene"
+        },
+        "hint": {
+          "en": "Switches to a random diy scene (and turns on the light if off)"
+        },
+        "titleFormatted": {
+          "en": "Switch to random diy scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-local-device&capabilities=lightDiyScenes.localdevice"
           }
         ]
       },
