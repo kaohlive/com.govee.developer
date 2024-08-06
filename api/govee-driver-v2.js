@@ -12,6 +12,7 @@ class GoveeDriver extends Driver {
     this.api = new gv.GoveeClient({
       api_key: this.homey.settings.get('api_key')
     });
+    this.coudapi = this.api;
     if(this.getDevices().length>0)
       await this.homey.app.setupMqttReceiver();
   }
@@ -20,7 +21,7 @@ class GoveeDriver extends Driver {
     this.api = new gv.GoveeClient({
       api_key: this.homey.settings.get('api_key')
     });
-
+    this.coudapi = this.api;
     this.log('govee.driver has been re-initialized');
   }
 
