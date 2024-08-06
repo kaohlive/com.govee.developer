@@ -109,5 +109,8 @@
   },
   "2.8.6": {
     "en": "Improved support for humidifier devices"
+  },
+  "2.8.7": {
+    "en": "Small fix on snapshots for cloud devices"
   }
 }
