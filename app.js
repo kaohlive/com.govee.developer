@@ -54,34 +54,13 @@ class GoveeApp extends Homey.App {
     })
     this.mqttClient=client;
     this.mqttClient.on('message', (topic, message) => {  
-      this.log(`Received message ${message} from topic ${topic}`)
-      let payload = message.toJSON();
+      this.log(`Received message from topic ${topic}`)
+      const jsonString = message.toString();
+      const payload = JSON.parse(jsonString);
+      this.log(JSON.stringify(payload));
+      this.log('Message is for device ['+payload.device+']');
       this.eventBus.emit('device_event_'+payload.device, payload);
     })
-    // //Send a test event
-    // setTimeout(function() {
-    //   this.log('App: Test send a device message'); // This will execute after 5 seconds
-    //   this.eventBus.emit('device_event_'+'19:05:D4:AD:FC:86:95:14', {
-    //     "sku":"H7140",
-    //     "device":"19:05:D4:AD:FC:86:95:14",
-    //     "deviceName":"Smart Humidifier Lite",
-    //     "capabilities":
-    //     [
-    //       {
-    //         "type":"devices.capabilities.event",
-    //         "instance":"lackWaterEvent",
-    //         "state":
-    //         [
-    //           {
-    //             "name":"lack",
-    //             "value":1,
-    //             "message":"Lack of Water"
-    //           }
-    //         ]
-    //       }
-    //     ]
-    //     });
-    // }.bind(this), 5000);
   }
 }
 
