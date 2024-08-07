@@ -112,5 +112,8 @@
   },
   "2.8.7": {
     "en": "Small fix on snapshots for cloud devices"
+  },
+  "2.9.0": {
+    "en": "Added generic support for the Event system"
   }
 }
