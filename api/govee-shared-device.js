@@ -234,6 +234,7 @@ class GoveeSharedDeviceClient {
           device.log('Registering device ['+device.data.mac+'] to the eventHub to receive mqtt messages');
           device.homey.app.eventBus.on('device_event_'+device.data.mac, (message) => {
             // Check if the message is targetting this device
+            device.log('Received an event from the mqtt, start processing it.')
             this.processReceivedDeviceEvent(device,message);
           });
 
@@ -267,6 +268,7 @@ class GoveeSharedDeviceClient {
     {
       device.log(JSON.stringify(message));
       //Trigger the When flow cards as a result
+      if(message.capabilities.find(function(e) {return e.instance == "bodyAppearedEvent" }))
       {
         let tokenStates = message.capabilities.find(function(e) {return e.instance == "bodyAppearedEvent" }).state;
         let tokens = {

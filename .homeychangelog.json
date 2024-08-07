@@ -115,5 +115,8 @@
   },
   "2.9.0": {
     "en": "Added generic support for the Event system"
+  },
+  "2.9.1": {
+    "en": "Minor fix on events"
   }
 }
