@@ -244,19 +244,49 @@ class GoveeSharedDeviceClient {
               await device.addCapability('lackWater.'+device.goveedevicetype);
             }
             if(device.hasCapability('lackWater.'+device.goveedevicetype)) {
-              device.log('Setting up work mode capability');
+              device.log('Setting up lack water event capability');
               await this.setupFlowLackWater(device);
             }
           } else if(device.hasCapability('lackWater.'+device.goveedevicetype))
             await device.removeCapability('lackWater.'+device.goveedevicetype);
+          if(capabilitieslist.find(function(e) {return e.instance == "bodyAppearedEvent" }))
+            {
+              if(!device.hasCapability('bodyAppeared.'+device.goveedevicetype)) {
+                await device.addCapability('bodyAppeared.'+device.goveedevicetype);
+              }
+              if(device.hasCapability('bodyAppeared.'+device.goveedevicetype)) {
+                device.log('Setting up body appeared capability');
+                await this.setupFlowBodyAppeared(device);
+              }
+            } else if(device.hasCapability('bodyAppeared.'+device.goveedevicetype))
+              await device.removeCapability('bodyAppeared.'+device.goveedevicetype);
         }
     }
 
     async processReceivedDeviceEvent(device, message)
     {
       device.log(JSON.stringify(message));
-      //Todo handle the event
       //Trigger the When flow cards as a result
+      {
+        let tokenStates = message.capabilities.find(function(e) {return e.instance == "bodyAppearedEvent" }).state;
+        let tokens = {
+          presence:tokenStates.find(function(e) {return e.name == "Presence" }).value
+        }
+        device._bodyAppearedTrigger.trigger(device, tokens, {})
+          .then(this.log)
+          .catch(this.error);
+      }
+      if(message.capabilities.find(function(e) {return e.instance == "lackWaterEvent" }))
+        {
+          let tokenStates = message.capabilities.find(function(e) {return e.instance == "lackWaterEvent" }).state;
+          let tokens = {
+            lack:tokenStates.find(function(e) {return e.name == "lack" }).value,
+            message:tokenStates.find(function(e) {return e.name == "lack" }).message
+          }
+          device._lackWaterTrigger.trigger(device, tokens, {})
+            .then(this.log)
+            .catch(this.error);
+        }
     }
 
     async setupFlowSwitchLightScene(device) {
@@ -354,6 +384,13 @@ class GoveeSharedDeviceClient {
 async setupFlowLackWater(device)
 {
   device.log('Create the flow for the lack water event capability');
+  device._lackWaterTrigger = device.homey.flow.getDeviceTriggerCard('event_lackWater.'+device.goveedevicetype);
+}
+
+async setupFlowBodyAppeared(device)
+{
+  device.log('Create the flow for the body appeared event capability');
+  device._bodyAppearedTrigger = device.homey.flow.getDeviceTriggerCard('event_bodyAppearedEvent.'+device.goveedevicetype);
 }
 
 createSegmentCollection(segmentField)

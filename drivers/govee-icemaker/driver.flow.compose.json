@@ -19,6 +19,30 @@
           "en": "When the ice maker is reported to be offline"
         },
         "$filter": "capabilities=alarm_online.ice_maker"
+      },
+      {
+        "id": "event_lackWater.ice_maker",
+        "title": {
+          "en": "The ice maker is lacking water"
+        },
+        "hint": {
+          "en": "When the ice maker generates the lacking water event"
+        },
+        "tokens": [
+        {
+          "name": "lack",
+          "type": "number",
+          "title": { "en": "Water lacking" },
+          "example": 1
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "title": { "en": "Event message" },
+          "example": { "en": "Lack of Water" }
+        }
+      ],
+        "$filter": "capabilities=lackWater.ice_maker"
       }
     ]
 }

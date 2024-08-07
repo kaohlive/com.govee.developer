@@ -7,7 +7,7 @@
   "icon": "default.svg",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.sensor"],
+  "capabilities": ["alarm_online.sensor", "bodyAppeared.sensor"],
   "images": {
     "small": "/drivers/govee-sensor/assets/images/small.png",
     "large": "/drivers/govee-sensor/assets/images/large.png",

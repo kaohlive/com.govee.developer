@@ -19,6 +19,24 @@
           "en": "When the sensor is reported to be offline"
         },
         "$filter": "capabilities=alarm_online.sensor"
+      },
+      {
+        "id": "event_bodyAppearedEvent.sensor",
+        "title": {
+          "en": "The presence state changed"
+        },
+        "hint": {
+          "en": "When the presence state changes, for example presence is newly detected or no longer detected"
+        },
+        "tokens": [
+        {
+          "name": "presence",
+          "type": "number",
+          "title": { "en": "Is the body present" },
+          "example": 1
+        }
+      ],
+        "$filter": "capabilities=bodyAppeared.sensor"
       }
     ]
 }

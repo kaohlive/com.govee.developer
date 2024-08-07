@@ -58,30 +58,30 @@ class GoveeApp extends Homey.App {
       let payload = message.toJSON();
       this.eventBus.emit('device_event_'+payload.device, payload);
     })
-    //Send a test event
-    setTimeout(function() {
-      this.log('App: Test send a device message'); // This will execute after 5 seconds
-      this.eventBus.emit('device_event_'+'19:05:D4:AD:FC:86:95:14', {
-        "sku":"H7140",
-        "device":"19:05:D4:AD:FC:86:95:14",
-        "deviceName":"Smart Humidifier Lite",
-        "capabilities":
-        [
-          {
-            "type":"devices.capabilities.event",
-            "instance":"lackWaterEvent",
-            "state":
-            [
-              {
-                "name":"lack",
-                "value":1,
-                "message":"Lack of Water"
-              }
-            ]
-          }
-        ]
-        });
-    }.bind(this), 5000);
+    // //Send a test event
+    // setTimeout(function() {
+    //   this.log('App: Test send a device message'); // This will execute after 5 seconds
+    //   this.eventBus.emit('device_event_'+'19:05:D4:AD:FC:86:95:14', {
+    //     "sku":"H7140",
+    //     "device":"19:05:D4:AD:FC:86:95:14",
+    //     "deviceName":"Smart Humidifier Lite",
+    //     "capabilities":
+    //     [
+    //       {
+    //         "type":"devices.capabilities.event",
+    //         "instance":"lackWaterEvent",
+    //         "state":
+    //         [
+    //           {
+    //             "name":"lack",
+    //             "value":1,
+    //             "message":"Lack of Water"
+    //           }
+    //         ]
+    //       }
+    //     ]
+    //     });
+    // }.bind(this), 5000);
   }
 }
 
