@@ -223,6 +223,40 @@ class GoveeSharedDeviceClient {
           }
         } else if(device.hasCapability('workMode.'+device.goveedevicetype))
           await device.removeCapability('workMode.'+device.goveedevicetype);
+
+        //Check if the device supports events //devices.capabilities.event
+        if(capabilitieslist.find(function(e) {return e.type == "devices.capabilities.event" }))
+        {
+          //Ensure the mqtt receiver has been setup.
+          device.log('Device supports events, connect the MQTT broker.');
+          await device.homey.app.setupMqttReceiver();
+          //We are going to emit the recieved mqtt events, so lets subscribe to them
+          device.log('Registering device ['+device.data.mac+'] to the eventHub to receive mqtt messages');
+          device.homey.app.eventBus.on('device_event_'+device.data.mac, (message) => {
+            // Check if the message is targetting this device
+            this.processReceivedDeviceEvent(device,message);
+          });
+
+          //Now hook the Flow event to the events the device supports
+          if(capabilitieslist.find(function(e) {return e.instance == "lackWaterEvent" }))
+          {
+            if(!device.hasCapability('lackWater.'+device.goveedevicetype)) {
+              await device.addCapability('lackWater.'+device.goveedevicetype);
+            }
+            if(device.hasCapability('lackWater.'+device.goveedevicetype)) {
+              device.log('Setting up work mode capability');
+              await this.setupFlowLackWater(device);
+            }
+          } else if(device.hasCapability('lackWater.'+device.goveedevicetype))
+            await device.removeCapability('lackWater.'+device.goveedevicetype);
+        }
+    }
+
+    async processReceivedDeviceEvent(device, message)
+    {
+      device.log(JSON.stringify(message));
+      //Todo handle the event
+      //Trigger the When flow cards as a result
     }
 
     async setupFlowSwitchLightScene(device) {
@@ -316,6 +350,11 @@ class GoveeSharedDeviceClient {
             });
           });
   }
+
+async setupFlowLackWater(device)
+{
+  device.log('Create the flow for the lack water event capability');
+}
 
 createSegmentCollection(segmentField)
 {

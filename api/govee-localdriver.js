@@ -11,7 +11,8 @@ class GoveeDriver extends Driver {
    * onInit is called when the driver is initialized.
    */
   async onInit() {
-    this.homey.app.localApiClient = new gv.GoveeClient();
+    if(this.homey.app.localApiClient===null)
+      this.homey.app.localApiClient = new gv.GoveeClient();
     this.log('govee.localdriver has been initialized');
   }
 
