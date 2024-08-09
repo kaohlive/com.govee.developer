@@ -2,7 +2,7 @@
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.govee.developer",
   "brandColor": "#00ACE7",
-  "version": "2.9.2",
+  "version": "2.9.3",
   "compatibility": ">=12.0.0",
   "sdk": 3,
   "platforms": [
@@ -519,6 +519,45 @@
     ],
     "actions": [
       {
+        "id": "set-work-mode.air_purifier",
+        "title": {
+          "en": "Select work mode"
+        },
+        "hint": {
+          "en": "Sets the work mode of the air purifier"
+        },
+        "titleFormatted": {
+          "en": "Set the work mode to [[workMode]] with option [[modeValue]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-airpurifier&capabilities=workMode.air_purifier"
+          },
+          {
+            "type": "autocomplete",
+            "name": "workMode",
+            "title": {
+              "en": "Work mode"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          },
+          {
+            "type": "autocomplete",
+            "name": "modeValue",
+            "title": {
+              "en": "Option"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          }
+        ]
+      },
+      {
         "id": "activate-music-mode.appliance",
         "title": {
           "en": "Activate music mode"
@@ -588,6 +627,123 @@
             },
             "placeholder": {
               "en": "game setup"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set-work-mode.appliance",
+        "title": {
+          "en": "Select work mode"
+        },
+        "hint": {
+          "en": "Sets the work mode of the appliance"
+        },
+        "titleFormatted": {
+          "en": "Set the work mode to [[workMode]] with option [[modeValue]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-appliance&capabilities=workMode.appliance"
+          },
+          {
+            "type": "autocomplete",
+            "name": "workMode",
+            "title": {
+              "en": "Work mode"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          },
+          {
+            "type": "autocomplete",
+            "name": "modeValue",
+            "title": {
+              "en": "Option"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set-work-mode.aroma_diffuser",
+        "title": {
+          "en": "Select work mode"
+        },
+        "hint": {
+          "en": "Sets the work mode of the aroma diffuser"
+        },
+        "titleFormatted": {
+          "en": "Set the work mode to [[workMode]] with option [[modeValue]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-aromadiffuser&capabilities=workMode.aroma_diffuser"
+          },
+          {
+            "type": "autocomplete",
+            "name": "workMode",
+            "title": {
+              "en": "Work mode"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          },
+          {
+            "type": "autocomplete",
+            "name": "modeValue",
+            "title": {
+              "en": "Option"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set-work-mode.dehumidifier",
+        "title": {
+          "en": "Select work mode"
+        },
+        "hint": {
+          "en": "Sets the work mode of the dehumidifier"
+        },
+        "titleFormatted": {
+          "en": "Set the work mode to [[workMode]] with option [[modeValue]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-dehumidifier&capabilities=workMode.dehumidifier"
+          },
+          {
+            "type": "autocomplete",
+            "name": "workMode",
+            "title": {
+              "en": "Work mode"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          },
+          {
+            "type": "autocomplete",
+            "name": "modeValue",
+            "title": {
+              "en": "Option"
+            },
+            "placeholder": {
+              "en": "Work mode"
             }
           }
         ]
@@ -912,6 +1068,45 @@
         ]
       },
       {
+        "id": "set-work-mode.heater",
+        "title": {
+          "en": "Select work mode"
+        },
+        "hint": {
+          "en": "Sets the work mode of the heater"
+        },
+        "titleFormatted": {
+          "en": "Set the work mode to [[workMode]] with option [[modeValue]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-heater&capabilities=workMode.heater"
+          },
+          {
+            "type": "autocomplete",
+            "name": "workMode",
+            "title": {
+              "en": "Work mode"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          },
+          {
+            "type": "autocomplete",
+            "name": "modeValue",
+            "title": {
+              "en": "Option"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          }
+        ]
+      },
+      {
         "id": "set-work-mode.humidifier",
         "title": {
           "en": "Select work mode"
@@ -1036,6 +1231,45 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=govee-humidifier&capabilities=nightlightScenes.humidifier"
+          }
+        ]
+      },
+      {
+        "id": "set-work-mode.ice_maker",
+        "title": {
+          "en": "Select work mode"
+        },
+        "hint": {
+          "en": "Sets the work mode of the ice maker"
+        },
+        "titleFormatted": {
+          "en": "Set the work mode to [[workMode]] with option [[modeValue]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-icemaker&capabilities=workMode.ice_maker"
+          },
+          {
+            "type": "autocomplete",
+            "name": "workMode",
+            "title": {
+              "en": "Work mode"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          },
+          {
+            "type": "autocomplete",
+            "name": "modeValue",
+            "title": {
+              "en": "Option"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
           }
         ]
       },
@@ -1377,7 +1611,8 @@
       ],
       "capabilities": [
         "alarm_online.air_purifier",
-        "onoff"
+        "onoff",
+        "workMode.air_purifier"
       ],
       "images": {
         "small": "/drivers/govee-airpurifier/assets/images/small.png",
@@ -1425,7 +1660,8 @@
         "measure_temperature",
         "measure_humidity",
         "snapshots.appliance",
-        "musicMode.appliance"
+        "musicMode.appliance",
+        "workMode.appliance"
       ],
       "images": {
         "small": "/drivers/govee-appliance/assets/images/small.png",
@@ -1468,7 +1704,8 @@
       ],
       "capabilities": [
         "alarm_online.aroma_diffuser",
-        "onoff"
+        "onoff",
+        "workMode.aroma_diffuser"
       ],
       "images": {
         "small": "/drivers/govee-aromadiffuser/assets/images/small.png",
@@ -1554,7 +1791,8 @@
       ],
       "capabilities": [
         "alarm_online.dehumidifier",
-        "onoff"
+        "onoff",
+        "workMode.dehumidifier"
       ],
       "images": {
         "small": "/drivers/govee-dehumidifier/assets/images/small.png",
@@ -1651,7 +1889,8 @@
       ],
       "capabilities": [
         "alarm_online.heater",
-        "onoff"
+        "onoff",
+        "workMode.heater"
       ],
       "images": {
         "small": "/drivers/govee-heater/assets/images/small.png",

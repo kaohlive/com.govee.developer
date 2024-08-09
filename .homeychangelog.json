@@ -121,5 +121,8 @@
   },
   "2.9.2": {
     "en": "Another fix on events not firing in certain scenarios"
+  },
+  "2.9.3": {
+    "en": "Added work mode support to all appliance devices"
   }
 }
