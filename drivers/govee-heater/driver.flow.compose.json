@@ -20,5 +20,42 @@
         },
         "$filter": "capabilities=alarm_online.heater"
       }
-    ]
+    ],
+    "actions": [
+      {
+            "id": "set-work-mode.heater",
+            "title": {
+              "en": "Select work mode"
+            },
+            "hint": {
+              "en": "Sets the work mode of the heater"
+            },
+            "titleFormatted": {
+              "en": "Set the work mode to [[workMode]] with option [[modeValue]]"
+            },
+            "$filter": "capabilities=workMode.heater",
+            "args": [
+              {
+                "type": "autocomplete",
+                "name": "workMode",
+                "title": {
+                  "en": "Work mode"
+                },
+                "placeholder": {
+                  "en": "Work mode"
+                }
+              },
+              {
+                "type": "autocomplete",
+                "name": "modeValue",
+                "title": {
+                  "en": "Option"
+                },
+                "placeholder": {
+                  "en": "Work mode"
+                }
+              }
+            ]
+          }
+       ]
 }

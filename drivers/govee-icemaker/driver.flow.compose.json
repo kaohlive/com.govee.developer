@@ -44,5 +44,42 @@
       ],
         "$filter": "capabilities=lackWater.ice_maker"
       }
-    ]
+    ],
+    "actions": [
+      {
+            "id": "set-work-mode.ice_maker",
+            "title": {
+              "en": "Select work mode"
+            },
+            "hint": {
+              "en": "Sets the work mode of the ice maker"
+            },
+            "titleFormatted": {
+              "en": "Set the work mode to [[workMode]] with option [[modeValue]]"
+            },
+            "$filter": "capabilities=workMode.ice_maker",
+            "args": [
+              {
+                "type": "autocomplete",
+                "name": "workMode",
+                "title": {
+                  "en": "Work mode"
+                },
+                "placeholder": {
+                  "en": "Work mode"
+                }
+              },
+              {
+                "type": "autocomplete",
+                "name": "modeValue",
+                "title": {
+                  "en": "Option"
+                },
+                "placeholder": {
+                  "en": "Work mode"
+                }
+              }
+            ]
+          }
+       ]
 }

@@ -87,6 +87,41 @@
                 }
             }
         ]
+      },
+      {
+        "id": "set-work-mode.appliance",
+        "title": {
+          "en": "Select work mode"
+        },
+        "hint": {
+          "en": "Sets the work mode of the appliance"
+        },
+        "titleFormatted": {
+          "en": "Set the work mode to [[workMode]] with option [[modeValue]]"
+        },
+        "$filter": "capabilities=workMode.appliance",
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "workMode",
+            "title": {
+              "en": "Work mode"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          },
+          {
+            "type": "autocomplete",
+            "name": "modeValue",
+            "title": {
+              "en": "Option"
+            },
+            "placeholder": {
+              "en": "Work mode"
+            }
+          }
+        ]
       }
     ]
 }

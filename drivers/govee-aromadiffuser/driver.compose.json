@@ -7,7 +7,7 @@
   "icon": "default.svg",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.aroma_diffuser", "onoff"],
+  "capabilities": ["alarm_online.aroma_diffuser", "onoff", "workMode.aroma_diffuser"],
   "images": {
     "small": "/drivers/govee-aromadiffuser/assets/images/small.png",
     "large": "/drivers/govee-aromadiffuser/assets/images/large.png",

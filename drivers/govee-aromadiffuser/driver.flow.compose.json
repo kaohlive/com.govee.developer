@@ -20,5 +20,42 @@
         },
         "$filter": "capabilities=alarm_online.aroma_diffuser"
       }
-    ]
+    ],
+    "actions": [
+      {
+            "id": "set-work-mode.aroma_diffuser",
+            "title": {
+              "en": "Select work mode"
+            },
+            "hint": {
+              "en": "Sets the work mode of the aroma diffuser"
+            },
+            "titleFormatted": {
+              "en": "Set the work mode to [[workMode]] with option [[modeValue]]"
+            },
+            "$filter": "capabilities=workMode.aroma_diffuser",
+            "args": [
+              {
+                "type": "autocomplete",
+                "name": "workMode",
+                "title": {
+                  "en": "Work mode"
+                },
+                "placeholder": {
+                  "en": "Work mode"
+                }
+              },
+              {
+                "type": "autocomplete",
+                "name": "modeValue",
+                "title": {
+                  "en": "Option"
+                },
+                "placeholder": {
+                  "en": "Work mode"
+                }
+              }
+            ]
+          }
+       ]
 }
