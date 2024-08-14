@@ -5,7 +5,7 @@
   },
   "getable": true,
   "setable": true,
-  "uiComponent": "slider",
+  "uiComponent": null,
   "decimals": 0,
   "min": 0,
   "max": 1,

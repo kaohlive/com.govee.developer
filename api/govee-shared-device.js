@@ -67,6 +67,8 @@ class GoveeSharedDeviceClient {
             } else {
             device.lightScenes=modeValues;
             }
+            let enhancedUI=null;
+            if(await device.getSetting('ui_enhance')) enhancedUI="slider";
             const modeOptions = {
             "type": "number",
             "title": {
@@ -74,7 +76,7 @@ class GoveeSharedDeviceClient {
             },
             "getable": true,
             "setable": true,
-            "uiComponent": "slider",
+            "uiComponent": enhancedUI,
             "decimals": 0,
             "min": 0,
             "max": (device.lightScenes.options.length-1),
@@ -113,7 +115,8 @@ class GoveeSharedDeviceClient {
             } else {
               device.diyScenes=modeValues;
             }
-
+            let enhancedUI=null;
+            if(await device.getSetting('ui_enhance')) enhancedUI="slider";
             const modeOptions = {
             "type": "number",
             "title": {
@@ -121,7 +124,7 @@ class GoveeSharedDeviceClient {
             },
             "getable": true,
             "setable": true,
-            "uiComponent": "slider",
+            "uiComponent": enhancedUI,
             "decimals": 0,
             "min": 0,
             "max": (device.diyScenes.options.length-1),
@@ -158,8 +161,10 @@ class GoveeSharedDeviceClient {
                 return device.capabilitieslist.find(function(e) {return e.instance == "nightlightScene" }).parameters;
               });
               } else {
-              device.nightlightScenes=modeValues;
+                device.nightlightScenes=modeValues;
               }
+              let enhancedUI=null;
+              if(await device.getSetting('ui_enhance')) enhancedUI="slider";
               const modeOptions = {
               "type": "number",
               "title": {
@@ -167,7 +172,7 @@ class GoveeSharedDeviceClient {
               },
               "getable": true,
               "setable": true,
-              "uiComponent": "slider",
+              "uiComponent": enhancedUI,
               "decimals": 0,
               "min": 0,
               "max": (device.nightlightScenes.options.length-1),
@@ -421,6 +426,11 @@ createSegmentCollection(segmentField)
       value: segmentArray.slice(Math.floor((segmentField.elementRange.max/2)),segmentField.elementRange.max).join(','),
       name: `Second halve of segments`
     });
+    //Add an empty slot
+    segmentRange.push({
+      value: null,
+      name: `Use segment list`
+    });
     console.log(JSON.stringify(segmentRange));
     return segmentRange;
   }
@@ -433,8 +443,11 @@ createSegmentCollection(segmentField)
       .registerRunListener(async (args, state) => {
         return new Promise((resolve, reject) => {
             let segmentArray=null;
-            if(!args.segmentArray && !args.segmentNr)
+            device.log('Started action with '+JSON.stringify(args.segmentArray)+'-'+JSON.stringify(args.segmentNr));
+            if(!args.segmentArray && !(args.segmentNr && args.segmentNr.value!=null))
               reject("Select either segment or enter a comma seperated segment nr list");
+            if((args.segmentArray && args.segmentArray!=='') && (args.segmentNr && args.segmentNr.value!=null))
+              reject("Select either segment or enter a comma seperated segment nr list, dont use both");
             if(args.segmentArray && args.segmentArray!==''  )
               segmentArray = args.segmentArray.split(',').map(Number);
             else
@@ -471,8 +484,11 @@ createSegmentCollection(segmentField)
       .registerRunListener(async (args, state) => {
         return new Promise((resolve, reject) => {
           let segmentArray=null;
-          if(!args.segmentArray && !args.segmentNr)
+          device.log('Started action with '+JSON.stringify(args.segmentArray)+'-'+JSON.stringify(args.segmentNr));
+          if(!args.segmentArray && !(args.segmentNr && args.segmentNr.value!=null))
             reject("Select either segment or enter a comma seperated segment nr list");
+          if((args.segmentArray && args.segmentArray!=='') && (args.segmentNr && args.segmentNr.value!=null))
+            reject("Select either segment or enter a comma seperated segment nr list, dont use both");
           if(args.segmentArray && args.segmentArray!==''  )
             segmentArray = args.segmentArray.split(',').map(Number);
           else
