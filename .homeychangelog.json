@@ -124,5 +124,8 @@
   },
   "2.9.3": {
     "en": "Added work mode support to all appliance devices"
+  },
+  "2.10.0": {
+    "en": "Replaced some images and hints, moved slider UI to advanced settings"
   }
 }
