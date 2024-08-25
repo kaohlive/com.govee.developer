@@ -4,22 +4,11 @@
     "label": { "en": "Advanced UI components" },
     "children": [
       {
-        "id": "ui_enhance_label",
-        "type": "label",
-        "label": { "en": "Explanation" },
-        "value": "When you enable this option (after app restart), additional slider components become available to select night light scenes"
-      },
-      {
-        "id": "ui_enhance_warning",
-        "type": "label",
-        "label": { "en": "Warning" },
-        "value": "When you change this setting you need to resart the Govee app to get the full result."
-      },
-      {
         "id": "ui_enhance",
         "type": "checkbox",
         "value": false,
-        "label": { "en": "Enable advance UI components" }
+        "hint": { "en": "Enable this option to get additional slider components to interact with nighlight scenes. An App restart is necessary for the changes to become visible"},
+        "label": { "en": "Nightlight Scene components" }
       }
     ]
   }

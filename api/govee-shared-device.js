@@ -16,7 +16,9 @@ class GoveeSharedDeviceClient {
 
     async createDynamicCapabilities(model,mac,capabilitieslist,device)
     {
-        device.log('Start adding dynamic cloud capabilities');
+        let enhancedUI=null;
+        if(await device.getSetting('ui_enhance')) enhancedUI="slider";
+        device.log('Start adding dynamic cloud capabilities, scene components: '+enhancedUI);
         //Add new feauters
         //Setup the segment color control capability, flow only
         if(capabilitieslist.find(function(e) { return e.instance == "segmentedColorRgb" })) {
@@ -67,8 +69,6 @@ class GoveeSharedDeviceClient {
             } else {
             device.lightScenes=modeValues;
             }
-            let enhancedUI=null;
-            if(await device.getSetting('ui_enhance')) enhancedUI="slider";
             const modeOptions = {
             "type": "number",
             "title": {
@@ -115,8 +115,6 @@ class GoveeSharedDeviceClient {
             } else {
               device.diyScenes=modeValues;
             }
-            let enhancedUI=null;
-            if(await device.getSetting('ui_enhance')) enhancedUI="slider";
             const modeOptions = {
             "type": "number",
             "title": {
@@ -163,8 +161,6 @@ class GoveeSharedDeviceClient {
               } else {
                 device.nightlightScenes=modeValues;
               }
-              let enhancedUI=null;
-              if(await device.getSetting('ui_enhance')) enhancedUI="slider";
               const modeOptions = {
               "type": "number",
               "title": {
@@ -306,6 +302,9 @@ class GoveeSharedDeviceClient {
             return new Promise((resolve, reject) => {
                 device.log('now send the light scene capability command');
                 device.driver.setLightScene(args.lightScene.value, "lightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+                  const sceneIndex = args.device.lightScenes.options.findIndex((obj) => obj.value.id === args.lightScene.value.id);
+                  //console.log('Scene selected index: '+sceneIndex);
+                  args.device.setCapabilityValue('lightScenes.'+device.goveedevicetype, sceneIndex);
                   resolve(true);
                 }, (_error) => {
                   reject(_error);
@@ -334,6 +333,7 @@ class GoveeSharedDeviceClient {
               return new Promise((resolve, reject) => {
                   device.log('now send the light scene capability command');
                   device.driver.setLightScene(randomScene.value, "lightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+                    args.device.setCapabilityValue('lightScenes.'+device.goveedevicetype, randomIndex);
                     resolve(true);
                   }, (_error) => {
                     reject(_error);
@@ -352,6 +352,8 @@ class GoveeSharedDeviceClient {
           return new Promise((resolve, reject) => {
               device.log('now send the nightlight scene capability command');
               device.driver.setMode(args.nightlightScene.value, "nightlightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+                const sceneIndex = args.device.nightlightScenes.options.findIndex((obj) => obj.value.id === args.nightlightScene.value.id);
+                args.device.setCapabilityValue('nightlightScene.'+device.goveedevicetype, sceneIndex);
                 resolve(true);
               }, (_error) => {
                 reject(_error);
@@ -380,6 +382,7 @@ class GoveeSharedDeviceClient {
             return new Promise((resolve, reject) => {
                 device.log('now send the nightlight scene capability command');
                 device.driver.setMode(randomScene.value, "nightlightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+                  args.device.setCapabilityValue('nightlightScene.'+device.goveedevicetype, randomIndex);
                   resolve(true);
                 }, (_error) => {
                   reject(_error);
@@ -583,6 +586,8 @@ createSegmentCollection(segmentField)
         return new Promise((resolve, reject) => {
             device.log('now send the DIY light scene capability command');
             device.driver.setLightScene(args.diyScene.value, "diyScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+            const sceneIndex = args.device.diyScenes.options.findIndex((obj) => obj.value === args.diyScene.value);
+            args.device.setCapabilityValue('lightDiyScenes.'+device.goveedevicetype, sceneIndex);
             resolve(true);
           }, (_error) => {
             reject(_error);
@@ -611,6 +616,7 @@ createSegmentCollection(segmentField)
               return new Promise((resolve, reject) => {
                   device.log('now send the light scene capability command');
                   device.driver.setLightScene(randomScene.value, "diyScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
+                    args.device.setCapabilityValue('lightDiyScenes.'+device.goveedevicetype, randomIndex);
                     resolve(true);
                   }, (_error) => {
                     reject(_error);

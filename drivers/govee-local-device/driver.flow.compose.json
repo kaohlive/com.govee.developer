@@ -114,7 +114,7 @@
         "en": "Sets the segment to a specific brightness"
       },
       "titleFormatted": {
-        "en": "Set the segment [[segmentNr]] or [[segmentArray]] to brightness [[segmentBrightness]]"
+        "en": "Set [[segmentNr]] or segments [[segmentArray]] to brightness [[segmentBrightness]]"
       },
       "$filter": "capabilities=segmentControlBrightness.localdevice",
       "args": [
@@ -167,7 +167,7 @@
         "en": "Use the dropdown to set a specific segment to one color, or use the Segment List input to list one or multiple segments to set to a specific brightness."
       },
       "titleFormatted": {
-        "en": "Set the segment [[segmentNr]] or [[segmentArray]] to color [[segmentColor]]"
+        "en": "Set [[segmentNr]] or segments [[segmentArray]] to color [[segmentColor]]"
       },
       "$filter": "capabilities=segmentControlColor.localdevice",
       "args": [
