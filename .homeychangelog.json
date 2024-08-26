@@ -130,5 +130,8 @@
   },
   "2.10.1": {
     "en": "Improved slider control and settings"
+  },
+  "2.10.2": {
+    "en": "Added condition cards for scenes"
   }
 }
