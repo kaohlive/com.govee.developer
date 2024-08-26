@@ -332,9 +332,10 @@ class GoveeLocalDevice extends Device {
   setIfHasCapability(cap, value) {
     if (this.hasCapability(cap)) {
         return this.setCapabilityValue(cap, value).catch(this.error)
-    } else {
-        this.log('Attempt to set cap ['+cap+'] on device '+this.data.model+':'+this.data.name+' but it is not available');
-    }
+    } 
+    // else {
+    //     this.log('Attempt to set cap ['+cap+'] on device '+this.data.model+':'+this.data.name+' but it is not available');
+    // }
   }
 
   /**

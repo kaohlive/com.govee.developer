@@ -21,6 +21,83 @@
       "$filter": "capabilities=alarm_online.light"
     }
   ],
+  "conditions": [
+    {
+      "id": "lightDiyscene-active.light",
+      "title": {
+        "en": "A specific DIY scene is active"
+      },
+      "titleFormatted": {
+        "en": "The DIY scene [[diyScene]] !{{Is|Isn't}} active"
+      },
+      "hint": {
+        "en": "Current active DIY scene"
+      },
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "diyScene",
+          "title": {
+            "en": "DIY scene"
+          },
+          "placeholder": {
+            "en": "DIY scene"
+          }
+        }
+      ],
+      "$filter": "capabilities=lightDiyScenes.light"
+    },
+    {
+      "id": "lightscene-active.light",
+      "title": {
+        "en": "A specific light scene is active"
+      },
+      "titleFormatted": {
+        "en": "The light scene [[lightScene]] !{{Is|Isn't}} active"
+      },
+      "hint": {
+        "en": "Current active light scene"
+      },
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "lightScene",
+          "title": {
+            "en": "Light scene"
+          },
+          "placeholder": {
+            "en": "Light scene"
+          }
+        }
+      ],
+      "$filter": "capabilities=lightScenes.light"
+    },
+    {
+      "id": "nightlightscene-active.light",
+      "title": {
+        "en": "A specific nightlight scene is active"
+      },
+      "titleFormatted": {
+        "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
+      },
+      "hint": {
+        "en": "Current active nightlight scene"
+      },
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "nightlightScene",
+          "title": {
+            "en": "Nightlight scene"
+          },
+          "placeholder": {
+            "en": "Nightlight scene"
+          }
+        }
+      ],
+      "$filter": "capabilities=nightlightScenes.light"
+    }
+  ],
   "actions": [
     {
       "id":"activate-dreamview.light",

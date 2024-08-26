@@ -305,6 +305,8 @@ class GoveeSharedDeviceClient {
                   const sceneIndex = args.device.lightScenes.options.findIndex((obj) => obj.value.id === args.lightScene.value.id);
                   //console.log('Scene selected index: '+sceneIndex);
                   args.device.setCapabilityValue('lightScenes.'+device.goveedevicetype, sceneIndex);
+                  args.device.setIfHasCapability('nightlightScene.'+device.goveedevicetype, null);
+                  args.device.setIfHasCapability('lightDiyScenes.'+device.goveedevicetype, null);
                   resolve(true);
                 }, (_error) => {
                   reject(_error);
@@ -340,6 +342,29 @@ class GoveeSharedDeviceClient {
                   });
               });
             });
+          device._compareLightScene = await device.homey.flow.getConditionCard('lightscene-active.'+device.goveedevicetype); 
+          device._compareLightScene
+            .registerRunListener(async (args, state) => {
+              device.log('attempt to check if Light Scene is active: '+args.lightScene);
+                return new Promise((resolve, reject) => {
+                  const activeScene=args.device.getCapabilityValue('lightScenes.'+device.goveedevicetype);
+                  const sceneIndex= args.device.lightScenes.options.findIndex((obj) => obj.value.id === args.lightScene.value.id);
+                  device.log('Compare active index '+activeScene+' with picked index '+sceneIndex);
+                  resolve(activeScene==sceneIndex);
+                });
+              });
+            device._compareLightScene
+            .registerArgumentAutocompleteListener('lightScene', async (query, args) => {
+              device.log('attempt to list available light scenes matching filter ['+query+']');
+              let filteredScenes = args.device.lightScenes.options.filter(function(e) { 
+                return e.name.toLowerCase().includes(query.toLowerCase()) 
+              });
+              device.log(JSON.stringify(filteredScenes));
+              return filteredScenes.map((scene) => {
+                scene.formattedName = scene.name;
+                return scene;
+              });
+            });
     }
 
     async setupFlowSwitchNightlightScene(device) {
@@ -354,6 +379,8 @@ class GoveeSharedDeviceClient {
               device.driver.setMode(args.nightlightScene.value, "nightlightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
                 const sceneIndex = args.device.nightlightScenes.options.findIndex((obj) => obj.value.id === args.nightlightScene.value.id);
                 args.device.setCapabilityValue('nightlightScene.'+device.goveedevicetype, sceneIndex);
+                args.device.setIfHasCapability('lightScenes.'+device.goveedevicetype, null);
+                args.device.setIfHasCapability('lightDiyScenes.'+device.goveedevicetype, null);
                 resolve(true);
               }, (_error) => {
                 reject(_error);
@@ -387,6 +414,28 @@ class GoveeSharedDeviceClient {
                 }, (_error) => {
                   reject(_error);
                 });
+            });
+          });
+        device._compareNightlightScene = await device.homey.flow.getConditionCard('nightlightscene-active.'+device.goveedevicetype); 
+        device._compareNightlightScene
+          .registerRunListener(async (args, state) => {
+            device.log('attempt to check if Nightlight Scene is active: '+args.nightlightScene);
+              return new Promise((resolve, reject) => {
+                let activeScene=args.device.getCapabilityValue('nightlightScenes.'+device.goveedevicetype);
+                const sceneIndex = args.device.nightlightScenes.options.findIndex((obj) => obj.value.id === args.nightlightScene.value.id);
+                resolve(activeScene==sceneIndex);
+              });
+            });
+          device._compareNightlightScene
+          .registerArgumentAutocompleteListener('nightlightScene', async (query, args) => {
+            device.log('attempt to list available nightlight scenes matching filter ['+query+']');
+            let filteredScenes = args.device.nightlightScenes.options.filter(function(e) { 
+              return e.name.toLowerCase().includes(query.toLowerCase()) 
+            });
+            device.log(JSON.stringify(filteredScenes));
+            return filteredScenes.map((scene) => {
+              scene.formattedName = scene.name;
+              return scene;
             });
           });
   }
@@ -588,6 +637,8 @@ createSegmentCollection(segmentField)
             device.driver.setLightScene(args.diyScene.value, "diyScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
             const sceneIndex = args.device.diyScenes.options.findIndex((obj) => obj.value === args.diyScene.value);
             args.device.setCapabilityValue('lightDiyScenes.'+device.goveedevicetype, sceneIndex);
+            args.device.setIfHasCapability('lightScenes.'+device.goveedevicetype, null);
+            args.device.setIfHasCapability('nightlightScene.'+device.goveedevicetype, null);
             resolve(true);
           }, (_error) => {
             reject(_error);
@@ -623,6 +674,28 @@ createSegmentCollection(segmentField)
                   });
               });
             });
+      device._compareDiyLightScene = await device.homey.flow.getConditionCard('lightDiyscene-active.'+device.goveedevicetype); 
+      device._compareDiyLightScene
+        .registerRunListener(async (args, state) => {
+          device.log('attempt to switch to a DIY Light Scene: '+args.diyScene);
+            return new Promise((resolve, reject) => {
+              let activeScene=args.device.getCapabilityValue('lightDiyScenes.'+device.goveedevicetype);
+              const sceneIndex = args.device.diyScenes.options.findIndex((obj) => obj.value === args.diyScene.value);
+              resolve(activeScene==sceneIndex);
+            });
+          });
+        device._compareDiyLightScene
+        .registerArgumentAutocompleteListener('diyScene', async (query, args) => {
+          device.log('attempt to list available DIY light scenes matching filter ['+query+']');
+          let filteredScenes = args.device.diyScenes.options.filter(function(e) { 
+            return e.name.toLowerCase().includes(query.toLowerCase()) 
+          });
+          device.log(JSON.stringify(filteredScenes));
+          return filteredScenes.map((scene) => {
+            scene.formattedName = scene.name;
+            return scene;
+          });
+        });
   }
 
   async setupFlowSnapshots(device) {

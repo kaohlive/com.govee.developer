@@ -45,6 +45,33 @@
         "$filter": "capabilities=lackWater.humidifier"
       }
     ],
+    "conditions": [
+      {
+        "id": "nightlightscene-active.humidifier",
+        "title": {
+          "en": "A specific nightlight scene is active"
+        },
+        "titleFormatted": {
+          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
+        },
+        "hint": {
+          "en": "Current active nightlight scene"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "nightlightScene",
+            "title": {
+            "en": "Nightlight scene"
+            },
+            "placeholder": {
+              "en": "Nightlight scene"
+            }
+          }
+        ],
+        "$filter": "capabilities=nightlightScenes.humidifier"
+      }
+    ],
     "actions": [
       {
         "id": "set-work-mode.humidifier",
