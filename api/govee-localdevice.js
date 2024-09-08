@@ -184,6 +184,10 @@ class GoveeLocalDevice extends Device {
       this.registerCapabilityListener('lightScenes.'+this.goveedevicetype, this.onCapabilityLightScenes.bind(this));
     if (this.hasCapability('lightDiyScenes.'+this.goveedevicetype))
       this.registerCapabilityListener('lightDiyScenes.'+this.goveedevicetype, this.onCapabilityDIYLightScenes.bind(this));
+    //The dreamview is not available of you eable local api on dream view devices.
+    if (this.hasCapability('dreamViewToggle.'+this.goveedevicetype))
+      this.removeCapability('dreamViewToggle.'+this.goveedevicetype); 
+
   }
 
   /**

@@ -114,6 +114,11 @@ class GoveeDriver extends Driver {
    * Should be a copy of the driver-v2 methods
    */
 
+  async toggle(mode, instance, model, device, type) {
+		this.log('device toggle requested ['+mode+'] for intance '+instance);
+    return this.coudapi.devicesToggle(mode, instance, model, device);
+  }
+
   async deviceLightModes(model, device) {
     return this.coudapi.lightModes(model, device).then( device => {
       let deviceState = {
