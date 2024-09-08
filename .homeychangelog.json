@@ -133,5 +133,8 @@
   },
   "2.10.2": {
     "en": "Added condition cards for scenes"
+  },
+  "2.10.3": {
+    "en": "tweak on dreamview capability"
   }
 }
