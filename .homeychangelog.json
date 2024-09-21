@@ -136,5 +136,8 @@
   },
   "2.10.3": {
     "en": "tweak on dreamview capability"
+  },
+  "2.10.4": {
+    "en": "Small resource cleanups and status of local devices when updated using cloud event"
   }
 }
