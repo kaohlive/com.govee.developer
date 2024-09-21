@@ -304,6 +304,7 @@ class GoveeSharedDeviceClient {
                 device.driver.setLightScene(args.lightScene.value, "lightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
                   const sceneIndex = args.device.lightScenes.options.findIndex((obj) => obj.value.id === args.lightScene.value.id);
                   //console.log('Scene selected index: '+sceneIndex);
+                  args.device.setIfHasCapability('onoff', true);
                   args.device.setCapabilityValue('lightScenes.'+device.goveedevicetype, sceneIndex);
                   args.device.setIfHasCapability('nightlightScene.'+device.goveedevicetype, null);
                   args.device.setIfHasCapability('lightDiyScenes.'+device.goveedevicetype, null);
@@ -638,6 +639,7 @@ createSegmentCollection(segmentField)
             device.log('now send the DIY light scene capability command');
             device.driver.setLightScene(args.diyScene.value, "diyScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
             const sceneIndex = args.device.diyScenes.options.findIndex((obj) => obj.value === args.diyScene.value);
+            args.device.setIfHasCapability('onoff', true);
             args.device.setCapabilityValue('lightDiyScenes.'+device.goveedevicetype, sceneIndex);
             args.device.setIfHasCapability('lightScenes.'+device.goveedevicetype, null);
             args.device.setIfHasCapability('nightlightScene.'+device.goveedevicetype, null);

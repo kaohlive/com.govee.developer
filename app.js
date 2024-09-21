@@ -26,6 +26,8 @@ class GoveeApp extends Homey.App {
     }
     if((this.localApiClient!=null))
       this.localApiClient.destroy();
+    //Kill the eventbus, this prevents subscribed events from trying to fire while we are destorying hosts
+    this.eventBus.removeAllListeners();
     this.log('Cleaned up open connections');
   }
 
