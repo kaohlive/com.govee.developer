@@ -56,6 +56,43 @@
                 }
               }
             ]
+          },
+          {
+            "id":"activate-nightlight.heater",
+            "title": {
+              "en": "Toggle the nightlight"
+            },
+            "titleFormatted": {
+              "en": "Activate the nightlight [[activate]]"
+            },
+            "titleTrue": {
+              "en": "Activate nightlight"
+            },
+            "titleFalse": {
+              "en": "Deactivate nightlight"
+            },
+            "insightsTitleTrue": {
+              "en": "Nightlight was activated"
+            },
+            "insightsTitleTFalse": {
+              "en": "Nightlight was deactivated"
+            },      
+            "hint": {
+              "en": "Activates or deactivates the nightlight"
+            },
+            "$filter": "capabilities=nightlightToggle.heater",
+            "args": [
+              {
+                "type": "checkbox",
+                "name": "activate",
+                "title": {
+                  "en": "Activate"
+                },
+                "placeholder": {
+                  "en": "Activate"
+                }
+              }
+            ]
           }
        ]
 }
