@@ -2,7 +2,7 @@
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "com.govee.developer",
   "brandColor": "#00ACE7",
-  "version": "2.10.4",
+  "version": "2.11.0",
   "compatibility": ">=12.0.0",
   "sdk": 3,
   "platforms": [
@@ -1107,6 +1107,47 @@
         ]
       },
       {
+        "id": "activate-nightlight.heater",
+        "title": {
+          "en": "Toggle the nightlight"
+        },
+        "titleFormatted": {
+          "en": "Activate the nightlight [[activate]]"
+        },
+        "titleTrue": {
+          "en": "Activate nightlight"
+        },
+        "titleFalse": {
+          "en": "Deactivate nightlight"
+        },
+        "insightsTitleTrue": {
+          "en": "Nightlight was activated"
+        },
+        "insightsTitleTFalse": {
+          "en": "Nightlight was deactivated"
+        },
+        "hint": {
+          "en": "Activates or deactivates the nightlight"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-heater&capabilities=nightlightToggle.heater"
+          },
+          {
+            "type": "checkbox",
+            "name": "activate",
+            "title": {
+              "en": "Activate"
+            },
+            "placeholder": {
+              "en": "Activate"
+            }
+          }
+        ]
+      },
+      {
         "id": "set-work-mode.humidifier",
         "title": {
           "en": "Select work mode"
@@ -2116,7 +2157,8 @@
       "capabilities": [
         "alarm_online.heater",
         "onoff",
-        "workMode.heater"
+        "workMode.heater",
+        "nightlightToggle.heater"
       ],
       "images": {
         "small": "/drivers/govee-heater/assets/images/small.png",

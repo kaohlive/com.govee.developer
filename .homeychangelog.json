@@ -139,5 +139,8 @@
   },
   "2.10.4": {
     "en": "Small resource cleanups and status of local devices when updated using cloud event"
+  },
+  "2.11.0": {
+    "en": "Cleaned up images"
   }
 }
