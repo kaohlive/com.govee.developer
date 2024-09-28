@@ -4,7 +4,6 @@
     "en": "Socket"
   },
   "class": "socket",
-  "icon": "default.svg",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
   "capabilities": ["alarm_online.socket", "onoff"],

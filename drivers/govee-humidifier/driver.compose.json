@@ -4,7 +4,6 @@
     "en": "Humidifier"
   },
   "class": "humidifier",
-  "icon": "default.svg",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
   "capabilities": ["alarm_online.humidifier", "onoff", "workMode.humidifier", "nightlightToggle.humidifier", "nightlightScenes.humidifier", "lackWater.humidifier"],

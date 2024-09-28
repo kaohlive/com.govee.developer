@@ -8,7 +8,8 @@
         "type": "checkbox",
         "value": false,
         "hint": { "en": "Enable this option to get additional slider components to interact with nighlight scenes. An App restart is necessary for the changes to become visible"},
-        "label": { "en": "Nightlight Scene components" }
+        "label": { "en": "Nightlight Scene components" },
+        "highlight": true
       }
     ]
   }

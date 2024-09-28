@@ -4,7 +4,6 @@
     "en": "Air purifier"
   },
   "class": "airpurifier",
-  "icon": "default.svg",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
   "capabilities": ["alarm_online.air_purifier", "onoff", "workMode.air_purifier"],

@@ -4,7 +4,6 @@
     "en": "Heater"
   },
   "class": "heater",
-  "icon": "default.svg",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
   "capabilities": ["alarm_online.heater", "onoff", "workMode.heater", "nightlightToggle.heater"],

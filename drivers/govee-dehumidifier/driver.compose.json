@@ -4,7 +4,6 @@
     "en": "Dehumidifier"
   },
   "class": "dehumidifier",
-  "icon": "default.svg",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
   "capabilities": ["alarm_online.dehumidifier", "onoff", "workMode.dehumidifier"],

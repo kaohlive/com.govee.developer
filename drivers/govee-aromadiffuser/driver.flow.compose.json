@@ -19,6 +19,30 @@
           "en": "When the aroma diffuser is reported to be offline"
         },
         "$filter": "capabilities=alarm_online.aroma_diffuser"
+      },
+      {
+        "id": "event_lackWater.aroma_diffuser",
+        "title": {
+          "en": "The aroma diffures is lacking water"
+        },
+        "hint": {
+          "en": "When the aroma diffuser generates the lacking water event"
+        },
+        "tokens": [
+        {
+          "name": "lack",
+          "type": "number",
+          "title": { "en": "Water lacking" },
+          "example": 1
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "title": { "en": "Event message" },
+          "example": { "en": "Lack of Water" }
+        }
+      ],
+        "$filter": "capabilities=lackWater.aroma_diffuser"
       }
     ],
     "actions": [

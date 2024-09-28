@@ -8,7 +8,8 @@
         "type": "checkbox",
         "value": false,
         "hint": { "en": "Enable this option to get additional slider components to interact with light and diy scenes. An App restart is necessary for the changes to become visible"},
-        "label": { "en": "Light Scene components" }
+        "label": { "en": "Light Scene components" },
+        "highlight": true
       }
     ]
   }

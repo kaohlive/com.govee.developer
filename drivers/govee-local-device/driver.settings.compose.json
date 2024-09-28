@@ -8,14 +8,16 @@
         "type": "checkbox",
         "value": false,
         "hint": {"en": "Enable this option to enhance the local device with features that are only available through the cloud api (like snapshots or light scenes). This requires a cloud api Key setup in the app settings. An App restart is necessary for the changes to become visible" },
-        "label": { "en": "Cloud API enhance this local device" }
+        "label": { "en": "Cloud API enhance this local device" },
+        "highlight": true
       },
       {
         "id": "ui_enhance",
         "type": "checkbox",
         "value": false,
         "hint": { "en": "Enable this option to get additional slider components to interact with light and diy scenes. An App restart is necessary for the changes to become visible"},
-        "label": { "en": "Light Scene components" }
+        "label": { "en": "Light Scene components" },
+        "highlight": true
       }
     ]
   }

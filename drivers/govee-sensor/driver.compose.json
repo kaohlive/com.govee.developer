@@ -4,7 +4,6 @@
     "en": "Sensor"
   },
   "class": "sensor",
-  "icon": "default.svg",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
   "capabilities": ["alarm_online.sensor", "bodyAppeared.sensor"],

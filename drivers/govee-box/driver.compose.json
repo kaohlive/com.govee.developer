@@ -4,7 +4,6 @@
     "en": "Box"
   },
   "class": "other",
-  "icon": "default.svg",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
   "capabilities": ["alarm_online.box", "onoff"],
