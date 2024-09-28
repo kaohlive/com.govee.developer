@@ -1,7 +1,7 @@
 {
   "id": "com.govee.developer",
   "brandColor": "#00ACE7",
-  "version": "2.11.2",
+  "version": "2.11.3",
   "compatibility": ">=12.0.0",
   "sdk": 3,
   "platforms": [
