@@ -154,5 +154,8 @@
   },
   "2.11.4": {
     "en": "Additional driver icons"
+  },
+  "2.11.5": {
+    "en": "Improved Heater support"
   }
 }
