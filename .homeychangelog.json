@@ -157,5 +157,8 @@
   },
   "2.11.5": {
     "en": "Improved Heater support"
+  },
+  "2.11.6": {
+    "en": "Completed device icon rework"
   }
 }
