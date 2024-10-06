@@ -160,5 +160,8 @@
   },
   "2.11.6": {
     "en": "Completed device icon rework"
+  },
+  "2.11.7": {
+    "en": "Minor issues that could cause the app to crash"
   }
 }
