@@ -17,7 +17,7 @@ class GoveeLocalDevice extends Device {
     }
     //Now lets do our device setup
     this.data = await this.getDeviceData();
-    //console.log(JSON.stringify(this.data))
+
     await this.setupCapabilities();
     this.log('Now (de)register the cloud capabilitities');
     await this.sharedDevice.createDynamicCapabilities(this.data.model,this.data.id,this.data.cloudcapabilitieslist,this);
@@ -70,7 +70,7 @@ class GoveeLocalDevice extends Device {
       var thisdevice = devicelist.data.find(function(e) { return e.device === deviceData.mac })
       if(thisdevice!=null){
         this.log('Device '+deviceData.mac+' needs to be upgraded, retrieved its capabilities');
-        console.log(JSON.stringify(thisdevice.capabilities));
+        this.log(JSON.stringify(thisdevice.capabilities));
         //Now make sure we store these, so we can consider the device upgraded
         this.setStoreValue('capabilityList',thisdevice.capabilities);
         this.setStoreValue('deviceVersion','v2');
@@ -85,9 +85,8 @@ class GoveeLocalDevice extends Device {
 
   async refreshState(newState,stateChanged)
   {
-    //console.log(JSON.stringify(stateChanged));
-    //console.log(JSON.stringify(newState));
     this.log('govee.device.'+this.data.model+': '+this.data.id+' device state to be updated');
+    this.log('Received new state info ['+JSON.stringify(newState)+']');
     //Now update the capabilities with the actual state
     if (this.hasCapability('onoff') && stateChanged.includes('onOff'))
     {

@@ -581,7 +581,7 @@ createSegmentCollection(segmentField)
         if(args.activate){
           return new Promise((resolve, reject) => {
             device.driver.toggle(1, 'dreamViewToggle', args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
-              args.device.setCapabilityValue('dreamViewToggle.'+device.goveedevicetype, 1);
+              args.device.setCapabilityValue('dreamViewToggle.'+device.goveedevicetype, true);
               resolve(true);
             }, (_error) => {
               reject(_error);
@@ -590,7 +590,7 @@ createSegmentCollection(segmentField)
         } else {
           return new Promise((resolve, reject) => {
             device.driver.toggle(0, 'dreamViewToggle', args.device.data.model,args.device.data.mac, args.device.goveedevicetype).then(() => {
-              args.device.setCapabilityValue('dreamViewToggle.'+device.goveedevicetype, 0);
+              args.device.setCapabilityValue('dreamViewToggle.'+device.goveedevicetype, false);
               resolve(true);
             }, (_error) => {
               reject(_error);

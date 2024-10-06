@@ -168,7 +168,11 @@ class GoveeDevice extends Device {
         {
           this.log('Processing the humidity sensor state');
           var hum = currentState.capabilitieslist.find(function(e) {return e.instance == "sensorHumidity" })
-          this.setCapabilityValue('measure_humidity',hum.state.value.currentHumidity);
+          if (hum.state.value.currentHumidity === undefined) {
+            console.log("currentHumidity was not received in the state: "+JSON.stringify(hum.state));
+          } else {
+            this.setCapabilityValue('measure_humidity',hum.state.value.currentHumidity);
+          }
         }
     }).catch((err) => this.log('Error calling the state endpoint ['+JSON.stringify(err)+']'));
   }
