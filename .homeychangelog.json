@@ -163,5 +163,8 @@
   },
   "2.11.7": {
     "en": "Minor issues that could cause the app to crash"
+  },
+  "2.11.8": {
+    "en": "Added device icon 6093"
   }
 }
