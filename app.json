@@ -2491,6 +2491,36 @@
       ]
     },
     {
+      "name": {
+        "en": "Matter devices"
+      },
+      "class": "light",
+      "capabilities": [
+        "light_saturation",
+        "light_temperature",
+        "dim",
+        "light_hue",
+        "light_mode",
+        "onoff"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "matter"
+      ],
+      "images": {
+        "small": "/drivers/govee-matter-device/assets/images/small.png",
+        "large": "/drivers/govee-matter-device/assets/images/large.png",
+        "xlarge": "/drivers/govee-matter-device/assets/images/xlarge.png"
+      },
+      "matter": {
+        "vendorId": 4999,
+        "productId": 24879
+      },
+      "id": "govee-matter-device"
+    },
+    {
       "id": "govee-sensor",
       "name": {
         "en": "Sensor"
