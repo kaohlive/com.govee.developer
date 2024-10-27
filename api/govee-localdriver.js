@@ -42,9 +42,11 @@ class GoveeDriver extends Driver {
           id: device.deviceID,
           name: device.deviceID,
           model: device.model,
-          capabilitieslist: device.state
+          //capabilitieslist: device.state
         }
       }
+      //TODO: Remove capabilitylist from data object, its used in its entire to find unique items.
+      //Put it in the store
       this.log('device located: '+JSON.stringify(goveedevice));
       return goveedevice;
     });

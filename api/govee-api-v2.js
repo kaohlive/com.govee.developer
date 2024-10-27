@@ -342,6 +342,25 @@ class GoveeClient {
     });
   }
   
+  range(instance, value, model, device) {
+    return new Promise((resolve, reject) => {
+      let params = {
+        "requestId": "uuid",
+        "payload": {
+          "sku": model,
+          "device": device,
+          "capability": {
+            "type": "devices.capabilities.range",
+            "instance": instance,
+            "value": value
+          }
+        }
+      };
+      this.deviceControl(params).then(res => {
+        resolve(res);
+      }).catch(e => {reject(e)});
+    });
+  }
 
   brightness(dim, model, device) {
     return new Promise((resolve, reject) => {

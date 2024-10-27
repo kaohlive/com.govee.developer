@@ -327,6 +327,34 @@
         ]
       },
       {
+        "id": "setHumidity.humidifier_changed",
+        "title": {
+          "en": "The humidifier target humidity changed"
+        },
+        "hint": {
+          "en": "When the humidifier received a new target humidity"
+        },
+        "tokens": [
+          {
+            "name": "setHumidity",
+            "type": "number",
+            "title": {
+              "en": "Target humidity"
+            },
+            "example": {
+              "en": "Humidity"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-humidifier&capabilities=setHumidity.humidifier"
+          }
+        ]
+      },
+      {
         "id": "event_lackWater.humidifier",
         "title": {
           "en": "The humidifier is lacking water"
@@ -1266,6 +1294,41 @@
             },
             "placeholder": {
               "en": "Work mode"
+            }
+          }
+        ]
+      },
+      {
+        "id": "set-humidity-target.humidifier",
+        "title": {
+          "en": "Set humidity target"
+        },
+        "hint": {
+          "en": "Sets the target humidity of the humidifier"
+        },
+        "titleFormatted": {
+          "en": "Set the target humidity to [[humidity]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-humidifier&capabilities=setHumidity.humidifier"
+          },
+          {
+            "type": "range",
+            "name": "humidity",
+            "title": {
+              "en": "Humidity"
+            },
+            "labelDecimals": 0,
+            "min": 40,
+            "max": 80,
+            "step": 1,
+            "label": "%",
+            "labelMultiplier": 1,
+            "placeholder": {
+              "en": "48"
             }
           }
         ]
@@ -2311,6 +2374,7 @@
       "capabilities": [
         "alarm_online.humidifier",
         "onoff",
+        "setHumidity.humidifier",
         "workMode.humidifier",
         "nightlightToggle.humidifier",
         "nightlightScenes.humidifier",
@@ -2516,7 +2580,17 @@
       },
       "matter": {
         "vendorId": 4999,
-        "productId": 24879
+        "productId": [
+          24879,
+          25045,
+          25062
+        ],
+        "learnmode": {
+          "instruction": {
+            "en": "Ensure the device is in pair mode (unplug the device and plug it back in). Then press the power button on your device quickly once."
+          },
+          "image": "/drivers/govee-matter-device/assets/learnmode.svg"
+        }
       },
       "id": "govee-matter-device"
     },
@@ -2781,6 +2855,20 @@
       "getable": false,
       "setable": false,
       "uiComponent": null
+    },
+    "setHumidity": {
+      "type": "number",
+      "title": {
+        "en": "Humidity target"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": "slider",
+      "decimals": 0,
+      "min": 40,
+      "max": 80,
+      "step": 1,
+      "unit": "%"
     },
     "snapshots": {
       "type": "number",

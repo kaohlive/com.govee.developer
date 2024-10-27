@@ -6,7 +6,7 @@
   "class": "humidifier",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.humidifier", "onoff", "workMode.humidifier", "nightlightToggle.humidifier", "nightlightScenes.humidifier", "lackWater.humidifier"],
+  "capabilities": ["alarm_online.humidifier", "onoff", "setHumidity.humidifier", "workMode.humidifier", "nightlightToggle.humidifier", "nightlightScenes.humidifier", "lackWater.humidifier"],
   "images": {
     "small": "/drivers/govee-humidifier/assets/images/small.png",
     "large": "/drivers/govee-humidifier/assets/images/large.png",

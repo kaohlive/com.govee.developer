@@ -24,9 +24,9 @@
   },
   "matter": {
     "vendorId": 4999,
-    "productId": 24879,
+    "productId": [24879,25045,25062],
     "learnmode": {
-      "instruction": { "en": "Ensure the device is in pair mode (unplug the device and plaug it back in). Then press the power button on your device quickly once." },
+      "instruction": { "en": "Ensure the device is in pair mode (unplug the device and plug it back in). Then press the power button on your device quickly once." },
       "image": "{{driverAssetsPath}}/learnmode.svg"
     }
   }

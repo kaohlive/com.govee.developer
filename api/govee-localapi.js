@@ -10,8 +10,13 @@ class GoveeLocalClient {
       console.log("Local Govee Server/client is ready!");
     });
     this.GoveeClient.on("deviceAdded", (device) => {
-      this.localDevices.push(device);
-      console.log("New Device! [", device.model, ']. Total devices:'+this.localDevices.length);
+      const isInCollection = this.localDevices.some(element => element.deviceID === device.deviceID)
+      if(isInCollection)
+        console.log('Ignore located device, it was already found [', device.model, ']' );
+      else {
+        this.localDevices.push(device);
+        console.log('New Device! [', device.model, ']. Total devices:'+this.localDevices.length);
+      }
     });
   }
 

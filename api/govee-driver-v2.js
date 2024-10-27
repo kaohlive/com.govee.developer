@@ -70,8 +70,8 @@ class GoveeDriver extends Driver {
           name: device.deviceName,
           model: device.sku,
           type: device.type,
-          goveeApi: 'v2',
-          capabilitieslist: device.capabilities,
+          //goveeApi: 'v2',
+          //capabilitieslist: device.capabilities,
         }
       }
       this.log(type+' located: '+JSON.stringify(goveedevice));
@@ -178,6 +178,11 @@ class GoveeDriver extends Driver {
     var correctDimLevel = (dim*100);
 		this.log('device brightness change requested ['+correctDimLevel+']');
     return this.api.brightness(correctDimLevel, model, device);
+  }
+
+  async range(instance, value, model, device) {
+		this.log('device '+instance+' change requested ['+value+']');
+    return this.api.range(instance, value, model, device);
   }
 
   async colorTemp(colortemp, model, device) {

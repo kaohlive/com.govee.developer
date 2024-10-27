@@ -285,6 +285,8 @@ class GoveeDevice extends Device {
       if (this.hasCapability('light_hue'))
         this.registerCapabilityListener('light_hue', this.onCapabilityHue.bind(this));
     }
+    if (this.hasCapability('setHumidity.'+this.goveedevicetype))
+      this.registerCapabilityListener('setHumidity.'+this.goveedevicetype, this.onCapabilitySethumidity.bind(this));
     if (this.hasCapability('light_mode'))
       this.registerCapabilityListener('light_mode', this.onCapabilityLightMode.bind(this));
     if (this.hasCapability('lightScenes.'+this.goveedevicetype))
@@ -379,6 +381,16 @@ class GoveeDevice extends Device {
       await this.driver.setLightScene(this.lightScenes.options[value].value, "lightScene", this.data.model, this.data.mac, this.goveedevicetype);
       this.unsetWarning();
     }
+
+  /**
+   * Switches the device to a new target humidity
+   * @param {string} value the humidity target
+   * @param {*} opts 
+   */
+  async onCapabilitySethumidity( value, opts ) {
+    await this.driver.range('humidity',value,this.data.model, this.data.mac);
+    this.setIfHasCapability('setHumidity.'+this.goveedevicetype, value);
+  }
   
   /**
    * Switches the device to a different DIY light scene
