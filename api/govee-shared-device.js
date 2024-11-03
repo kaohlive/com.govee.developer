@@ -319,7 +319,7 @@ class GoveeSharedDeviceClient {
                   //console.log('Scene selected index: '+sceneIndex);
                   args.device.setIfHasCapability('onoff', true);
                   args.device.setCapabilityValue('lightScenes.'+device.goveedevicetype, sceneIndex);
-                  args.device.setIfHasCapability('nightlightScene.'+device.goveedevicetype, null);
+                  args.device.setIfHasCapability('nightlightScenes.'+device.goveedevicetype, null);
                   args.device.setIfHasCapability('lightDiyScenes.'+device.goveedevicetype, null);
                   resolve(true);
                 }, (_error) => {
@@ -392,7 +392,7 @@ class GoveeSharedDeviceClient {
               device.log('now send the nightlight scene capability command');
               device.driver.setMode(args.nightlightScene.value, "nightlightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
                 const sceneIndex = args.device.nightlightScenes.options.findIndex((obj) => obj.value.id === args.nightlightScene.value.id);
-                args.device.setCapabilityValue('nightlightScene.'+device.goveedevicetype, sceneIndex);
+                args.device.setCapabilityValue('nightlightScenes.'+device.goveedevicetype, sceneIndex);
                 args.device.setIfHasCapability('lightScenes.'+device.goveedevicetype, null);
                 args.device.setIfHasCapability('lightDiyScenes.'+device.goveedevicetype, null);
                 resolve(true);
@@ -423,7 +423,7 @@ class GoveeSharedDeviceClient {
             return new Promise((resolve, reject) => {
                 device.log('now send the nightlight scene capability command');
                 device.driver.setMode(randomScene.value, "nightlightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
-                  args.device.setCapabilityValue('nightlightScene.'+device.goveedevicetype, randomIndex);
+                  args.device.setCapabilityValue('nightlightScenes.'+device.goveedevicetype, randomIndex);
                   resolve(true);
                 }, (_error) => {
                   reject(_error);
@@ -655,7 +655,7 @@ createSegmentCollection(segmentField)
             args.device.setIfHasCapability('onoff', true);
             args.device.setCapabilityValue('lightDiyScenes.'+device.goveedevicetype, sceneIndex);
             args.device.setIfHasCapability('lightScenes.'+device.goveedevicetype, null);
-            args.device.setIfHasCapability('nightlightScene.'+device.goveedevicetype, null);
+            args.device.setIfHasCapability('nightlightScenes.'+device.goveedevicetype, null);
             resolve(true);
           }, (_error) => {
             reject(_error);
