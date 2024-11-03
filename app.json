@@ -3,7 +3,7 @@
   "id": "com.govee.developer",
   "brandColor": "#00ACE7",
   "version": "2.11.8",
-  "compatibility": ">=12.0.0",
+  "compatibility": ">=12.2.0",
   "sdk": 3,
   "platforms": [
     "local",
@@ -35,6 +35,7 @@
   "flow": {
     "triggers": [
       {
+        "deprecated": true,
         "id": "alarm_online.air_purifier_false",
         "title": {
           "en": "The air purifier is online"
@@ -51,6 +52,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.air_purifier_true",
         "title": {
           "en": "The air purifier is offline"
@@ -67,6 +69,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.appliance_false",
         "title": {
           "en": "The appliance is online"
@@ -83,6 +86,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.appliance_true",
         "title": {
           "en": "The appliance is offline"
@@ -99,6 +103,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.aroma_diffuser_false",
         "title": {
           "en": "The aroma diffuser is online"
@@ -115,6 +120,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.aroma_diffuser_true",
         "title": {
           "en": "The aroma diffuser is offline"
@@ -167,6 +173,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.box_false",
         "title": {
           "en": "The box is online"
@@ -183,6 +190,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.box_true",
         "title": {
           "en": "The box is offline"
@@ -199,6 +207,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.dehumidifier_false",
         "title": {
           "en": "The dehumidifier is online"
@@ -215,6 +224,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.dehumidifier_true",
         "title": {
           "en": "The dehumidifier is offline"
@@ -231,6 +241,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.light_false",
         "title": {
           "en": "The light is online"
@@ -247,6 +258,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.light_true",
         "title": {
           "en": "The light is offline"
@@ -263,6 +275,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.heater_false",
         "title": {
           "en": "The heater is online"
@@ -279,6 +292,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.heater_true",
         "title": {
           "en": "The heater is offline"
@@ -295,6 +309,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.humidifier_false",
         "title": {
           "en": "The humidifier is online"
@@ -311,6 +326,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.humidifier_true",
         "title": {
           "en": "The humidifier is offline"
@@ -323,34 +339,6 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=govee-humidifier&capabilities=alarm_online.humidifier"
-          }
-        ]
-      },
-      {
-        "id": "setHumidity.humidifier_changed",
-        "title": {
-          "en": "The humidifier target humidity changed"
-        },
-        "hint": {
-          "en": "When the humidifier received a new target humidity"
-        },
-        "tokens": [
-          {
-            "name": "setHumidity",
-            "type": "number",
-            "title": {
-              "en": "Target humidity"
-            },
-            "example": {
-              "en": "Humidity"
-            }
-          }
-        ],
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-humidifier&capabilities=setHumidity.humidifier"
           }
         ]
       },
@@ -391,6 +379,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.ice_maker_false",
         "title": {
           "en": "The ice maker is online"
@@ -407,6 +396,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.ice_maker_true",
         "title": {
           "en": "The ice maker is offline"
@@ -459,6 +449,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.sensor_false",
         "title": {
           "en": "The sensor is online"
@@ -475,6 +466,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.sensor_true",
         "title": {
           "en": "The sensor is offline"
@@ -517,6 +509,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.socket_false",
         "title": {
           "en": "The socket is online"
@@ -533,6 +526,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.socket_true",
         "title": {
           "en": "The socket is offline"
@@ -549,6 +543,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.thermometer_false",
         "title": {
           "en": "The thermometer is online"
@@ -565,6 +560,7 @@
         ]
       },
       {
+        "deprecated": true,
         "id": "alarm_online.thermometer_true",
         "title": {
           "en": "The thermometer is offline"
@@ -1299,41 +1295,6 @@
         ]
       },
       {
-        "id": "set-humidity-target.humidifier",
-        "title": {
-          "en": "Set humidity target"
-        },
-        "hint": {
-          "en": "Sets the target humidity of the humidifier"
-        },
-        "titleFormatted": {
-          "en": "Set the target humidity to [[humidity]]"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-humidifier&capabilities=setHumidity.humidifier"
-          },
-          {
-            "type": "range",
-            "name": "humidity",
-            "title": {
-              "en": "Humidity"
-            },
-            "labelDecimals": 0,
-            "min": 40,
-            "max": 80,
-            "step": 1,
-            "label": "%",
-            "labelMultiplier": 1,
-            "placeholder": {
-              "en": "48"
-            }
-          }
-        ]
-      },
-      {
         "id": "activate-nightlight.humidifier",
         "title": {
           "en": "Toggle the nightlight"
@@ -2031,6 +1992,7 @@
         "cloud"
       ],
       "capabilities": [
+        "alarm_connectivity",
         "alarm_online.air_purifier",
         "onoff",
         "workMode.air_purifier"
@@ -2076,6 +2038,7 @@
         "cloud"
       ],
       "capabilities": [
+        "alarm_connectivity",
         "alarm_online.appliance",
         "onoff",
         "measure_temperature",
@@ -2123,9 +2086,11 @@
         "cloud"
       ],
       "capabilities": [
+        "alarm_connectivity",
         "alarm_online.aroma_diffuser",
         "onoff",
         "workMode.aroma_diffuser",
+        "alarm_tank_empty",
         "lackWater.aroma_diffuser"
       ],
       "images": {
@@ -2167,6 +2132,7 @@
         "cloud"
       ],
       "capabilities": [
+        "alarm_connectivity",
         "alarm_online.box",
         "onoff"
       ],
@@ -2209,6 +2175,7 @@
         "cloud"
       ],
       "capabilities": [
+        "alarm_connectivity",
         "alarm_online.dehumidifier",
         "onoff",
         "workMode.dehumidifier"
@@ -2252,6 +2219,7 @@
         "cloud"
       ],
       "capabilities": [
+        "alarm_connectivity",
         "alarm_online.light",
         "onoff",
         "dim",
@@ -2328,6 +2296,7 @@
         "cloud"
       ],
       "capabilities": [
+        "alarm_connectivity",
         "alarm_online.heater",
         "onoff",
         "workMode.heater",
@@ -2372,9 +2341,11 @@
         "cloud"
       ],
       "capabilities": [
+        "alarm_connectivity",
         "alarm_online.humidifier",
         "onoff",
-        "setHumidity.humidifier",
+        "target_humidity",
+        "alarm_tank_empty",
         "workMode.humidifier",
         "nightlightToggle.humidifier",
         "nightlightScenes.humidifier",
@@ -2441,6 +2412,7 @@
         "cloud"
       ],
       "capabilities": [
+        "alarm_connectivity",
         "alarm_online.ice_maker",
         "onoff",
         "lackWater.ice_maker"
@@ -2608,8 +2580,10 @@
         "cloud"
       ],
       "capabilities": [
+        "alarm_connectivity",
         "alarm_online.sensor",
-        "bodyAppeared.sensor"
+        "bodyAppeared.sensor",
+        "alarm_presence"
       ],
       "images": {
         "small": "/drivers/govee-sensor/assets/images/small.png",
@@ -2650,6 +2624,7 @@
         "cloud"
       ],
       "capabilities": [
+        "alarm_connectivity",
         "alarm_online.socket",
         "onoff"
       ],
@@ -2692,6 +2667,7 @@
         "cloud"
       ],
       "capabilities": [
+        "alarm_connectivity",
         "alarm_online.thermometer",
         "measure_temperature",
         "measure_humidity"
@@ -2731,7 +2707,7 @@
       },
       "getable": true,
       "setable": false,
-      "icon": "/assets/health.svg"
+      "uiComponent": null
     },
     "bodyAppeared": {
       "type": "boolean",
@@ -2764,8 +2740,8 @@
     "lackWater": {
       "type": "boolean",
       "title": {
-        "en": "Offline",
-        "nl": "Offline"
+        "en": "Lacks water",
+        "nl": "Geen water"
       },
       "getable": true,
       "setable": false,
@@ -2855,20 +2831,6 @@
       "getable": false,
       "setable": false,
       "uiComponent": null
-    },
-    "setHumidity": {
-      "type": "number",
-      "title": {
-        "en": "Humidity target"
-      },
-      "getable": true,
-      "setable": true,
-      "uiComponent": "slider",
-      "decimals": 0,
-      "min": 40,
-      "max": 80,
-      "step": 1,
-      "unit": "%"
     },
     "snapshots": {
       "type": "number",

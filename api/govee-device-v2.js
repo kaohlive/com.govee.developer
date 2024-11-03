@@ -10,9 +10,10 @@ class GoveeDevice extends Device {
   async setupDevice() {
     this.sharedDevice = new GoveeSharedDevice.SharedDevice();
     this.data = await this.getDeviceData();
+    //Check if the device is fully setup
+    await this.addRemoveStandardCapabilities();
     //Lets create any missing capability based on the capabilitiesList
     await this.sharedDevice.createDynamicCapabilities(this.data.model,this.data.mac,this.data.capabilitieslist,this);
-    //await this.createDynamicCapabilities();
     await this.cleanOldCapabilities();
     //Now lets hook those capabilities to events
     await this.setupCapabilities();
@@ -76,6 +77,12 @@ class GoveeDevice extends Device {
           var online = currentState.capabilitieslist.find(function(e) {return e.instance == "online" })
           this.setCapabilityValue('alarm_online.'+this.goveedevicetype,!online.state.value);
         }
+        if(this.hasCapability('alarm_connectivity'))
+          {
+            this.log('Processing the online state');
+            var online = currentState.capabilitieslist.find(function(e) {return e.instance == "online" })
+            this.setCapabilityValue('alarm_connectivity',!online.state.value);
+          }
       if (this.hasCapability('onoff'))
       {
         this.log('Processing the on off toggle state');
@@ -174,25 +181,20 @@ class GoveeDevice extends Device {
             this.setCapabilityValue('measure_humidity',hum.state.value.currentHumidity);
           }
         }
+      
     }).catch((err) => this.log('Error calling the state endpoint ['+JSON.stringify(err)+']'));
   }
 
-  /**
-   * onAdded is called when the user adds the device, called just after pairing.
-   * That is a good moment to map the static device capabilties of Govee with the Homey capabilities
-   */
-  async onAdded() {
-    this.log('govee.device.'+this.data.model+': '+this.data.name+' has been added');
-    this.log('Lets connect capabilities:'+JSON.stringify(this.data.capabilitieslist));
-    //Lets make the capabilities list more flexible, lets store it in the storevalues
-    this.setStoreValue('capabilityList',this.data.capabilitieslist);
-    this.setStoreValue('deviceVersion','v2');
-    //Now create the capabilties based on the device
+  async addRemoveStandardCapabilities()
+  {
+    //Now create/update the capabilties based on the device
     if(!this.hasCapability('alarm_online.'+this.goveedevicetype))
       await this.addCapability('alarm_online.'+this.goveedevicetype);
+    if(!this.hasCapability('alarm_connectivity'))
+      await this.addCapability('alarm_connectivity');
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "powerSwitch" })) {
-		  if(!this.hasCapability('onoff'))
-			  await this.addCapability('onoff');
+      if(!this.hasCapability('onoff'))
+        await this.addCapability('onoff');
     } else if(this.hasCapability('onoff'))
       await this.removeCapability('onoff');  
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "brightness" })) {
@@ -209,7 +211,14 @@ class GoveeDevice extends Device {
       if(this.hasCapability('light_saturation'))
         await this.removeCapability('light_saturation');
       if(this.hasCapability('light_hue'))
-        await this.removeCapability('light_hue'); 
+        await this.removeCapability('light_hue');
+    } 
+    if(this.data.capabilitieslist.find(function(e) { return e.instance == "bodyAppearedEvent" })) {
+      if(!this.hasCapability('alarm_presence'))
+        await this.addCapability('alarm_presence');        
+    } else {
+      if(this.hasCapability('alarm_presence'))
+        await this.removeCapability('alarm_presence');
     }
 
     if(this.data.capabilitieslist.find(function(e) {return e.instance == "colorTemperatureK" })) {
@@ -233,8 +242,28 @@ class GoveeDevice extends Device {
       if(!this.hasCapability('measure_humidity'))
         await this.addCapability('measure_humidity'); 
     } else if(this.hasCapability('measure_humidity'))
-      await this.removeCapability('measure_humidity');    
+      await this.removeCapability('measure_humidity');  
+    //humidity target
+    if(this.data.capabilitieslist.find(function(e) { return e.instance == "humidity" })) {
+      this.log('Located the Target humidity capabilities')
+      if(!this.hasCapability('target_humidity')) 
+        await this.addCapability('target_humidity');
+    } else if(this.hasCapability('target_humidity'))
+      await this.removeCapability('target_humidity');
+  }
 
+  /**
+   * onAdded is called when the user adds the device, called just after pairing.
+   * That is a good moment to map the static device capabilties of Govee with the Homey capabilities
+   */
+  async onAdded() {
+    this.log('govee.device.'+this.data.model+': '+this.data.name+' has been added');
+    this.log('Lets connect capabilities:'+JSON.stringify(this.data.capabilitieslist));
+    //Lets make the capabilities list more flexible, lets store it in the storevalues
+    this.setStoreValue('capabilityList',this.data.capabilitieslist);
+    this.setStoreValue('deviceVersion','v2');
+    //Lets create all its capabilities
+    await this.addRemoveStandardCapabilities();
     //Now we need to link our capbilities with the ones we left or added
     await this.setupCapabilities();
   }
@@ -255,6 +284,8 @@ class GoveeDevice extends Device {
       await this.removeCapability('snapshots');
     if(this.hasCapability('musicMode'))
       await this.removeCapability('musicMode');
+    if(this.hasCapability('setHumidity.'+this.goveedevicetype))
+      await this.removeCapability('setHumidity.'+this.goveedevicetype);
   }
 
   /**
@@ -285,8 +316,8 @@ class GoveeDevice extends Device {
       if (this.hasCapability('light_hue'))
         this.registerCapabilityListener('light_hue', this.onCapabilityHue.bind(this));
     }
-    if (this.hasCapability('setHumidity.'+this.goveedevicetype))
-      this.registerCapabilityListener('setHumidity.'+this.goveedevicetype, this.onCapabilitySethumidity.bind(this));
+    if (this.hasCapability('target_humidity'))
+      this.registerCapabilityListener('target_humidity', this.onCapabilityTargetHumidity.bind(this));
     if (this.hasCapability('light_mode'))
       this.registerCapabilityListener('light_mode', this.onCapabilityLightMode.bind(this));
     if (this.hasCapability('lightScenes.'+this.goveedevicetype))
@@ -387,9 +418,10 @@ class GoveeDevice extends Device {
    * @param {string} value the humidity target
    * @param {*} opts 
    */
-  async onCapabilitySethumidity( value, opts ) {
-    await this.driver.range('humidity',value,this.data.model, this.data.mac);
-    this.setIfHasCapability('setHumidity.'+this.goveedevicetype, value);
+  async onCapabilityTargetHumidity( value, opts ) {
+    let perc_value = value*100;
+    await this.driver.range('humidity',perc_value,this.data.model, this.data.mac);
+    this.setIfHasCapability('target_humidity', value);
   }
   
   /**

@@ -1,6 +1,7 @@
 {
     "triggers": [
       {
+        "deprecated": true,
         "id": "alarm_online.appliance_false",
         "title": {
           "en": "The appliance is online"
@@ -11,6 +12,7 @@
         "$filter": "capabilities=alarm_online.appliance"
       },
       {
+        "deprecated": true,
         "id": "alarm_online.appliance_true",
         "title": {
           "en": "The appliance is offline"

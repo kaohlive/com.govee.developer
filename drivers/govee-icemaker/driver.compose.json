@@ -6,7 +6,7 @@
   "class": "other",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.ice_maker", "onoff", "lackWater.ice_maker"],
+  "capabilities": ["alarm_connectivity","alarm_online.ice_maker", "onoff", "lackWater.ice_maker"],
   "images": {
     "small": "/drivers/govee-icemaker/assets/images/small.png",
     "large": "/drivers/govee-icemaker/assets/images/large.png",

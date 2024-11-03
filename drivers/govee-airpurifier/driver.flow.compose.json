@@ -1,6 +1,7 @@
 {
     "triggers": [
       {
+        "deprecated": true,
         "id": "alarm_online.air_purifier_false",
         "title": {
           "en": "The air purifier is online"
@@ -11,6 +12,7 @@
         "$filter": "capabilities=alarm_online.air_purifier"
       },
       {
+        "deprecated": true,
         "id": "alarm_online.air_purifier_true",
         "title": {
           "en": "The air purifier is offline"

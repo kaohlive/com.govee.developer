@@ -1,6 +1,7 @@
 {
     "triggers": [
       {
+        "deprecated": true,
         "id": "alarm_online.sensor_false",
         "title": {
           "en": "The sensor is online"
@@ -11,6 +12,7 @@
         "$filter": "capabilities=alarm_online.sensor"
       },
       {
+        "deprecated": true,
         "id": "alarm_online.sensor_true",
         "title": {
           "en": "The sensor is offline"

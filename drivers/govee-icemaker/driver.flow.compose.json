@@ -1,6 +1,7 @@
 {
     "triggers": [
       {
+        "deprecated": true,
         "id": "alarm_online.ice_maker_false",
         "title": {
           "en": "The ice maker is online"
@@ -11,6 +12,7 @@
         "$filter": "capabilities=alarm_online.ice_maker"
       },
       {
+        "deprecated": true,
         "id": "alarm_online.ice_maker_true",
         "title": {
           "en": "The ice maker is offline"

@@ -1,6 +1,7 @@
 {
   "triggers": [
     {
+      "deprecated": true,
       "id": "alarm_online.light_false",
       "title": {
         "en": "The light is online"
@@ -11,6 +12,7 @@
       "$filter": "capabilities=alarm_online.light"
     },
     {
+      "deprecated": true,
       "id": "alarm_online.light_true",
       "title": {
         "en": "The light is offline"

@@ -1,6 +1,7 @@
 {
     "triggers": [
       {
+        "deprecated": true,
         "id": "alarm_online.dehumidifier_false",
         "title": {
           "en": "The dehumidifier is online"
@@ -11,6 +12,7 @@
         "$filter": "capabilities=alarm_online.dehumidifier"
       },
       {
+        "deprecated": true,
         "id": "alarm_online.dehumidifier_true",
         "title": {
           "en": "The dehumidifier is offline"

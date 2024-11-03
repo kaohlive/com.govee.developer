@@ -6,7 +6,7 @@
   "class": "socket",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.socket", "onoff"],
+  "capabilities": ["alarm_connectivity","alarm_online.socket", "onoff"],
   "images": {
     "small": "/drivers/govee-socket/assets/images/small.png",
     "large": "/drivers/govee-socket/assets/images/large.png",

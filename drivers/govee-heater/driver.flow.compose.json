@@ -1,6 +1,7 @@
 {
     "triggers": [
       {
+        "deprecated": true,
         "id": "alarm_online.heater_false",
         "title": {
           "en": "The heater is online"
@@ -11,6 +12,7 @@
         "$filter": "capabilities=alarm_online.heater"
       },
       {
+        "deprecated": true,
         "id": "alarm_online.heater_true",
         "title": {
           "en": "The heater is offline"

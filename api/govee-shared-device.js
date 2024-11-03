@@ -12,14 +12,6 @@ class GoveeSharedDeviceClient {
           device.log(JSON.stringify(nightlight))
           device.setCapabilityValue('nightlightToggle.'+device.goveedevicetype, (nightlight.state.value == 1));
         }
-      //target humidity, doesnt work in the api yet
-      // if(device.hasCapability('setHumidity.'+device.goveedevicetype))
-      //   {
-      //     device.log('Processing the humidity state');
-      //     var targetHumidity = currentState.capabilitieslist.find(function(e) {return e.instance == "humidity" })
-      //     device.log(JSON.stringify(targetHumidity));
-      //     device.setCapabilityValue('setHumidity.'+device.goveedevicetype, targetHumidity.state.value);
-      //   }
     }
 
     async createDynamicCapabilities(model,mac,capabilitieslist,device)
@@ -220,18 +212,6 @@ class GoveeSharedDeviceClient {
           }
         } else if(device.hasCapability('musicMode.'+device.goveedevicetype))
           await device.removeCapability('musicMode.'+device.goveedevicetype);
-        //humidity target
-        if(capabilitieslist.find(function(e) {return e.instance == "humidity" }))
-          {
-            if(!device.hasCapability('setHumidity.'+device.goveedevicetype)) {
-              await device.addCapability('setHumidity.'+device.goveedevicetype);
-            }
-            if(device.hasCapability('setHumidity.'+device.goveedevicetype)) {
-              device.log('Setting up humidity target capability');
-              await this.setupFlowSetHumidty(device);
-            }
-          } else if(device.hasCapability('setHumidity.'+device.goveedevicetype))
-            await device.removeCapability('setHumidity.'+device.goveedevicetype);
   
         //workMode
         if(capabilitieslist.find(function(e) {return e.instance == "workMode" }))
@@ -266,12 +246,18 @@ class GoveeSharedDeviceClient {
             if(!device.hasCapability('lackWater.'+device.goveedevicetype)) {
               await device.addCapability('lackWater.'+device.goveedevicetype);
             }
+            if(!device.hasCapability('alarm_tank_empty')) {
+              await device.addCapability('alarm_tank_empty');
+            }
             if(device.hasCapability('lackWater.'+device.goveedevicetype)) {
               device.log('Setting up lack water event capability');
               await this.setupFlowLackWater(device);
             }
           } else if(device.hasCapability('lackWater.'+device.goveedevicetype))
+          {
             await device.removeCapability('lackWater.'+device.goveedevicetype);
+            await device.removeCapability('alarm_tank_empty');
+          }
           if(capabilitieslist.find(function(e) {return e.instance == "bodyAppearedEvent" }))
             {
               if(!device.hasCapability('bodyAppeared.'+device.goveedevicetype)) {
@@ -296,6 +282,9 @@ class GoveeSharedDeviceClient {
         let tokens = {
           presence:tokenStates.find(function(e) {return e.name == "Presence" }).value
         }
+        //Update the capability
+        device.setIfHasCapability('alarm_presence', (tokes.presence==1));
+        //And trigger the flowcard
         device._bodyAppearedTrigger.trigger(device, tokens, {})
           .then(this.log)
           .catch(this.error);
@@ -307,6 +296,9 @@ class GoveeSharedDeviceClient {
             lack:tokenStates.find(function(e) {return e.name == "lack" }).value,
             message:tokenStates.find(function(e) {return e.name == "lack" }).message
           }
+          //Update the alarm capability
+          device.setIfHasCapability('alarm_tank_empty', (tokes.lack==1));
+          //And trigger the flowcard
           device._lackWaterTrigger.trigger(device, tokens, {})
             .then(this.log)
             .catch(this.error);
@@ -587,24 +579,6 @@ createSegmentCollection(segmentField)
         return filteredSegments.map((segment) => {
           segment.formattedName = segment.name;
           return segment;
-        });
-      });
-  }
-
-  async setupFlowSetHumidty(device) {
-    device.log('Create the flow for the Humidity Target capability');
-    //Now setup the flow cards
-    device._setHumidityTarget = await device.homey.flow.getActionCard('set-humidity-target.'+device.goveedevicetype); 
-    device._setHumidityTarget
-      .registerRunListener(async (args, state) => {
-        return new Promise((resolve, reject) => {
-          device.log('Started set humidity action with target '+JSON.stringify(args.humidity));
-          device.driver.range('humidity', args.humidity, args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
-            args.device.setCapabilityValue('setHumidity.'+device.goveedevicetype, args.humidity);
-            resolve(true);
-          }, (_error) => {
-            reject(_error);
-          });
         });
       });
   }

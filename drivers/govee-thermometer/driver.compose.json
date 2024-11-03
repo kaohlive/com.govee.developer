@@ -6,7 +6,7 @@
   "class": "sensor",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.thermometer", "measure_temperature", "measure_humidity"],
+  "capabilities": ["alarm_connectivity", "alarm_online.thermometer", "measure_temperature", "measure_humidity"],
   "images": {
     "small": "/drivers/govee-thermometer/assets/images/small.png",
     "large": "/drivers/govee-thermometer/assets/images/large.png",

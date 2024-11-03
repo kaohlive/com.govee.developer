@@ -1,6 +1,7 @@
 {
     "triggers": [
       {
+        "deprecated": true,
         "id": "alarm_online.aroma_diffuser_false",
         "title": {
           "en": "The aroma diffuser is online"
@@ -11,6 +12,7 @@
         "$filter": "capabilities=alarm_online.aroma_diffuser"
       },
       {
+        "deprecated": true,
         "id": "alarm_online.aroma_diffuser_true",
         "title": {
           "en": "The aroma diffuser is offline"

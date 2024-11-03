@@ -1,6 +1,7 @@
 {
     "triggers": [
       {
+        "deprecated": true,
         "id": "alarm_online.socket_false",
         "title": {
           "en": "The socket is online"
@@ -11,6 +12,7 @@
         "$filter": "capabilities=alarm_online.socket"
       },
       {
+        "deprecated": true,
         "id": "alarm_online.socket_true",
         "title": {
           "en": "The socket is offline"

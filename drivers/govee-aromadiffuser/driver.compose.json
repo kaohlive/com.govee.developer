@@ -6,7 +6,7 @@
   "class": "diffuser",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.aroma_diffuser", "onoff", "workMode.aroma_diffuser", "lackWater.aroma_diffuser"],
+  "capabilities": ["alarm_connectivity","alarm_online.aroma_diffuser", "onoff", "workMode.aroma_diffuser", "alarm_tank_empty", "lackWater.aroma_diffuser"],
   "images": {
     "small": "/drivers/govee-aromadiffuser/assets/images/small.png",
     "large": "/drivers/govee-aromadiffuser/assets/images/large.png",

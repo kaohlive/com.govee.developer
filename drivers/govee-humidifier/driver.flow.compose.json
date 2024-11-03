@@ -1,6 +1,7 @@
 {
     "triggers": [
       {
+        "deprecated": true,
         "id": "alarm_online.humidifier_false",
         "title": {
           "en": "The humidifier is online"
@@ -11,6 +12,7 @@
         "$filter": "capabilities=alarm_online.humidifier"
       },
       {
+        "deprecated": true,
         "id": "alarm_online.humidifier_true",
         "title": {
           "en": "The humidifier is offline"
@@ -19,24 +21,6 @@
           "en": "When the humidifier is reported to be offline"
         },
         "$filter": "capabilities=alarm_online.humidifier"
-      },
-      {
-        "id": "setHumidity.humidifier_changed",
-        "title": {
-          "en": "The humidifier target humidity changed"
-        },
-        "hint": {
-          "en": "When the humidifier received a new target humidity"
-        },
-        "tokens": [
-          {
-            "name": "setHumidity",
-            "type": "number",
-            "title": { "en": "Target humidity" },
-            "example": { "en": "Humidity" }
-          }
-        ],
-        "$filter": "capabilities=setHumidity.humidifier"
       },
       {
         "id": "event_lackWater.humidifier",
@@ -122,37 +106,6 @@
             },
             "placeholder": {
               "en": "Work mode"
-            }
-          }
-        ]
-      },
-      {
-        "id": "set-humidity-target.humidifier",
-        "title": {
-          "en": "Set humidity target"
-        },
-        "hint": {
-          "en": "Sets the target humidity of the humidifier"
-        },
-        "titleFormatted": {
-          "en": "Set the target humidity to [[humidity]]"
-        },
-        "$filter": "capabilities=setHumidity.humidifier",
-        "args": [
-          {
-            "type": "range",
-            "name": "humidity",
-            "title": {
-              "en": "Humidity"
-            },
-            "labelDecimals": 0,
-            "min": 40,
-            "max": 80,
-            "step": 1,
-            "label": "%",
-            "labelMultiplier": 1,
-            "placeholder": {
-              "en": "48"
             }
           }
         ]

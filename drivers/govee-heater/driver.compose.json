@@ -6,7 +6,7 @@
   "class": "heater",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.heater", "onoff", "workMode.heater", "nightlightToggle.heater"],
+  "capabilities": ["alarm_connectivity","alarm_online.heater", "onoff", "workMode.heater", "nightlightToggle.heater"],
   "images": {
     "small": "/drivers/govee-heater/assets/images/small.png",
     "large": "/drivers/govee-heater/assets/images/large.png",

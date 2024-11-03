@@ -6,7 +6,7 @@
   "class": "other",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.box", "onoff"],
+  "capabilities": ["alarm_connectivity","alarm_online.box", "onoff"],
   "images": {
     "small": "/drivers/govee-box/assets/images/small.png",
     "large": "/drivers/govee-box/assets/images/large.png",

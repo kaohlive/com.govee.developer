@@ -1,6 +1,7 @@
 {
     "triggers": [
       {
+        "deprecated": true,
         "id": "alarm_online.thermometer_false",
         "title": {
           "en": "The thermometer is online"
@@ -11,6 +12,7 @@
         "$filter": "capabilities=alarm_online.thermometer"
       },
       {
+        "deprecated": true,
         "id": "alarm_online.thermometer_true",
         "title": {
           "en": "The thermometer is offline"

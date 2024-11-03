@@ -6,7 +6,7 @@
   "class": "sensor",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_online.sensor", "bodyAppeared.sensor"],
+  "capabilities": ["alarm_connectivity","alarm_online.sensor", "bodyAppeared.sensor", "alarm_presence"],
   "images": {
     "small": "/drivers/govee-sensor/assets/images/small.png",
     "large": "/drivers/govee-sensor/assets/images/large.png",

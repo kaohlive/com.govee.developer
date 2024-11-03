@@ -1,6 +1,7 @@
 {
     "triggers": [
       {
+        "deprecated": true,
         "id": "alarm_online.box_false",
         "title": {
           "en": "The box is online"
@@ -11,6 +12,7 @@
         "$filter": "capabilities=alarm_online.box"
       },
       {
+        "deprecated": true,
         "id": "alarm_online.box_true",
         "title": {
           "en": "The box is offline"

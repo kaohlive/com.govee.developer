@@ -6,5 +6,5 @@
 },
 "getable": true,
 "setable": false,
-"icon": "/assets/health.svg"
+"uiComponent": null
 }
