@@ -166,5 +166,8 @@
   },
   "2.11.8": {
     "en": "Added device icon 6093"
+  },
+  "2.12.0": {
+    "en": "Supports new capabilities and improvements"
   }
 }
