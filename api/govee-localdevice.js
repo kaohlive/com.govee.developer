@@ -63,6 +63,13 @@ class GoveeLocalDevice extends Device {
       //See if we already retrieved its capabilities earlier
       if(deviceVersion==='v2'){
         deviceData.cloudcapabilitieslist=await this.getStoreValue('capabilityList');
+        //Update our settings based on current values in the device
+        await this.setSettings({
+          // only provide keys for the settings you want to change
+          devicemodel: deviceData.model,
+          devicecapabilities: JSON.stringify(deviceData.cloudcapabilitieslist)
+        });
+        this.setSettings
         return deviceData;
       }
       //Lets retrive the v2 capabilities of this device from the API
@@ -75,10 +82,23 @@ class GoveeLocalDevice extends Device {
         this.setStoreValue('capabilityList',thisdevice.capabilities);
         this.setStoreValue('deviceVersion','v2');
         deviceData.cloudcapabilitieslist=thisdevice.capabilities;
+        //Update our settings based on current values in the device
+        await this.setSettings({
+          // only provide keys for the settings you want to change
+          devicemodel: deviceData.model,
+          devicecapabilities: JSON.stringify(deviceData.cloudcapabilitieslist)
+        });
+        this.setSettings
         return deviceData;
       }
     } else {
       deviceData.cloudcapabilitieslist=[];
+      await this.setSettings({
+        // only provide keys for the settings you want to change
+        devicemodel: deviceData.model,
+        devicecapabilities: JSON.stringify(deviceData.capabilitieslist)
+      });
+      this.setSettings
       return deviceData;
     }
   }

@@ -32,6 +32,13 @@ class GoveeDevice extends Device {
     let deviceVersion = await this.getStoreValue('deviceVersion');
     if(deviceVersion==='v2'){
       deviceData.capabilitieslist=await this.getStoreValue('capabilityList');
+      //Update our settings based on current values in the device
+      await this.setSettings({
+        // only provide keys for the settings you want to change
+        devicemodel: deviceData.model,
+        devicecapabilities: JSON.stringify(deviceData.capabilitieslist)
+      });
+      this.setSettings
       return deviceData;
     }
     //Then its the old device, we need to map the capabilities
@@ -45,6 +52,13 @@ class GoveeDevice extends Device {
       this.setStoreValue('capabilityList',thisdevice.capabilities);
       this.setStoreValue('deviceVersion','v2');
       deviceData.capabilitieslist=thisdevice.capabilities;
+      //Update our settings based on current values in the device
+      await this.setSettings({
+        // only provide keys for the settings you want to change
+        devicemodel: deviceData.model,
+        devicecapabilities: JSON.stringify(deviceData.capabilitieslist)
+      });
+      this.setSettings
       return deviceData;
     }
   }
@@ -91,6 +105,12 @@ class GoveeDevice extends Device {
           this.setCapabilityValue('onoff', true);
         else
           this.setCapabilityValue('onoff', false);
+      }
+      if (this.hasCapability('oscillating'))
+      {
+        this.log('Processing the Oscillating state');
+        var options = currentState.capabilitieslist.find(function(e) { return e.instance == "oscillationToggle" })
+        this.setCapabilityValue('onoff', (options.state.value==1));
       }
       if (this.hasCapability('dim'))
       {
@@ -250,6 +270,13 @@ class GoveeDevice extends Device {
         await this.addCapability('target_humidity');
     } else if(this.hasCapability('target_humidity'))
       await this.removeCapability('target_humidity');
+    //oscillationToggle
+    if(this.data.capabilitieslist.find(function(e) { return e.instance == "oscillationToggle" })) {
+      this.log('Located the oscillation capabilities')
+      if(!this.hasCapability('oscillating')) 
+        await this.addCapability('oscillating');
+    } else if(this.hasCapability('oscillating'))
+      await this.removeCapability('oscillating');
   }
 
   /**
@@ -326,6 +353,8 @@ class GoveeDevice extends Device {
       this.registerCapabilityListener('lightDiyScenes.'+this.goveedevicetype, this.onCapabilityDIYLightScenes.bind(this));
     if (this.hasCapability('nightlightScenes.'+this.goveedevicetype))
       this.registerCapabilityListener('nightlightScenes.'+this.goveedevicetype, this.onCapabilityNightlightScenes.bind(this));
+    if (this.hasCapability('oscillating'))
+      this.registerCapabilityListener('oscillating', this.onCapabilityOscillating.bind(this));
   }
 
   /**
@@ -380,6 +409,15 @@ class GoveeDevice extends Device {
       await this.driver.toggle(0, 'dreamViewToggle', this.data.model,this.data.mac, this.goveedevicetype);
     }
     this.setIfHasCapability('dreamViewToggle', value);
+  }
+
+  async onCapabilityOscillating( value, opts ) {
+    if(value){
+      await this.driver.toggle(1, 'oscillationToggle', this.data.model, this.data.mac, this.goveedevicetype);
+    } else {
+      await this.driver.toggle(0, 'oscillationToggle', this.data.model,this.data.mac, this.goveedevicetype);
+    }
+    this.setIfHasCapability('oscillating', value);
   }
 
   async onCapabilityNightlight( value, opts ) {

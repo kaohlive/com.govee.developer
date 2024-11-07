@@ -20,5 +20,23 @@
         "highlight": true
       }
     ]
+  },
+  {
+    "type": "group",
+    "label": { "en": "Device info" },
+    "children": [
+      {
+        "id": "devicemodel",
+        "type": "label",
+        "label": { "en": "Model" },
+        "value": "Hxxxxxx"
+      },
+      {
+        "id": "devicecapabilities",
+        "type": "label",
+        "label": { "en": "Capabilities" },
+        "value": "{}"
+      }
+    ]
   }
 ]
