@@ -283,7 +283,7 @@ class GoveeSharedDeviceClient {
           presence:tokenStates.find(function(e) {return e.name == "Presence" }).value
         }
         //Update the capability
-        device.setIfHasCapability('alarm_presence', (tokes.presence==1));
+        device.setIfHasCapability('alarm_presence', (tokens.presence==1));
         //And trigger the flowcard
         device._bodyAppearedTrigger.trigger(device, tokens, {})
           .then(this.log)
@@ -297,7 +297,7 @@ class GoveeSharedDeviceClient {
             message:tokenStates.find(function(e) {return e.name == "lack" }).message
           }
           //Update the alarm capability
-          device.setIfHasCapability('alarm_tank_empty', (tokes.lack==1));
+          device.setIfHasCapability('alarm_tank_empty', (tokens.lack==1));
           //And trigger the flowcard
           device._lackWaterTrigger.trigger(device, tokens, {})
             .then(this.log)
