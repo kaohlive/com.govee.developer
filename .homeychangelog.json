@@ -172,5 +172,8 @@
   },
   "2.12.1": {
     "en": "Bug fix on presence event"
+  },
+  "2.12.2": {
+    "en": "Improved error handling"
   }
 }
