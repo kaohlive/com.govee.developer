@@ -24,6 +24,11 @@ class GoveeDevice extends Device {
     this.start_update_loop();
   }
 
+  async onUninit() {
+    //Clear any listeners
+    this.homey.clearInterval(this._timer);
+  }
+
   async getDeviceData()
   {
     //Lets get the device data object
@@ -70,7 +75,7 @@ class GoveeDevice extends Device {
       this.log('Interval is not set or set to low, force 1 min');
       interval = 60000;
     }
-    this._timer = setInterval(() => {
+    this._timer = this.homey.setInterval(() => {
         this.refreshState();
     }, interval); //Do not set this to low, 4 devices per halve minute already surpases the 10K global call count per day
   }
@@ -89,37 +94,38 @@ class GoveeDevice extends Device {
         {
           this.log('Processing the online state');
           var online = currentState.capabilitieslist.find(function(e) {return e.instance == "online" })
-          this.setCapabilityValue('alarm_online.'+this.goveedevicetype,!online.state.value);
+          this.setCapabilityValue('alarm_online.'+this.goveedevicetype,!online.state.value).catch( reason => this.log('Error while updating capability: '+reason) );
         }
         if(this.hasCapability('alarm_connectivity'))
           {
             this.log('Processing the online state');
             var online = currentState.capabilitieslist.find(function(e) {return e.instance == "online" })
-            this.setCapabilityValue('alarm_connectivity',!online.state.value);
+            this.setCapabilityValue('alarm_connectivity',!online.state.value).catch( reason => this.log('Error while updating capability: '+reason) );
           }
       if (this.hasCapability('onoff'))
       {
         this.log('Processing the on off toggle state');
         var powerstate = currentState.capabilitieslist.find(function(e) { return e.instance == "powerSwitch" })
         if(powerstate.state.value) //should be a boolean value
-          this.setCapabilityValue('onoff', true);
+          this.setCapabilityValue('onoff', true).catch( reason => this.log('Error while updating capability: '+reason) );
         else
-          this.setCapabilityValue('onoff', false);
+          this.setCapabilityValue('onoff', false).catch( reason => this.log('Error while updating capability: '+reason) );
       }
       if (this.hasCapability('oscillating'))
       {
         this.log('Processing the Oscillating state');
         var options = currentState.capabilitieslist.find(function(e) { return e.instance == "oscillationToggle" })
-        this.setCapabilityValue('onoff', (options.state.value==1));
+        this.setCapabilityValue('onoff', (options.state.value==1)).catch( reason => this.log('Error while updating capability: '+reason) );
       }
       if (this.hasCapability('dim'))
       {
         this.log('Processing the dim level state');
         var brightness = currentState.capabilitieslist.find(function(e) { return e.instance == "brightness" })
         if (brightness.state.value > 100)
-          this.setCapabilityValue('dim', (brightness.state.value/255)); //Seems to be a mismatch in documentation. It should be a range between 0 and 100
+          this.setCapabilityValue('dim', (brightness.state.value/255)).catch( reason => this.log('Error while updating capability: '+reason) );
+        //Seems to be a mismatch in documentation. It should be a range between 0 and 100
         else
-          this.setCapabilityValue('dim', (brightness.state.value/100));
+          this.setCapabilityValue('dim', (brightness.state.value/100)).catch( reason => this.log('Error while updating capability: '+reason) );
       }
       if (this.hasCapability('light_temperature'))
       {
@@ -137,13 +143,15 @@ class GoveeDevice extends Device {
           this.log('colorTem: '+colorTempState.state.value+' - range[max:'+rangeMax+', min: '+rangeMin+', range: '+rangeTotal+'] so perc is: '+rangePerc);
           if (rangePerc>1) rangePerc = 1; //Seems that sometimes this math ends up in a higher than 1 result, strange but without more data hard to locate.
           if(this.hasCapability('light_mode'))
-            this.setCapabilityValue('light_mode', 'temperature'); //Tell homey we are in colorTemp mode
-          this.setCapabilityValue('light_temperature', rangePerc);
+            this.setCapabilityValue('light_mode', 'temperature').catch( reason => this.log('Error while updating capability: '+reason) ); 
+            //Tell homey we are in colorTemp mode
+          this.setCapabilityValue('light_temperature', rangePerc).catch( reason => this.log('Error while updating capability: '+reason) );
         } else {
           this.log('no color temp known');
           if(this.hasCapability('light_mode'))
-            this.setCapabilityValue('light_mode', 'color'); //Tell homey we are not in colorTemp mode
-          this.setCapabilityValue('light_temperature', null);
+            this.setCapabilityValue('light_mode', 'color').catch( reason => this.log('Error while updating capability: '+reason) ); 
+            //Tell homey we are not in colorTemp mode
+          this.setCapabilityValue('light_temperature', null).catch( reason => this.log('Error while updating capability: '+reason) );
         }
       }
       if(this.hasCapability('light_hue'))
@@ -156,16 +164,18 @@ class GoveeDevice extends Device {
           var colorHSV=this.driver.colorCommandGetParser(colorRGB.state.value);
           this.log(JSON.stringify(colorHSV))
           if(this.hasCapability('light_mode'))
-            this.setCapabilityValue('light_mode', 'color'); //Tell homey we are in color mode
-          this.setCapabilityValue('light_saturation', colorHSV.s);
-          this.setCapabilityValue('light_hue', (colorHSV.h/360));
+            this.setCapabilityValue('light_mode', 'color').catch( reason => this.log('Error while updating capability: '+reason) );
+            //Tell homey we are in color mode
+          this.setCapabilityValue('light_saturation', colorHSV.s).catch( reason => this.log('Error while updating capability: '+reason) );
+          this.setCapabilityValue('light_hue', (colorHSV.h/360)).catch( reason => this.log('Error while updating capability: '+reason) );
         }
         else {
           this.log('no color rgb known');
           if(this.hasCapability('light_mode'))
-            this.setCapabilityValue('light_mode', 'temperature'); //Tell homey we are not in color mode
-          this.setCapabilityValue('light_hue', null);
-          this.setCapabilityValue('light_saturation', null);
+            this.setCapabilityValue('light_mode', 'temperature').catch( reason => this.log('Error while updating capability: '+reason) );
+            //Tell homey we are not in color mode
+          this.setCapabilityValue('light_hue', null).catch( reason => this.log('Error while updating capability: '+reason) );
+          this.setCapabilityValue('light_saturation', null).catch( reason => this.log('Error while updating capability: '+reason) );
         }
       }
 
@@ -181,7 +191,7 @@ class GoveeDevice extends Device {
         }
         else {
           //How to read modes?
-          this.setCapabilityValue('mode', null);
+          this.setCapabilityValue('mode', null).catch( reason => this.log('Error while updating capability: '+reason) );
         }
       }
       if(this.hasCapability('measure_temperature'))
@@ -189,7 +199,7 @@ class GoveeDevice extends Device {
         this.log('Processing the temp sensor state');
         var temp = currentState.capabilitieslist.find(function(e) {return e.instance == "sensorTemperature" })
         var celc = (temp.state.value - 32) / 1.8;
-        this.setCapabilityValue('measure_temperature',celc);
+        this.setCapabilityValue('measure_temperature',celc).catch( reason => this.log('Error while updating capability: '+reason) );
       }
       if(this.hasCapability('measure_humidity'))
         {
@@ -198,7 +208,7 @@ class GoveeDevice extends Device {
           if (hum.state.value.currentHumidity === undefined) {
             console.log("currentHumidity was not received in the state: "+JSON.stringify(hum.state));
           } else {
-            this.setCapabilityValue('measure_humidity',hum.state.value.currentHumidity);
+            this.setCapabilityValue('measure_humidity',hum.state.value.currentHumidity).catch( reason => this.log('Error while updating capability: '+reason) );
           }
         }
       

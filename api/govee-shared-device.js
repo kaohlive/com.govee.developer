@@ -10,7 +10,7 @@ class GoveeSharedDeviceClient {
           device.log('Processing the nightlight state');
           var nightlight = currentState.capabilitieslist.find(function(e) {return e.instance == "nightlightToggle" })
           device.log(JSON.stringify(nightlight))
-          device.setCapabilityValue('nightlightToggle.'+device.goveedevicetype, (nightlight.state.value == 1));
+          device.setCapabilityValue('nightlightToggle.'+device.goveedevicetype, (nightlight.state.value == 1)).catch( reason => args.device.log('Error while updating capability: '+reason) );
         }
     }
 
@@ -318,7 +318,7 @@ class GoveeSharedDeviceClient {
                   const sceneIndex = args.device.lightScenes.options.findIndex((obj) => obj.value.id === args.lightScene.value.id);
                   //console.log('Scene selected index: '+sceneIndex);
                   args.device.setIfHasCapability('onoff', true);
-                  args.device.setCapabilityValue('lightScenes.'+device.goveedevicetype, sceneIndex);
+                  args.device.setCapabilityValue('lightScenes.'+device.goveedevicetype, sceneIndex).catch( reason => args.device.log('Error while updating capability: '+reason) );
                   args.device.setIfHasCapability('nightlightScenes.'+device.goveedevicetype, null);
                   args.device.setIfHasCapability('lightDiyScenes.'+device.goveedevicetype, null);
                   resolve(true);
@@ -349,7 +349,7 @@ class GoveeSharedDeviceClient {
               return new Promise((resolve, reject) => {
                   device.log('now send the light scene capability command');
                   device.driver.setLightScene(randomScene.value, "lightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
-                    args.device.setCapabilityValue('lightScenes.'+device.goveedevicetype, randomIndex);
+                    args.device.setCapabilityValue('lightScenes.'+device.goveedevicetype, randomIndex).catch( reason => args.device.log('Error while updating capability: '+reason) );
                     resolve(true);
                   }, (_error) => {
                     reject(_error);
@@ -392,7 +392,7 @@ class GoveeSharedDeviceClient {
               device.log('now send the nightlight scene capability command');
               device.driver.setMode(args.nightlightScene.value, "nightlightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
                 const sceneIndex = args.device.nightlightScenes.options.findIndex((obj) => obj.value.id === args.nightlightScene.value.id);
-                args.device.setCapabilityValue('nightlightScenes.'+device.goveedevicetype, sceneIndex);
+                args.device.setCapabilityValue('nightlightScenes.'+device.goveedevicetype, sceneIndex).catch( reason => args.device.log('Error while updating capability: '+reason) );
                 args.device.setIfHasCapability('lightScenes.'+device.goveedevicetype, null);
                 args.device.setIfHasCapability('lightDiyScenes.'+device.goveedevicetype, null);
                 resolve(true);
@@ -423,7 +423,7 @@ class GoveeSharedDeviceClient {
             return new Promise((resolve, reject) => {
                 device.log('now send the nightlight scene capability command');
                 device.driver.setMode(randomScene.value, "nightlightScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
-                  args.device.setCapabilityValue('nightlightScenes.'+device.goveedevicetype, randomIndex);
+                  args.device.setCapabilityValue('nightlightScenes.'+device.goveedevicetype, randomIndex).catch( reason => args.device.log('Error while updating capability: '+reason) );
                   resolve(true);
                 }, (_error) => {
                   reject(_error);
@@ -594,7 +594,7 @@ createSegmentCollection(segmentField)
         if(args.activate){
           return new Promise((resolve, reject) => {
             device.driver.toggle(1, 'dreamViewToggle', args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
-              args.device.setCapabilityValue('dreamViewToggle.'+device.goveedevicetype, true);
+              args.device.setCapabilityValue('dreamViewToggle.'+device.goveedevicetype, true).catch( reason => args.device.log('Error while updating capability: '+reason) );
               resolve(true);
             }, (_error) => {
               reject(_error);
@@ -603,7 +603,7 @@ createSegmentCollection(segmentField)
         } else {
           return new Promise((resolve, reject) => {
             device.driver.toggle(0, 'dreamViewToggle', args.device.data.model,args.device.data.mac, args.device.goveedevicetype).then(() => {
-              args.device.setCapabilityValue('dreamViewToggle.'+device.goveedevicetype, false);
+              args.device.setCapabilityValue('dreamViewToggle.'+device.goveedevicetype, false).catch( reason => args.device.log('Error while updating capability: '+reason) );
               resolve(true);
             }, (_error) => {
               reject(_error);
@@ -653,7 +653,7 @@ createSegmentCollection(segmentField)
             device.driver.setLightScene(args.diyScene.value, "diyScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
             const sceneIndex = args.device.diyScenes.options.findIndex((obj) => obj.value === args.diyScene.value);
             args.device.setIfHasCapability('onoff', true);
-            args.device.setCapabilityValue('lightDiyScenes.'+device.goveedevicetype, sceneIndex);
+            args.device.setCapabilityValue('lightDiyScenes.'+device.goveedevicetype, sceneIndex).catch( reason => args.device.log('Error while updating capability: '+reason) );
             args.device.setIfHasCapability('lightScenes.'+device.goveedevicetype, null);
             args.device.setIfHasCapability('nightlightScenes.'+device.goveedevicetype, null);
             resolve(true);
@@ -684,7 +684,7 @@ createSegmentCollection(segmentField)
               return new Promise((resolve, reject) => {
                   device.log('now send the light scene capability command');
                   device.driver.setLightScene(randomScene.value, "diyScene", args.device.data.model, args.device.data.mac, args.device.goveedevicetype).then(() => {
-                    args.device.setCapabilityValue('lightDiyScenes.'+device.goveedevicetype, randomIndex);
+                    args.device.setCapabilityValue('lightDiyScenes.'+device.goveedevicetype, randomIndex).catch( reason => args.device.log('Error while updating capability: '+reason) );
                     resolve(true);
                   }, (_error) => {
                     reject(_error);
