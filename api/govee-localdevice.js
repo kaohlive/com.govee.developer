@@ -3,14 +3,6 @@
 const { Device } = require('homey');
 const GoveeSharedDevice = require('./govee-shared-device');
 
-const updateHandler = (state, stateChanged) => { 
-  if (stateChanged.length > 0) 
-    { 
-      this.log("Received an update for device [" + this.data.id + "]"); 
-      this.refreshState(state, stateChanged); 
-    } 
-  };
-
 class GoveeLocalDevice extends Device {
   /**
    * onInit is called when the device is initialized.
@@ -37,15 +29,35 @@ class GoveeLocalDevice extends Device {
     this.start_update_loop();
   }
 
-  
-  registerUpdateEvent(apidevice) {
-    apidevice.on('updatedStatus', updateHandler);
+  updateHandler = (state, stateChanged) => { 
+    if (stateChanged.length > 0) { 
+      this.log("Received an update for device [" + this.data.id + "]"); 
+      this.refreshState(state, stateChanged); 
+    }
   }
 
+  registerUpdateEvent(apidevice) {
+    // Bind this to the updateHandler to ensure it has the correct context 
+    const boundUpdateHandler = this.updateHandler.bind(this); 
+    apidevice.on('updatedStatus', boundUpdateHandler); 
+    // Store the bound handler to remove it later 
+    this.boundUpdateHandler = boundUpdateHandler;
+  }
+
+  unregisterUpdateEvent(apidevice) {
+    if (this.boundUpdateHandler) { 
+      apidevice.removeListener('updatedStatus', this.boundUpdateHandler);
+  }}
+
   async onUninit() {
+    this.log('Device uninit, clean up references');
     //Clear any listeners
     this.homey.clearInterval(this._timer);
-    apidevice.removeListener('updatedStatus', updateHandler);
+    var discoveredDevice = this.homey.app.localApiClient.getDeviceById(this.data.id);
+    if(discoveredDevice!=null)
+    {
+      this.unregisterUpdateEvent(discoveredDevice);
+    }
   }
 
   start_update_loop() {
