@@ -175,5 +175,8 @@
   },
   "2.12.2": {
     "en": "Improved error handling"
+  },
+  "2.12.3": {
+    "en": "hotfix on localdevice state changes crash"
   }
 }
