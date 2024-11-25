@@ -16,7 +16,7 @@ class GoveeLocalDevice extends Device {
       await this.driver.cloudInit();
     }
     //Now lets do our device setup
-    this.data = await this.getDeviceData();
+    this.data = await this.getDeviceData(this.cloudEnhance);
 
     await this.setupCapabilities();
     this.log('Now (de)register the cloud capabilitities');
@@ -74,12 +74,12 @@ class GoveeLocalDevice extends Device {
     }, 1000);
   }
 
-  async getDeviceData()
+  async getDeviceData(enhanced)
   {
     //Lets get the device data object
     let deviceData = this.getData();
     //Lets see if we want to cloud enhance this device
-    if(this.cloudEnhance) {
+    if(enhanced) {
       deviceData.mac = deviceData.id;
       let deviceVersion = await this.getStoreValue('deviceVersion');
       //See if we already retrieved its capabilities earlier
@@ -243,13 +243,21 @@ class GoveeLocalDevice extends Device {
     this.log('govee.device.'+this.data.model+': '+this.data.name+' settings where changed');
     if(changedKeys.includes('cloud_enhance'))
     {
-      //Rebuild the device
-      await this.driver.cloudInit();
-      this.cloudEnhance=newSettings.cloud_enhance;
-      this.data = await this.getDeviceData();
-      this.log('Now (de)register the cloud capabilitities');
-      await this.sharedDevice.createDynamicCapabilities(this.data.model,this.data.id,this.data.cloudcapabilitieslist,this);
+      this.homey.setTimeout(this.enableCloudEnhancement.bind(this, newSettings), 1000);
     }
+    return true;
+  }
+
+  async enableCloudEnhancement(newSettings)
+  {
+    if(newSettings.cloud_enhance) {
+      await this.driver.cloudInit();
+    }
+    //Rebuild the device
+    this.cloudEnhance=newSettings.cloud_enhance;
+    this.data = await this.getDeviceData(newSettings.cloud_enhance);
+    this.log('Now (de)register the cloud capabilitities with data ['+JSON.stringify(this.data.cloudcapabilitieslist)+']');
+    await this.sharedDevice.createDynamicCapabilities(this.data.model,this.data.id,this.data.cloudcapabilitieslist,this);
   }
 
   /**
