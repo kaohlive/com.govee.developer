@@ -184,5 +184,8 @@
   },
   "2.12.5": {
     "en": "Minor bug fix on lackwaterevent"
+  },
+  "2.12.6": {
+    "en": "Improved error handling on events"
   }
 }

@@ -280,7 +280,7 @@ class GoveeSharedDeviceClient {
       {
         let tokenStates = message.capabilities.find(function(e) {return e.instance == "bodyAppearedEvent" }).state;
         let tokens = {
-          presence:tokenStates.find(function(e) {return e.name == "Presence" }).value
+          presence:tokenStates.find(function(e) {return e.name == "Presence" })?.value ?? 0,
         }
         //Update the capability
         device.setIfHasCapability('alarm_presence', (tokens.presence==1));
@@ -293,7 +293,7 @@ class GoveeSharedDeviceClient {
         {
           let tokenStates = message.capabilities.find(function(e) {return e.instance == "lackWaterEvent" }).state;
           let tokens = {
-            lack:tokenStates.find(function(e) {return e.name == "lack" }).value,
+            lack:tokenStates.find(function(e) {return e.name == "lack" })?.value ?? 0,
             message:tokenStates.find(function(e) {return e.name == "lack" })?.message ?? "",
           }
           //Update the alarm capability
