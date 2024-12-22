@@ -294,7 +294,7 @@ class GoveeSharedDeviceClient {
           let tokenStates = message.capabilities.find(function(e) {return e.instance == "lackWaterEvent" }).state;
           let tokens = {
             lack:tokenStates.find(function(e) {return e.name == "lack" }).value,
-            message:tokenStates.find(function(e) {return e.name == "lack" }).message
+            message:tokenStates.find(function(e) {return e.name == "lack" })?.message ?? "",
           }
           //Update the alarm capability
           device.setIfHasCapability('alarm_tank_empty', (tokens.lack==1));
