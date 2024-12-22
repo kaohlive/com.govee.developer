@@ -181,5 +181,8 @@
   },
   "2.12.4": {
     "en": "Fix for Cloud enhance settings not stored"
+  },
+  "2.12.5": {
+    "en": "Minor bug fix on lackwaterevent"
   }
 }
