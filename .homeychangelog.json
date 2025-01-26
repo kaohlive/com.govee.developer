@@ -187,5 +187,8 @@
   },
   "2.12.6": {
     "en": "Improved error handling on events"
+  },
+  "2.13.0": {
+    "en": "Manual reset for empty tank event"
   }
 }
