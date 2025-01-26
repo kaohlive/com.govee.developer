@@ -298,6 +298,7 @@ class GoveeSharedDeviceClient {
           }
           //Update the alarm capability
           device.setIfHasCapability('alarm_tank_empty', (tokens.lack==1));
+          device.setIfHasCapability('lackWater.'+device.goveedevicetype, (tokens.lack==1));
           //And trigger the flowcard
           device._lackWaterTrigger.trigger(device, tokens, {})
             .then(this.log)

@@ -23,6 +23,33 @@
         "$filter": "capabilities=alarm_online.dehumidifier"
       }
     ],
+    "conditions": [
+      {
+        "id": "nightlightscene-active.dehumidifier",
+        "title": {
+          "en": "A specific nightlight scene is active"
+        },
+        "titleFormatted": {
+          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
+        },
+        "hint": {
+          "en": "Current active nightlight scene"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "nightlightScene",
+            "title": {
+            "en": "Nightlight scene"
+            },
+            "placeholder": {
+              "en": "Nightlight scene"
+            }
+          }
+        ],
+        "$filter": "capabilities=nightlightScenes.dehumidifier"
+      }
+    ],
     "actions": [
       {
             "id": "set-work-mode.dehumidifier",
@@ -58,6 +85,81 @@
                 }
               }
             ]
+          },
+          {
+            "id":"activate-nightlight.dehumidifier",
+            "title": {
+              "en": "Toggle the nightlight"
+            },
+            "titleFormatted": {
+              "en": "Activate the nightlight [[activate]]"
+            },
+            "titleTrue": {
+              "en": "Activate nightlight"
+            },
+            "titleFalse": {
+              "en": "Deactivate nightlight"
+            },
+            "insightsTitleTrue": {
+              "en": "Nightlight was activated"
+            },
+            "insightsTitleTFalse": {
+              "en": "Nightlight was deactivated"
+            },      
+            "hint": {
+              "en": "Activates or deactivates the nightlight"
+            },
+            "$filter": "capabilities=nightlightToggle.dehumidifier",
+            "args": [
+              {
+                "type": "checkbox",
+                "name": "activate",
+                "title": {
+                  "en": "Activate"
+                },
+                "placeholder": {
+                  "en": "Activate"
+                }
+              }
+            ]
+          },
+          {
+            "id": "switch-to-nightlight-scene.dehumidifier",
+            "title": {
+              "en": "Switch to light scene"
+            },
+            "hint": {
+              "en": "Switches to the selected light scene (and turns on the light if off)"
+            },
+            "titleFormatted": {
+              "en": "Switch to light scene [[nightlightScene]]"
+            },
+            "$filter": "capabilities=nightlightScenes.dehumidifier",
+            "args": [
+              {
+                "type": "autocomplete",
+                "name": "nightlightScene",
+                "title": {
+                  "en": "Scene"
+                },
+                "placeholder": {
+                  "en": "Sunset glow"
+                }
+              }
+            ]
+          },
+          {
+            "id": "switch-to-random-nightlight-scene.dehumidifier",
+            "title": {
+              "en": "Switch to random light scene"
+            },
+            "hint": {
+              "en": "Switches to a random light scene (and turns on the light if off)"
+            },
+            "titleFormatted": {
+              "en": "Switch to random light scene"
+            },
+            "$filter": "capabilities=nightlightScenes.dehumidifier"
           }
        ]
 }

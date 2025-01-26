@@ -5,6 +5,6 @@
     "nl": "Geen water"
 },
 "getable": true,
-"setable": false,
-"uiComponent": null
+"setable": true,
+"uiComponent": "button"
 }

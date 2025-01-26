@@ -365,6 +365,9 @@ class GoveeDevice extends Device {
       this.registerCapabilityListener('nightlightScenes.'+this.goveedevicetype, this.onCapabilityNightlightScenes.bind(this));
     if (this.hasCapability('oscillating'))
       this.registerCapabilityListener('oscillating', this.onCapabilityOscillating.bind(this));
+    if (this.hasCapability('lackWater.'+this.goveedevicetype))
+      this.registerCapabilityListener('lackWater.'+this.goveedevicetype, this.onLackWaterOnoff.bind(this));
+
   }
 
   /**
@@ -396,6 +399,10 @@ class GoveeDevice extends Device {
     if (this._timer) {
       clearInterval(this._timer)
     }
+  }
+
+  async onLackWaterOnoff( value, opts ) {
+    this.setIfHasCapability('alarm_tank_empty', value);
   }
 
   /**

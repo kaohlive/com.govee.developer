@@ -6,7 +6,7 @@
   "class": "airpurifier",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_connectivity","alarm_online.air_purifier", "onoff", "workMode.air_purifier"],
+  "capabilities": ["alarm_connectivity","alarm_online.air_purifier", "onoff", "workMode.air_purifier", "nightlightToggle.air_purifier", "nightlightScenes.air_purifier"],
   "images": {
     "small": "/drivers/govee-airpurifier/assets/images/small.png",
     "large": "/drivers/govee-airpurifier/assets/images/large.png",

@@ -6,7 +6,7 @@
   "class": "dehumidifier",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_connectivity","alarm_online.dehumidifier", "onoff", "workMode.dehumidifier"],
+  "capabilities": ["alarm_connectivity","alarm_online.dehumidifier", "onoff", "workMode.dehumidifier", "nightlightToggle.dehumidifier", "nightlightScenes.dehumidifier"],
   "images": {
     "small": "/drivers/govee-dehumidifier/assets/images/small.png",
     "large": "/drivers/govee-dehumidifier/assets/images/large.png",

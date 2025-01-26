@@ -228,6 +228,8 @@ class GoveeLocalDevice extends Device {
     //The dreamview is not available of you eable local api on dream view devices.
     if (this.hasCapability('dreamViewToggle.'+this.goveedevicetype))
       this.removeCapability('dreamViewToggle.'+this.goveedevicetype); 
+    if (this.hasCapability('lackWater.'+this.goveedevicetype))
+      this.registerCapabilityListener('lackWater.'+this.goveedevicetype, this.onLackWaterOnoff.bind(this));
 
   }
 
@@ -287,6 +289,10 @@ class GoveeLocalDevice extends Device {
   async onCapabilityOnoff( value, opts ) {
     await this.driver.turn(value,this.data.id);
     this.setIfHasCapability('onoff', value);
+  }
+
+  async onLackWaterOnoff( value, opts ) {
+    this.setIfHasCapability('alarm_tank_empty', value);
   }
 
   /**
