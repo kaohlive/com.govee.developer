@@ -190,5 +190,8 @@
   },
   "2.13.0": {
     "en": "Manual reset for empty tank event"
+  },
+  "2.13.1": {
+    "en": "Update for new humidty sensor data response"
   }
 }
