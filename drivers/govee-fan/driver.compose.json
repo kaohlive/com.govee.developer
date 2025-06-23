@@ -1,0 +1,34 @@
+{
+  "id": "govee-fan",
+  "name": {
+    "en": "Fan"
+  },
+  "class": "fan",
+  "platforms": ["local","cloud"],
+  "connectivity": [ "cloud" ],
+  "capabilities": ["alarm_connectivity","alarm_online.fan", "onoff","oscillating", "workMode.fan"],
+  "images": {
+    "small": "/drivers/govee-fan/assets/images/small.png",
+    "large": "/drivers/govee-fan/assets/images/large.png",
+    "xlarge": "/drivers/govee-fan/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "api_settings"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "options": {
+        "singular": false
+      },
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}

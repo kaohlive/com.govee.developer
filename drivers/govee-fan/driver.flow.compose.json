@@ -1,0 +1,54 @@
+{
+    "triggers": [
+      {
+        "deprecated": true,
+        "id": "alarm_online.fan_false",
+        "title": {
+          "en": "The fan is online"
+        },
+        "hint": {
+          "en": "When the fan is reported online"
+        },
+        "$filter": "capabilities=alarm_online.fan"
+      }
+    ],
+    "conditions": [
+    ],
+    "actions": [
+      {
+            "id": "set-work-mode.fan",
+            "title": {
+              "en": "Select work mode"
+            },
+            "hint": {
+              "en": "Sets the work mode of the fan"
+            },
+            "titleFormatted": {
+              "en": "Set the work mode to [[workMode]] with option [[modeValue]]"
+            },
+            "$filter": "capabilities=workMode.fan",
+            "args": [
+              {
+                "type": "autocomplete",
+                "name": "workMode",
+                "title": {
+                  "en": "Work mode"
+                },
+                "placeholder": {
+                  "en": "Work mode"
+                }
+              },
+              {
+                "type": "autocomplete",
+                "name": "modeValue",
+                "title": {
+                  "en": "Option"
+                },
+                "placeholder": {
+                  "en": "Work mode"
+                }
+              }
+            ]
+          }
+       ]
+}
