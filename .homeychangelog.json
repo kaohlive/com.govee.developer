@@ -193,5 +193,8 @@
   },
   "2.13.1": {
     "en": "Update for new humidty sensor data response"
+  },
+  "2.15.0": {
+    "en": "Added target temp support for devices that have this capability"
   }
 }
