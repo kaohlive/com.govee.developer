@@ -203,6 +203,29 @@ class GoveeClient {
       });
   }
 
+    setTempuratureSettings(targetTemp, instance, model, device) {
+    return new Promise((resolve, reject) => {
+      //console.log('attempt to switch device ['+device+':'+model+'] to new mode: '+scene)
+      let params = {
+        "requestId": "uuid",
+        "payload": {
+          "sku": model,
+          "device": device,
+          "capability": {
+            "type": "devices.capabilities.temperature_setting",
+            "instance": instance,
+            "value": {
+                "temperature":targetTemp
+            }
+            }
+          }
+        }
+        this.deviceControl(params).then(res => {
+          resolve(res);
+        }).catch(e => {reject(e)});
+      });
+  }
+
   setMode(scene, instance, model, device) {
     return new Promise((resolve, reject) => {
       //console.log('attempt to switch device ['+device+':'+model+'] to new mode: '+scene)

@@ -49,7 +49,7 @@ class GoveeSharedDeviceClient {
             await device.addCapability('dreamViewToggle.'+device.goveedevicetype);
           await this.setupFlowDreamView(device);
         } else if(device.hasCapability('dreamViewToggle.'+device.goveedevicetype))
-          await device.removeCapability('dreamViewToggle.'+device.goveedevicetype); 
+          await device.removeCapability('dreamViewToggle.'+device.goveedevicetype);
         //Use the mode capability for Dynamic LightScenes
         if(capabilitieslist.find(function(e) {return e.instance == "lightScene" }))
         {

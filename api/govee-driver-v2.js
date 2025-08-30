@@ -143,6 +143,11 @@ class GoveeDriver extends Driver {
     return this.api.setWorkMode(workMode.value, modeValue.value, model, device);
   }
 
+  async setTargetTemperature(temperature, model, device) {
+    this.log("thermostat target temperature change requested ["+temperature+"]");
+    return this.api.setTempuratureSettings(temperature,"targetTemperature", model, device);
+  }
+
   async setSegmentColor(segment, colorHex, mode, model, device, type) {
     let colorParsed = this.colorHexCommandSetParser(colorHex);
     this.log('device segment change requested ['+segment+'] to color '+colorParsed);

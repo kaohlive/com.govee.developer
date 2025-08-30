@@ -265,7 +265,7 @@ class GoveeDevice extends Device {
         await this.addCapability('light_mode');
     } else if(this.hasCapability('light_mode'))
       await this.removeCapability('light_mode');
-      
+    
     //These are more likely to be appliance capabilities
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "sensorTemperature" })) {
       if(!this.hasCapability('measure_temperature'))
@@ -291,6 +291,23 @@ class GoveeDevice extends Device {
         await this.addCapability('oscillating');
     } else if(this.hasCapability('oscillating'))
       await this.removeCapability('oscillating');
+    //Thermostat support
+    if(this.data.capabilitieslist.find(function(e) {return e.instance == "targetTemperature"}))
+    {
+      this.log('Located the targetTemperature capabilities')
+      if(!this.hasCapability('target_temperature')) {
+        await this.addCapability('target_temperature');
+      }
+      let tempFields = this.data.capabilitieslist.find(function(e) {return e.instance == "targetTemperature" }).parameters;
+      let tempRange = tempFields.find(function(e) {return e.instance == "fieldName" }).range;
+      const thermostatOptions = {
+        "min": tempRange.min,
+        "max": tempRange.max,
+        "step": tempRange.step
+      }
+      await this.setCapabilityOptions('target_temperature', thermostatOptions);
+    } else if(this.hasCapability('target_temperature'))
+      await this.removeCapability('target_temperature');
   }
 
   /**
@@ -371,6 +388,8 @@ class GoveeDevice extends Device {
       this.registerCapabilityListener('oscillating', this.onCapabilityOscillating.bind(this));
     if (this.hasCapability('lackWater.'+this.goveedevicetype))
       this.registerCapabilityListener('lackWater.'+this.goveedevicetype, this.onLackWaterOnoff.bind(this));
+    if (this.hasCapability('target_temperature'))
+      this.registerCapabilityListener('target_temperature', this.onCapabilityTargetTemperature.bind(this));
 
   }
 
@@ -407,6 +426,16 @@ class GoveeDevice extends Device {
 
   async onLackWaterOnoff( value, opts ) {
     this.setIfHasCapability('alarm_tank_empty', value);
+  }
+
+    /**
+   * Sets the target temperature of thermostat devices
+   * @param {string} value the target temp value of the temperature within its definced range
+   * @param {*} opts 
+   */
+  async onCapabilityTargetTemperature( value, opts ) {
+    await this.driver.setTargetTemperature(value, this.data.model, this.data.mac, this.goveedevicetype);
+    this.setIfHasCapability('target_temperature', value);
   }
 
   /**
