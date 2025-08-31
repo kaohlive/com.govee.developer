@@ -196,5 +196,8 @@
   },
   "2.15.0": {
     "en": "Added target temp support for devices that have this capability"
+  },
+  "2.15.1": {
+    "en": "Bug fix new thermostat feature"
   }
 }
