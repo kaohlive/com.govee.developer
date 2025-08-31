@@ -194,6 +194,17 @@ class GoveeDevice extends Device {
           this.setCapabilityValue('mode', null).catch( reason => this.log('Error while updating capability: '+reason) );
         }
       }
+      if(this.hasCapability('target_temperature'))
+      {
+        this.log('Processing the target temperature state');
+        var temp = currentState.capabilitieslist.find(function(e) {return e.instance == "targetTemperature" })
+        var celc;
+        if(temp.state.value.unit=='Fahrenheit')
+          celc = (temp.state.value.targetTemperature - 32) / 1.8;
+        else
+          celc = temp.state.value.targetTemperature
+        this.setCapabilityValue('target_temperature',celc).catch( reason => this.log('Error while updating capability: '+reason) );
+      }
       if(this.hasCapability('measure_temperature'))
       {
         this.log('Processing the temp sensor state');
