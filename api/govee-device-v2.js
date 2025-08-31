@@ -298,8 +298,8 @@ class GoveeDevice extends Device {
       if(!this.hasCapability('target_temperature')) {
         await this.addCapability('target_temperature');
       }
-      let tempFields = this.data.capabilitieslist.find(function(e) {return e.instance == "targetTemperature" }).parameters;
-      let tempRange = tempFields.find(function(e) {return e.instance == "fieldName" }).range;
+      let tempFields = this.data.capabilitieslist.find(function(e) {return e.instance == "targetTemperature"});
+      let tempRange = tempFields.parameters.fields.find(function(e) {return e.fieldName == "temperature" }).range;
       const thermostatOptions = {
         "min": tempRange.min,
         "max": tempRange.max,
