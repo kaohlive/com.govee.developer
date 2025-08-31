@@ -199,5 +199,8 @@
   },
   "2.15.1": {
     "en": "Bug fix new thermostat feature"
+  },
+  "2.15.2": {
+    "en": "Added support for thermostat target temp state updates"
   }
 }
