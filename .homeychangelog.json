@@ -202,5 +202,8 @@
   },
   "2.15.2": {
     "en": "Added support for thermostat target temp state updates"
+  },
+  "2.15.3": {
+    "en": "Improved handling of local UDP port unavailable cases"
   }
 }

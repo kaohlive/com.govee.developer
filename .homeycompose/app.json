@@ -1,7 +1,7 @@
 {
   "id": "com.govee.developer",
   "brandColor": "#00ACE7",
-  "version": "2.15.2",
+  "version": "2.15.3",
   "compatibility": ">=12.2.0",
   "sdk": 3,
   "platforms": [
@@ -30,5 +30,23 @@
     "name": "Kaoh",
     "email": "kaoh@kaoh.nl"
   },
-  "support": "mailto:vincent+govee@vdboer.nl"
+  "support": "mailto:vincent+govee@vdboer.nl",
+  "api": {
+    "getLocalApiStatus": {
+      "method": "GET",
+      "path": "/local-api-status"
+    },
+    "triggerDiscovery": {
+      "method": "POST",
+      "path": "/trigger-discovery"
+    },
+    "testCloudApi": {
+      "method": "GET",
+      "path": "/test-cloud-api"
+    },
+    "pingCloudApi": {
+      "method": "GET",
+      "path": "/ping-cloud-api"
+    }
+  }
 }
