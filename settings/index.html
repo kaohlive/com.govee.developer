@@ -1,72 +1,752 @@
+<!DOCTYPE html>
+<html>
 <head>
-    <!-- ... -->
-    <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
-  </head>
-  <body>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+  <style>
+    /*
+     * Custom styles for elements not covered by Homey Style Library
+     * Tabs, status indicators, and device cards
+     */
 
+    /* Tab navigation - using Homey color variables */
+    .tab-container {
+      display: flex;
+      margin-bottom: 20px;
+      gap: 4px;
+    }
+
+    .tab-button {
+      flex: 1;
+      padding: 12px 8px;
+      border: none;
+      background-color: rgb(var(--tint-3));
+      color: rgb(var(--tint-9));
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-radius: 8px 8px 0 0;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab-button:hover {
+      background-color: rgb(var(--tint-4));
+    }
+
+    .tab-button.active {
+      background-color: rgb(var(--tint-2));
+      color: rgb(var(--primary-original));
+      border-bottom-color: rgb(var(--primary-original));
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Status card using Homey variables */
+    .status-card {
+      background-color: rgb(var(--tint-2));
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgb(var(--tint-4));
+    }
+
+    .status-row:last-child {
+      border-bottom: none;
+    }
+
+    .status-label {
+      color: rgb(var(--tint-9));
+      font-size: 14px;
+    }
+
+    .status-value {
+      font-weight: 500;
+      font-size: 14px;
+      color: rgb(var(--tint-12));
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .status-dot.success {
+      background-color: rgb(var(--success-original));
+    }
+
+    .status-dot.error {
+      background-color: rgb(var(--danger-original));
+    }
+
+    .status-dot.warning {
+      background-color: rgb(var(--warning-original));
+    }
+
+    .status-dot.pending {
+      background-color: rgb(var(--tint-7));
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Device list */
+    .device-list {
+      margin-top: 16px;
+    }
+
+    .device-list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .device-list-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: rgb(var(--tint-12));
+    }
+
+    .device-count {
+      background-color: rgb(var(--primary-original));
+      color: rgb(var(--primary-original-contrast));
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .device-item {
+      background-color: rgb(var(--tint-2));
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .device-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .device-model {
+      font-weight: 600;
+      font-size: 14px;
+      color: rgb(var(--tint-12));
+    }
+
+    .device-power {
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .device-power.on {
+      background-color: rgb(var(--success-original));
+      color: rgb(var(--success-original-contrast));
+    }
+
+    .device-power.off {
+      background-color: rgb(var(--tint-6));
+      color: rgb(var(--tint-12));
+    }
+
+    .device-type {
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      background-color: rgb(var(--tint-4));
+      color: rgb(var(--tint-10));
+    }
+
+    .device-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .device-detail {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .device-detail-label {
+      color: rgb(var(--tint-7));
+      font-size: 10px;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .device-detail-value {
+      color: rgb(var(--tint-11));
+    }
+
+    .no-devices {
+      text-align: center;
+      padding: 24px;
+      color: rgb(var(--tint-7));
+      font-style: italic;
+    }
+
+    /* Cloud device item */
+    .cloud-device-item {
+      background-color: rgb(var(--tint-2));
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cloud-device-info {
+      flex: 1;
+    }
+
+    .cloud-device-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: rgb(var(--tint-12));
+    }
+
+    .cloud-device-model {
+      font-size: 12px;
+      color: rgb(var(--tint-7));
+      margin-top: 2px;
+    }
+
+    /* Info box */
+    .info-box {
+      background-color: rgb(var(--info-3));
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 13px;
+      color: rgb(var(--info-11));
+      margin-bottom: 16px;
+    }
+
+    /* Alert messages */
+    .error-message {
+      background-color: rgb(var(--danger-3));
+      border: 1px solid rgb(var(--danger-7));
+      border-radius: 8px;
+      padding: 12px;
+      color: rgb(var(--danger-11));
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    .success-message {
+      background-color: rgb(var(--success-3));
+      border: 1px solid rgb(var(--success-7));
+      border-radius: 8px;
+      padding: 12px;
+      color: rgb(var(--success-11));
+      font-size: 13px;
+      margin-top: 12px;
+    }
+
+    /* Raw response textarea */
+    .raw-response-container {
+      margin-top: 16px;
+    }
+
+    .raw-response-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .raw-response-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: rgb(var(--tint-12));
+    }
+
+    .timestamp {
+      font-size: 11px;
+      color: rgb(var(--tint-7));
+      margin-top: 8px;
+    }
+
+    /* Button spinner */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Button with icon */
+    .button-with-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tab Navigation -->
+  <div class="tab-container">
+    <button class="tab-button active" data-tab="cloud-api">Cloud API</button>
+    <button class="tab-button" data-tab="local-api">Local API</button>
+    <button class="tab-button" data-tab="cloud-test">API Test</button>
+  </div>
+
+  <!-- Cloud API Tab Content -->
+  <div id="cloud-api" class="tab-content active">
     <header class="homey-header">
-      <h1 class="homey-title">
-       Govee Cloud API
-      </h1>
+      <h1 class="homey-title">Govee Cloud API</h1>
       <p class="homey-subtitle">
-          To be able to pair Govee Cloud API devices you need to provide Homey with your Govee API key.
-          If you did not do so already follow <a href="https://developer.govee.com/reference/apply-you-govee-api-key" target="_blank">this procedure</a> from Govee.
-          Once you have done so, and you received your API key, provide your API key here.
+        To be able to pair Govee Cloud API devices you need to provide Homey with your Govee API key.
+        If you did not do so already follow <a href="https://developer.govee.com/reference/apply-you-govee-api-key" target="_blank">this procedure</a> from Govee.
+        Once you have done so, and you received your API key, provide your API key here.
       </p>
       <p class="homey-subtitle">
         If you do not provide this API key, you are still able to add the Local Lights device class.
-    </p>
+      </p>
     </header>
 
     <fieldset class="homey-form-fieldset">
       <legend class="homey-form-legend">Govee Cloud API Settings</legend>
-      
+
       <div class="homey-form-group">
-          <label class="homey-form-label" for="apikey">Your API Key</label>
-          <input class="homey-form-input" id="apikey" type="text" value="" />
+        <label class="homey-form-label" for="apikey">Your API Key</label>
+        <input class="homey-form-input" id="apikey" type="text" value="" />
       </div>
       <div class="homey-form-group">
         <label class="homey-form-label" for="pollinterval">Device state poll interval (in ms), increase this if your devices stop working due to rate limiting. Minimum setting is 60 seconds</label>
         <input class="homey-form-input" id="pollinterval" type="text" value="60000" />
       </div>
-  </fieldset>
+    </fieldset>
 
-    <button class="homey-button-primary-full" id="save" class="right">Save</button>
+    <button class="homey-button-primary-full" id="save">Save</button>
+  </div>
 
-    <script type="text/javascript">
+  <!-- Local API Tab Content -->
+  <div id="local-api" class="tab-content">
+    <header class="homey-header">
+      <h1 class="homey-title">Local API Status</h1>
+      <p class="homey-subtitle">
+        The Local API uses UDP multicast to discover and control Govee devices on your local network.
+        This provides faster response times and works without internet connectivity.
+      </p>
+    </header>
 
-    // a method named 'onHomeyReady' must be present in your code
-    function onHomeyReady( Homey ){
+    <div class="info-box">
+      Govee devices must have LAN Control enabled in the Govee Home app to be discovered via the Local API.
+    </div>
 
-        // Tell Homey we're ready to be displayed
-        Homey.ready();
+    <!-- UDP Client Status -->
+    <div class="status-card">
+      <div class="status-row">
+        <span class="status-label">UDP Client Status</span>
+        <span class="status-value">
+          <span class="status-indicator" id="udp-status">
+            <span class="status-dot pending"></span>
+            <span>Checking...</span>
+          </span>
+        </span>
+      </div>
+      <div class="status-row">
+        <span class="status-label">UDP Port</span>
+        <span class="status-value" id="udp-port">4002</span>
+      </div>
+      <div class="status-row">
+        <span class="status-label">Multicast Address</span>
+        <span class="status-value" id="multicast-address">239.255.255.250</span>
+      </div>
+      <div class="status-row">
+        <span class="status-label">Discovery Interval</span>
+        <span class="status-value" id="discovery-interval">30s</span>
+      </div>
+    </div>
 
-        var keyElement = document.getElementById('apikey');
-        var intervalElement = document.getElementById('pollinterval');
-        var saveElement = document.getElementById('save');
+    <div id="error-container"></div>
 
-        saveElement.addEventListener('click', function(e) {
-          Homey.set('api_key', keyElement.value, function( err ){
-            if( err ) return Homey.alert( err );
+    <!-- Device List -->
+    <div class="device-list">
+      <div class="device-list-header">
+        <span class="device-list-title">Discovered Devices</span>
+        <span class="device-count" id="device-count">0</span>
+      </div>
+
+      <button class="homey-button-primary button-with-icon" id="refresh-status">
+        <span id="refresh-icon">&#x21bb;</span>
+        <span id="refresh-text">Refresh</span>
+      </button>
+
+      <div id="device-list-container">
+        <div class="no-devices">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cloud API Test Tab Content -->
+  <div id="cloud-test" class="tab-content">
+    <header class="homey-header">
+      <h1 class="homey-title">Cloud API Test</h1>
+      <p class="homey-subtitle">
+        Test your Govee Cloud API connection and retrieve your device list.
+        Use this page for troubleshooting or to share device information with support.
+      </p>
+    </header>
+
+    <div class="info-box">
+      Click the button below to test your API connection. The raw API response will be shown below,
+      which you can copy and send to support if you're experiencing issues.
+    </div>
+
+    <button class="homey-button-primary button-with-icon" id="test-cloud-api">
+      <span id="test-icon">&#x27A4;</span>
+      <span id="test-text">Test API &amp; Get Devices</span>
+    </button>
+
+    <div id="cloud-test-status"></div>
+
+    <!-- Cloud Device List -->
+    <div class="device-list">
+      <div class="device-list-header">
+        <span class="device-list-title">Cloud Devices</span>
+        <span class="device-count" id="cloud-device-count">0</span>
+      </div>
+
+      <div id="cloud-device-list-container">
+        <div class="no-devices">Click "Test API & Get Devices" to retrieve your device list.</div>
+      </div>
+    </div>
+
+    <!-- Raw Response -->
+    <div class="raw-response-container">
+      <div class="raw-response-label">
+        <span class="raw-response-title">Raw API Response (for support)</span>
+        <button class="homey-button-secondary-small" id="copy-response">Copy to Clipboard</button>
+      </div>
+      <textarea class="homey-form-textarea" id="raw-response" readonly placeholder="API response will appear here after testing..." style="min-height: 200px; font-family: monospace; font-size: 11px;"></textarea>
+      <div class="timestamp" id="response-timestamp"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    function onHomeyReady(Homey) {
+      Homey.ready();
+
+      // Tab switching
+      const tabButtons = document.querySelectorAll('.tab-button');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const tabId = button.getAttribute('data-tab');
+
+          // Update button states
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+
+          // Update content visibility
+          tabContents.forEach(content => content.classList.remove('active'));
+          document.getElementById(tabId).classList.add('active');
+
+          // Refresh local API status when switching to that tab
+          if (tabId === 'local-api') {
+            refreshLocalApiStatus();
+          }
+        });
+      });
+
+      // Cloud API Settings
+      const keyElement = document.getElementById('apikey');
+      const intervalElement = document.getElementById('pollinterval');
+      const saveElement = document.getElementById('save');
+
+      saveElement.addEventListener('click', function(e) {
+        Homey.set('api_key', keyElement.value, function(err) {
+          if (err) return Homey.alert(err);
+        });
+        Homey.set('poll_interval', intervalElement.value, function(err) {
+          if (err) return Homey.alert(err);
+        });
+        Homey.alert('Settings saved successfully!');
+      });
+
+      Homey.get('api_key', function(err, key) {
+        if (err) return Homey.alert(err);
+        keyElement.value = key || '';
+      });
+
+      Homey.get('poll_interval', function(err, pollinterval) {
+        if (err) return Homey.alert(err);
+        if (!pollinterval || pollinterval < 60000) pollinterval = 60000;
+        intervalElement.value = pollinterval;
+      });
+
+      // Local API Status
+      const refreshButton = document.getElementById('refresh-status');
+      const refreshIcon = document.getElementById('refresh-icon');
+      const refreshText = document.getElementById('refresh-text');
+
+      refreshButton.addEventListener('click', function() {
+        // Trigger discovery first, then refresh status
+        Homey.api('POST', '/trigger-discovery', null, function(err, result) {
+          if (err) console.error('Discovery trigger failed:', err);
+        });
+
+        refreshButton.disabled = true;
+        refreshButton.classList.add('is-loading');
+        refreshIcon.innerHTML = '<span class="spinner"></span>';
+        refreshText.textContent = 'Discovering...';
+
+        // Wait a moment for discovery, then refresh
+        setTimeout(function() {
+          refreshLocalApiStatus();
+          refreshButton.disabled = false;
+          refreshButton.classList.remove('is-loading');
+          refreshIcon.innerHTML = '&#x21bb;';
+          refreshText.textContent = 'Refresh';
+        }, 3000);
+      });
+
+      function refreshLocalApiStatus() {
+        Homey.api('GET', '/local-api-status', function(err, status) {
+          if (err) {
+            updateUdpStatus('error', 'Error: ' + err);
+            return;
+          }
+
+          // Update UDP status
+          if (!status.initialized) {
+            updateUdpStatus('warning', 'Not Initialized');
+          } else if (status.error) {
+            updateUdpStatus('error', 'Error');
+            showLocalError(status.error);
+          } else if (status.ready) {
+            updateUdpStatus('success', 'Connected');
+            hideLocalError();
+          } else {
+            updateUdpStatus('pending', 'Initializing...');
+          }
+
+          // Update connection info
+          document.getElementById('udp-port').textContent = status.udpPort || '4002';
+          document.getElementById('multicast-address').textContent = status.multicastAddress || '239.255.255.250';
+          document.getElementById('discovery-interval').textContent = (status.discoveryInterval / 1000) + 's' || '30s';
+
+          // Update device count
+          document.getElementById('device-count').textContent = status.deviceCount || 0;
+
+          // Update device list
+          updateLocalDeviceList(status.devices || []);
+        });
+      }
+
+      function updateUdpStatus(statusClass, text) {
+        const container = document.getElementById('udp-status');
+        container.innerHTML = `
+          <span class="status-dot ${statusClass}"></span>
+          <span>${text}</span>
+        `;
+      }
+
+      function showLocalError(message) {
+        const container = document.getElementById('error-container');
+        container.innerHTML = `<div class="error-message">${escapeHtml(message)}</div>`;
+      }
+
+      function hideLocalError() {
+        document.getElementById('error-container').innerHTML = '';
+      }
+
+      function updateLocalDeviceList(devices) {
+        const container = document.getElementById('device-list-container');
+
+        if (devices.length === 0) {
+          container.innerHTML = '<div class="no-devices">No devices discovered yet. Make sure LAN Control is enabled in the Govee Home app.</div>';
+          return;
+        }
+
+        let html = '';
+        devices.forEach(device => {
+          html += `
+            <div class="device-item">
+              <div class="device-header">
+                <span class="device-model">${escapeHtml(device.model)}</span>
+                <span class="device-power ${device.isOn ? 'on' : 'off'}">${device.isOn ? 'On' : 'Off'}</span>
+              </div>
+              <div class="device-details">
+                <div class="device-detail">
+                  <span class="device-detail-label">Device ID</span>
+                  <span class="device-detail-value">${escapeHtml(device.id)}</span>
+                </div>
+                <div class="device-detail">
+                  <span class="device-detail-label">IP Address</span>
+                  <span class="device-detail-value">${escapeHtml(device.ip)}</span>
+                </div>
+                <div class="device-detail">
+                  <span class="device-detail-label">Brightness</span>
+                  <span class="device-detail-value">${device.brightness}%</span>
+                </div>
+                <div class="device-detail">
+                  <span class="device-detail-label">Updates</span>
+                  <span class="device-detail-value">${device.hasReceivedUpdates ? 'Yes' : 'No'}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      }
+
+      // Cloud API Test
+      const testButton = document.getElementById('test-cloud-api');
+      const testIcon = document.getElementById('test-icon');
+      const testText = document.getElementById('test-text');
+      const rawResponseTextarea = document.getElementById('raw-response');
+      const copyButton = document.getElementById('copy-response');
+      const timestampEl = document.getElementById('response-timestamp');
+
+      testButton.addEventListener('click', function() {
+        testButton.disabled = true;
+        testButton.classList.add('is-loading');
+        testIcon.innerHTML = '<span class="spinner"></span>';
+        testText.textContent = 'Testing...';
+
+        Homey.api('GET', '/test-cloud-api', function(err, result) {
+          testButton.disabled = false;
+          testButton.classList.remove('is-loading');
+          testIcon.innerHTML = '&#x27A4;';
+          testText.textContent = 'Test API & Get Devices';
+
+          if (err) {
+            showCloudTestStatus('error', 'Failed to call API: ' + err);
+            rawResponseTextarea.value = JSON.stringify({ error: err }, null, 2);
+            return;
+          }
+
+          // Update status
+          if (result.success) {
+            showCloudTestStatus('success', `Successfully retrieved ${result.deviceCount} device(s) from Govee Cloud API.`);
+          } else {
+            showCloudTestStatus('error', result.error || 'Unknown error occurred');
+          }
+
+          // Update device count
+          document.getElementById('cloud-device-count').textContent = result.deviceCount || 0;
+
+          // Update device list
+          updateCloudDeviceList(result.devices || []);
+
+          // Update raw response
+          rawResponseTextarea.value = result.rawResponse || 'No response data';
+
+          // Update timestamp
+          timestampEl.textContent = result.timestamp ? `Last tested: ${new Date(result.timestamp).toLocaleString()}` : '';
+        });
+      });
+
+      function showCloudTestStatus(type, message) {
+        const container = document.getElementById('cloud-test-status');
+        const className = type === 'success' ? 'success-message' : 'error-message';
+        container.innerHTML = `<div class="${className}">${escapeHtml(message)}</div>`;
+      }
+
+      function updateCloudDeviceList(devices) {
+        const container = document.getElementById('cloud-device-list-container');
+
+        if (devices.length === 0) {
+          container.innerHTML = '<div class="no-devices">No devices found. Make sure your API key is correct and you have devices registered in the Govee app.</div>';
+          return;
+        }
+
+        let html = '';
+        devices.forEach(device => {
+          html += `
+            <div class="cloud-device-item">
+              <div class="cloud-device-info">
+                <div class="cloud-device-name">${escapeHtml(device.name)}</div>
+                <div class="cloud-device-model">${escapeHtml(device.model)} - ${escapeHtml(device.id)}</div>
+              </div>
+              <span class="device-type">${escapeHtml(device.type)}</span>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      }
+
+      // Copy to clipboard
+      copyButton.addEventListener('click', function() {
+        rawResponseTextarea.select();
+        rawResponseTextarea.setSelectionRange(0, 99999); // For mobile
+
+        try {
+          navigator.clipboard.writeText(rawResponseTextarea.value).then(function() {
+            copyButton.textContent = 'Copied!';
+            setTimeout(function() {
+              copyButton.textContent = 'Copy to Clipboard';
+            }, 2000);
           });
-          Homey.set('poll_interval', intervalElement.value, function( err ){
-            if( err ) return Homey.alert( err );
-          });
-        });
+        } catch (err) {
+          // Fallback for older browsers
+          document.execCommand('copy');
+          copyButton.textContent = 'Copied!';
+          setTimeout(function() {
+            copyButton.textContent = 'Copy to Clipboard';
+          }, 2000);
+        }
+      });
 
-        Homey.get('api_key', function( err, key ) {
-           if( err ) return Homey.alert( err );
-           keyElement.value = key;
-        });
+      // Helper function to escape HTML
+      function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
 
-        Homey.get('poll_interval', function( err, pollinterval ) {
-           if( err ) return Homey.alert( err );
-           if(pollinterval < 60000)
-            pollinterval = 60000;
-           intervalElement.value = pollinterval;
-        });
-
+      // Initial load of local API status
+      setTimeout(refreshLocalApiStatus, 500);
     }
-    </script>
+  </script>
 
 </body>
+</html>

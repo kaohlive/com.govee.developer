@@ -11,8 +11,29 @@ class GoveeDriver extends Driver {
    * onInit is called when the driver is initialized.
    */
   async onInit() {
-    if(this.homey.app.localApiClient===null)
-      this.homey.app.localApiClient = new gv.GoveeClient();
+    if (this.homey.app.localApiClient === null) {
+      this.log('Initializing Local API client...');
+      try {
+        this.homey.app.localApiClient = new gv.GoveeClient();
+
+        // Log initialization status after a short delay
+        setTimeout(() => {
+          if (this.homey.app.localApiClient) {
+            const error = this.homey.app.localApiClient.getInitError();
+            if (error) {
+              this.error('Local API client initialization failed:', error.message);
+            } else if (this.homey.app.localApiClient.isClientReady()) {
+              this.log('Local API client initialized successfully');
+            } else {
+              this.log('Local API client still initializing...');
+            }
+          }
+        }, 5000);
+      } catch (err) {
+        this.error('Failed to create Local API client:', err.message);
+        this.homey.app.localApiClient = null;
+      }
+    }
     this.log('govee.localdriver has been initialized');
   }
 
@@ -29,9 +50,28 @@ class GoveeDriver extends Driver {
    */
   async ListDevices() {
     this.log('List available devices');
-    var devicelist = null;
-    devicelist = await this.homey.app.localApiClient.deviceList();
-    this.log('Received '+devicelist.length+' from local discovery');
+
+    // Check if local API client is available and ready
+    if (!this.homey.app.localApiClient) {
+      this.error('Local API client is not initialized');
+      return [];
+    }
+
+    const initError = this.homey.app.localApiClient.getInitError();
+    if (initError) {
+      this.error('Local API client has initialization error:', initError.message);
+      return [];
+    }
+
+    if (!this.homey.app.localApiClient.isClientReady()) {
+      this.log('Local API client not ready yet, triggering discovery...');
+      this.homey.app.localApiClient.triggerDiscovery();
+      // Wait a bit for discovery
+      await new Promise(resolve => setTimeout(resolve, 3000));
+    }
+
+    var devicelist = this.homey.app.localApiClient.deviceList();
+    this.log('Received ' + devicelist.length + ' from local discovery');
     //Convert to our Homey device info object
     var devices = await devicelist.map((device) => {
       let goveedevice = {

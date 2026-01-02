@@ -52,25 +52,64 @@ class GoveeLocalDevice extends Device {
   async onUninit() {
     this.log('Device uninit, clean up references');
     //Clear any listeners
-    this.homey.clearInterval(this._timer);
-    var discoveredDevice = this.homey.app.localApiClient.getDeviceById(this.data.id);
-    if(discoveredDevice!=null)
-    {
-      this.unregisterUpdateEvent(discoveredDevice);
+    if (this._timer) {
+      this.homey.clearInterval(this._timer);
+      this._timer = null;
+    }
+    // Check if localApiClient exists before trying to use it
+    if (this.homey.app.localApiClient && this.data) {
+      var discoveredDevice = this.homey.app.localApiClient.getDeviceById(this.data.id);
+      if (discoveredDevice != null) {
+        this.unregisterUpdateEvent(discoveredDevice);
+      }
     }
   }
 
   start_update_loop() {
+    this._discoveryAttempts = 0;
+    const MAX_DISCOVERY_ATTEMPTS = 120; // 2 minutes max
+
     this._timer = this.homey.setInterval(() => {
-        var discoveredDevice = this.homey.app.localApiClient.getDeviceById(this.data.id);
-        if(discoveredDevice!=null)
-        {
-          this.setWarning(null);
-          this.setAvailable();
-          this.registerUpdateEvent(discoveredDevice);
-          this.refreshState(discoveredDevice.state,["onOff","brightness","color"]);
+      this._discoveryAttempts++;
+
+      // Check if localApiClient is available
+      if (!this.homey.app.localApiClient) {
+        this.log('Local API client not available, waiting...');
+        if (this._discoveryAttempts >= MAX_DISCOVERY_ATTEMPTS) {
+          this.setWarning('Local API unavailable - UDP port may be in use');
           this.homey.clearInterval(this._timer);
+          this._timer = null;
         }
+        return;
+      }
+
+      // Check if client has initialization error
+      const initError = this.homey.app.localApiClient.getInitError();
+      if (initError) {
+        this.setWarning('Local API error: ' + initError.message);
+        this.homey.clearInterval(this._timer);
+        this._timer = null;
+        return;
+      }
+
+      var discoveredDevice = this.homey.app.localApiClient.getDeviceById(this.data.id);
+      if (discoveredDevice != null) {
+        this.setWarning(null);
+        this.setAvailable();
+        this.registerUpdateEvent(discoveredDevice);
+        this.refreshState(discoveredDevice.state, ["onOff", "brightness", "color"]);
+        this.homey.clearInterval(this._timer);
+        this._timer = null;
+        this.log('Device discovered and connected: ' + this.data.id);
+      } else if (this._discoveryAttempts >= MAX_DISCOVERY_ATTEMPTS) {
+        this.setWarning('Device not found after 2 minutes - check device is on network');
+        this.log('Device discovery timed out for: ' + this.data.id);
+        this.homey.clearInterval(this._timer);
+        this._timer = null;
+      } else if (this._discoveryAttempts % 30 === 0) {
+        // Log progress every 30 seconds
+        this.log('Still searching for device: ' + this.data.id + ' (attempt ' + this._discoveryAttempts + ')');
+      }
     }, 1000);
   }
 

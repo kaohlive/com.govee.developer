@@ -19,14 +19,22 @@ class GoveeApp extends Homey.App {
 
   async onUninit() {
     //We need to disconnect our hosts
-    if(this.mqttClient!=null)
-    {
-      this.mqttClient.end();
-      this.mqttClient.destroy();
+    if (this.mqttClient != null) {
+      try {
+        this.mqttClient.end();
+        this.mqttClient.destroy();
+      } catch (err) {
+        this.error('Error cleaning up MQTT client:', err.message);
+      }
     }
-    if((this.localApiClient!=null))
-      this.localApiClient.destroy();
-    //Kill the eventbus, this prevents subscribed events from trying to fire while we are destorying hosts
+    if (this.localApiClient != null) {
+      try {
+        this.localApiClient.destroy();
+      } catch (err) {
+        this.error('Error cleaning up Local API client:', err.message);
+      }
+    }
+    //Kill the eventbus, this prevents subscribed events from trying to fire while we are destroying hosts
     this.eventBus.removeAllListeners();
     this.log('Cleaned up open connections');
   }
