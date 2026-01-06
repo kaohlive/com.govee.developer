@@ -15,6 +15,40 @@ class GoveeApp extends Homey.App {
     this.localApiClient=null;
     //Create an event emitter to send received mqtt to the devices
     this.eventBus = new EventEmitter();
+
+    // Handle uncaught errors from the govee-lan-control library
+    // This prevents the app from crashing due to library bugs or network issues
+    process.on('uncaughtException', (err) => {
+      // Handle UDP port already in use
+      if (err.code === 'EADDRINUSE' && err.message.includes('4002')) {
+        this.error('[GoveeApp] UDP port 4002 is already in use - local API disabled');
+        this.error('[GoveeApp] Another application (Home Assistant, another Govee app) may be using this port');
+        // Mark the local API client as failed if it exists
+        if (this.localApiClient) {
+          this.localApiClient.initError = err;
+          this.localApiClient.isReady = false;
+        }
+        return; // Don't re-throw, handle gracefully
+      }
+
+      // Handle govee-lan-control library bug: accessing state of undefined device
+      // This happens when the library receives a UDP message for an unknown device
+      if (err instanceof TypeError && err.message.includes("Cannot read properties of undefined (reading 'state')") &&
+          err.stack && err.stack.includes('govee-lan-control')) {
+        this.error('[GoveeApp] Govee LAN library received message for unknown device (ignoring)');
+        return; // Don't re-throw, this is a known library bug
+      }
+
+      // Handle other govee-lan-control errors gracefully
+      if (err.stack && err.stack.includes('govee-lan-control')) {
+        this.error('[GoveeApp] Govee LAN library error (ignoring):', err.message);
+        return; // Don't re-throw library errors
+      }
+
+      // Re-throw other uncaught exceptions
+      this.error('[GoveeApp] Uncaught exception:', err.message);
+      throw err;
+    });
   }
 
   async onUninit() {

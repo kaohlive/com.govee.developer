@@ -63,17 +63,59 @@ class GoveeDriver extends Driver {
       return [];
     }
 
+    // Wait for client to be ready with retries
+    // Socket creation can take up to 5s, plus devices need time to respond to scan
+    const MAX_WAIT_MS = 12000; // 12 seconds total max wait
+    const CHECK_INTERVAL_MS = 1000; // Check every second
+    let waitedMs = 0;
+
+    while (!this.homey.app.localApiClient.isClientReady() && waitedMs < MAX_WAIT_MS) {
+      if (waitedMs === 0) {
+        this.log('Local API client not ready yet, waiting for initialization...');
+      }
+      await new Promise(resolve => setTimeout(resolve, CHECK_INTERVAL_MS));
+      waitedMs += CHECK_INTERVAL_MS;
+    }
+
     if (!this.homey.app.localApiClient.isClientReady()) {
-      this.log('Local API client not ready yet, triggering discovery...');
-      this.homey.app.localApiClient.triggerDiscovery();
-      // Wait a bit for discovery
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      this.error('Local API client failed to initialize within timeout');
+      return [];
+    }
+
+    // Client is ready - trigger discovery and wait for devices to respond
+    this.log('Local API client ready, triggering discovery scan...');
+    this.homey.app.localApiClient.triggerDiscovery();
+
+    // Wait for devices to respond with progressive checks
+    // First check after 3s, then keep checking until we have devices or timeout
+    const DISCOVERY_WAIT_MS = 8000; // 8 seconds for device discovery
+    const DISCOVERY_CHECK_MS = 1000;
+    let discoveryWaited = 0;
+    let deviceCount = 0;
+
+    while (discoveryWaited < DISCOVERY_WAIT_MS) {
+      await new Promise(resolve => setTimeout(resolve, DISCOVERY_CHECK_MS));
+      discoveryWaited += DISCOVERY_CHECK_MS;
+
+      const currentCount = this.homey.app.localApiClient.localDevices.length;
+      if (currentCount > deviceCount) {
+        this.log(`Discovery found ${currentCount} device(s) after ${discoveryWaited}ms`);
+        deviceCount = currentCount;
+      }
+
+      // If we found devices and no new ones in last 2 seconds, we can stop early
+      if (deviceCount > 0 && discoveryWaited >= 3000) {
+        // Give a bit more time for additional devices
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        break;
+      }
     }
 
     var devicelist = this.homey.app.localApiClient.deviceList();
-    this.log('Received ' + devicelist.length + ' from local discovery');
+    this.log('Received ' + devicelist.length + ' from local discovery (waited ' + (waitedMs + discoveryWaited) + 'ms total)');
+
     //Convert to our Homey device info object
-    var devices = await devicelist.map((device) => {
+    var devices = devicelist.map((device) => {
       let goveedevice = {
         id: device.deviceID,
         icon: '../../../assets/add_list_type_device_'+device.model.substring(1)+'.svg',
@@ -82,11 +124,8 @@ class GoveeDriver extends Driver {
           id: device.deviceID,
           name: device.deviceID,
           model: device.model,
-          //capabilitieslist: device.state
         }
       }
-      //TODO: Remove capabilitylist from data object, its used in its entire to find unique items.
-      //Put it in the store
       this.log('device located: '+JSON.stringify(goveedevice));
       return goveedevice;
     });

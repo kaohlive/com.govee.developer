@@ -56,8 +56,90 @@ module.exports = {
       return { success: false, error: 'Local API client not initialized' };
     }
 
+    if (!client.isClientReady()) {
+      return { success: false, error: 'Local API client not ready - ' + (client.getInitError()?.message || 'still initializing') };
+    }
+
     client.triggerDiscovery();
-    return { success: true };
+
+    // Wait a moment and return updated device count
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    return {
+      success: true,
+      deviceCount: client.localDevices.length,
+      message: `Discovery triggered. Found ${client.localDevices.length} device(s).`
+    };
+  },
+
+  /**
+   * Reinitialize the local API client
+   * Useful when the UDP socket needs to be recreated after an error
+   */
+  async reinitializeLocalApi({ homey }) {
+    const client = homey.app.localApiClient;
+
+    if (!client) {
+      // Try to create a new client
+      const gv = require('./api/govee-localapi');
+      try {
+        homey.app.localApiClient = new gv.GoveeClient();
+
+        // Wait for initialization
+        await new Promise(resolve => setTimeout(resolve, 5000));
+
+        const newClient = homey.app.localApiClient;
+        if (newClient.isClientReady()) {
+          return { success: true, message: 'Local API client initialized successfully' };
+        } else {
+          return {
+            success: false,
+            error: newClient.getInitError()?.message || 'Initialization timeout'
+          };
+        }
+      } catch (err) {
+        return { success: false, error: err.message };
+      }
+    }
+
+    // Reinitialize existing client
+    const success = await client.reinitialize();
+
+    if (success) {
+      // Trigger discovery after successful reinit
+      client.triggerDiscovery();
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      return {
+        success: true,
+        message: `Reinitialized successfully. Found ${client.localDevices.length} device(s).`,
+        deviceCount: client.localDevices.length
+      };
+    } else {
+      return {
+        success: false,
+        error: client.getInitError()?.message || 'Reinitialization failed'
+      };
+    }
+  },
+
+  /**
+   * Get detailed diagnostics for the local API client
+   */
+  async getLocalApiDiagnostics({ homey }) {
+    const client = homey.app.localApiClient;
+
+    if (!client) {
+      return {
+        initialized: false,
+        diagnostics: null
+      };
+    }
+
+    return {
+      initialized: true,
+      diagnostics: client.getDiagnostics()
+    };
   },
 
   /**
@@ -145,5 +227,35 @@ module.exports = {
         timestamp: new Date().toISOString()
       };
     }
+  },
+
+  /**
+   * Check if a device IP would be reachable from Homey's network interfaces
+   * Useful for debugging why local discovery might not find certain devices
+   */
+  async checkDeviceReachability({ homey, query }) {
+    const client = homey.app.localApiClient;
+
+    if (!client) {
+      return {
+        success: false,
+        error: 'Local API client not initialized'
+      };
+    }
+
+    const deviceIp = query?.ip;
+    if (!deviceIp) {
+      // Return general network info
+      const diagnostics = client.getDiagnostics();
+      return {
+        success: true,
+        network: diagnostics.network
+      };
+    }
+
+    return {
+      success: true,
+      reachability: client.checkDeviceReachability(deviceIp)
+    };
   }
 };

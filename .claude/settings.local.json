@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(npx homey app build:*)",
+      "Bash(npm view:*)"
     ]
   }
 }

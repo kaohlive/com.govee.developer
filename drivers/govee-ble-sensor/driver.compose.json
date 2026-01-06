@@ -1,0 +1,38 @@
+{
+  "id": "govee-ble-sensor",
+  "name": {
+    "en": "BLE Temperature/Humidity Sensor"
+  },
+  "class": "sensor",
+  "platforms": ["local"],
+  "connectivity": ["ble"],
+  "capabilities": [
+    "measure_temperature",
+    "measure_humidity",
+    "measure_battery"
+  ],
+  "energy": {
+    "batteries": ["AAA", "AAA"]
+  },
+  "images": {
+    "small": "/drivers/govee-ble-sensor/assets/images/small.png",
+    "large": "/drivers/govee-ble-sensor/assets/images/large.png",
+    "xlarge": "/drivers/govee-ble-sensor/assets/images/xlarge.png"
+  },
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "options": {
+        "singular": false
+      },
+      "navigation": {
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}

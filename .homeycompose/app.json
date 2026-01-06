@@ -20,7 +20,7 @@
     "lights",
     "appliances"
   ],
-  "permissions": [],
+  "permissions": ["homey:wireless:ble"],
   "images": {
     "small": "/assets/images/small.png",
     "large": "/assets/images/large.png",
@@ -40,6 +40,14 @@
       "method": "POST",
       "path": "/trigger-discovery"
     },
+    "reinitializeLocalApi": {
+      "method": "POST",
+      "path": "/reinitialize-local-api"
+    },
+    "getLocalApiDiagnostics": {
+      "method": "GET",
+      "path": "/local-api-diagnostics"
+    },
     "testCloudApi": {
       "method": "GET",
       "path": "/test-cloud-api"
@@ -47,6 +55,10 @@
     "pingCloudApi": {
       "method": "GET",
       "path": "/ping-cloud-api"
+    },
+    "checkDeviceReachability": {
+      "method": "GET",
+      "path": "/check-device-reachability"
     }
   }
 }
