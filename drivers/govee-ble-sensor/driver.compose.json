@@ -1,7 +1,7 @@
 {
   "id": "govee-ble-sensor",
   "name": {
-    "en": "BLE Temperature/Humidity Sensor"
+    "en": "[Beta] BLE Temp Sensor"
   },
   "class": "sensor",
   "platforms": ["local"],
