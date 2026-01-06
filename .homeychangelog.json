@@ -205,5 +205,8 @@
   },
   "2.15.3": {
     "en": "Improved handling of local UDP port unavailable cases"
+  },
+  "2.15.4": {
+    "en": "Improved local discovery and error handling, new BLE beta driver"
   }
 }

@@ -1,7 +1,7 @@
 {
   "id": "com.govee.developer",
   "brandColor": "#00ACE7",
-  "version": "2.15.3",
+  "version": "2.15.4",
   "compatibility": ">=12.2.0",
   "sdk": 3,
   "platforms": [
@@ -20,7 +20,9 @@
     "lights",
     "appliances"
   ],
-  "permissions": ["homey:wireless:ble"],
+  "permissions": [
+    "homey:wireless:ble"
+  ],
   "images": {
     "small": "/assets/images/small.png",
     "large": "/assets/images/large.png",
