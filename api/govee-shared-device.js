@@ -50,6 +50,12 @@ class GoveeSharedDeviceClient {
           await this.setupFlowDreamView(device);
         } else if(device.hasCapability('dreamViewToggle.'+device.goveedevicetype))
           await device.removeCapability('dreamViewToggle.'+device.goveedevicetype);
+        //Now setup the gradient toggle button
+        if(capabilitieslist.find(function(e) { return e.instance == "gradientToggle" })) {
+          if(!device.hasCapability('gradientToggle'))
+            await device.addCapability('gradientToggle');
+        } else if(device.hasCapability('gradientToggle'))
+          await device.removeCapability('gradientToggle');
         //Use the mode capability for Dynamic LightScenes
         if(capabilitieslist.find(function(e) {return e.instance == "lightScene" }))
         {
