@@ -1,0 +1,44 @@
+{
+  "title": {
+    "en": "Toggle Dreamview scene"
+  },
+  "titleFormatted": {
+    "en": "[[state]] Dreamview scene [[device]]"
+  },
+  "hint": {
+    "en": "Activate or deactivate a Dreamview scene using the cloud API"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "device",
+      "title": {
+        "en": "Scene"
+      },
+      "placeholder": {
+        "en": "Select a Dreamview scene"
+      }
+    },
+    {
+      "type": "dropdown",
+      "name": "state",
+      "title": {
+        "en": "Action"
+      },
+      "values": [
+        {
+          "id": "on",
+          "label": {
+            "en": "Activate"
+          }
+        },
+        {
+          "id": "off",
+          "label": {
+            "en": "Deactivate"
+          }
+        }
+      ]
+    }
+  ]
+}

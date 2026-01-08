@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: transparent;
+      color: white;
+      height: 120px;
+      overflow: hidden;
+    }
+
+    .widget-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, rgba(0, 172, 231, 0.15) 0%, rgba(0, 100, 150, 0.25) 100%);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 172, 231, 0.3);
+    }
+
+    .widget-container.active {
+      background: linear-gradient(135deg, rgba(0, 172, 231, 0.3) 0%, rgba(0, 150, 200, 0.4) 100%);
+      border-color: rgba(0, 172, 231, 0.6);
+      box-shadow: 0 0 20px rgba(0, 172, 231, 0.3);
+    }
+
+    .scene-icon {
+      width: 36px;
+      height: 36px;
+      margin-bottom: 8px;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .widget-container.active .scene-icon {
+      opacity: 1;
+    }
+
+    .scene-name {
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: 10px;
+      opacity: 0.9;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .toggle-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 70px;
+      height: 32px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .toggle-button:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .toggle-button:active {
+      transform: scale(0.95);
+    }
+
+    .toggle-button.on {
+      background: linear-gradient(135deg, #00ACE7 0%, #0088cc 100%);
+      color: white;
+    }
+
+    .toggle-button.loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .error-message {
+      font-size: 12px;
+      color: rgba(255, 100, 100, 0.9);
+      text-align: center;
+      padding: 20px;
+    }
+
+    .no-scene {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="widget" class="widget-container">
+    <svg class="scene-icon" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+    </svg>
+    <div id="scene-name" class="scene-name">Loading...</div>
+    <button id="toggle-btn" class="toggle-button" onclick="toggleScene()">Off</button>
+  </div>
+
+  <script>
+    let scene = null;
+    let isOn = false;
+    let isLoading = false;
+
+    function onHomeyReady(Homey) {
+      Homey.ready();
+
+      Homey.getSettings().then(settings => {
+        if (settings && settings.scene) {
+          scene = settings.scene;
+          document.getElementById('scene-name').innerText = scene.name;
+          fetchStatus();
+        } else {
+          showNoScene();
+        }
+      }).catch(err => {
+        showError('Failed to load settings');
+      });
+    }
+
+    function showNoScene() {
+      document.getElementById('scene-name').innerText = 'Select a scene';
+      document.getElementById('scene-name').classList.add('no-scene');
+      document.getElementById('toggle-btn').style.display = 'none';
+    }
+
+    function showError(message) {
+      document.getElementById('widget').innerHTML = `<div class="error-message">${message}</div>`;
+    }
+
+    function fetchStatus() {
+      if (!scene) return;
+
+      Homey.api('GET', `/status?sceneId=${scene.id}`)
+        .then(status => {
+          isOn = status.isOn;
+          updateUI();
+        })
+        .catch(err => {
+          console.error('Failed to fetch status:', err);
+          // Still show the widget, just with unknown state
+          updateUI();
+        });
+    }
+
+    function updateUI() {
+      const widget = document.getElementById('widget');
+      const btn = document.getElementById('toggle-btn');
+
+      if (isOn) {
+        widget.classList.add('active');
+        btn.classList.add('on');
+        btn.innerText = 'On';
+      } else {
+        widget.classList.remove('active');
+        btn.classList.remove('on');
+        btn.innerText = 'Off';
+      }
+
+      if (isLoading) {
+        btn.classList.add('loading');
+      } else {
+        btn.classList.remove('loading');
+      }
+    }
+
+    function toggleScene() {
+      if (!scene || isLoading) return;
+
+      isLoading = true;
+      updateUI();
+
+      const newState = !isOn;
+
+      Homey.api('POST', '/toggle', { sceneId: scene.id, state: newState })
+        .then(result => {
+          isOn = result.isOn;
+          isLoading = false;
+          updateUI();
+        })
+        .catch(err => {
+          console.error('Failed to toggle scene:', err);
+          isLoading = false;
+          updateUI();
+        });
+    }
+  </script>
+</body>
+</html>

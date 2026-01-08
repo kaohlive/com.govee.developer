@@ -3,6 +3,7 @@
 const Homey = require('homey');
 const mqtt = require('mqtt');
 const { EventEmitter } = require('events');
+const gvCloud = require('./api/govee-api-v2');
 
 class GoveeApp extends Homey.App {
   /**
@@ -13,8 +14,35 @@ class GoveeApp extends Homey.App {
     //Setup global jobs
     this.mqttClient=null;
     this.localApiClient=null;
+    this.cloudApi=null;
     //Create an event emitter to send received mqtt to the devices
     this.eventBus = new EventEmitter();
+
+    // Initialize cloud API for app-level flow cards
+    this.initCloudApi();
+
+    // Listen for API key changes to reinitialize cloud API
+    this.homey.settings.on('set', (key) => {
+      if (key === 'api_key') {
+        this.cloudApi = null; // Force reinit on next use
+        this.log('API key updated, cloud API will reinitialize on next use');
+      }
+    });
+
+    // Register Dreamview toggle action card
+    this._toggleDreamviewDevice = this.homey.flow.getActionCard('toggle-dreamview-device');
+    this._toggleDreamviewDevice.registerRunListener(async (args, state) => {
+      return this.toggleDreamviewDevice(args.device, args.state.id);
+    });
+    this._toggleDreamviewDevice.registerArgumentAutocompleteListener('device', async (query, args) => {
+      return this.getDreamviewDevices(query);
+    });
+
+    // Register Dreamview Scenes widget autocomplete
+    this.homey.dashboards.getWidget('dreamview-scenes')
+      .registerSettingAutocompleteListener('scene', async (query, settings) => {
+        return this.getDreamviewDevices(query);
+      });
 
     // Handle uncaught errors from the govee-lan-control library
     // This prevents the app from crashing due to library bugs or network issues
@@ -97,7 +125,7 @@ class GoveeApp extends Homey.App {
       })  
     })
     this.mqttClient=client;
-    this.mqttClient.on('message', (topic, message) => {  
+    this.mqttClient.on('message', (topic, message) => {
       this.log(`Received message from topic ${topic}`)
       const jsonString = message.toString();
       const payload = JSON.parse(jsonString);
@@ -105,6 +133,78 @@ class GoveeApp extends Homey.App {
       this.log('Message is for device ['+payload.device+']');
       this.eventBus.emit('device_event_'+payload.device, payload);
     })
+  }
+
+  /**
+   * Initialize the cloud API client for app-level flow cards
+   */
+  initCloudApi() {
+    const apiKey = this.homey.settings.get('api_key');
+    if (apiKey) {
+      this.cloudApi = new gvCloud.GoveeClient({ api_key: apiKey });
+      this.log('Cloud API initialized for app-level flow cards');
+    }
+  }
+
+  /**
+   * Get list of DreamViewScenic scenes from cloud API for autocomplete
+   */
+  async getDreamviewDevices(query) {
+    const apiKey = this.homey.settings.get('api_key');
+    if (!apiKey) {
+      throw new Error('Cloud API key not configured. Please add your Govee API key in the app settings.');
+    }
+
+    if (!this.cloudApi) {
+      this.initCloudApi();
+    }
+
+    try {
+      const response = await this.cloudApi.deviceList();
+      // Filter for DreamViewScenic virtual device groups
+      const dreamviewScenes = response.data.filter(device => {
+        return device.sku === 'DreamViewScenic';
+      });
+
+      // Filter by query and map to autocomplete format
+      return dreamviewScenes
+        .filter(device => device.deviceName.toLowerCase().includes(query.toLowerCase()))
+        .map(device => ({
+          name: device.deviceName,
+          description: 'Dreamview Scene',
+          id: device.device,
+          sku: device.sku
+        }));
+    } catch (error) {
+      this.error('Failed to fetch Dreamview scenes:', error);
+      throw new Error('Failed to fetch Dreamview scenes from Govee cloud. Please check your API key.');
+    }
+  }
+
+  /**
+   * Activate or deactivate a Dreamview scene via cloud API
+   */
+  async toggleDreamviewDevice(device, state) {
+    const apiKey = this.homey.settings.get('api_key');
+    if (!apiKey) {
+      throw new Error('Cloud API key not configured. Please add your Govee API key in the app settings.');
+    }
+
+    if (!this.cloudApi) {
+      this.initCloudApi();
+    }
+
+    const mode = state === 'on' ? 1 : 0;
+    const action = state === 'on' ? 'activated' : 'deactivated';
+
+    try {
+      await this.cloudApi.devicesTurn(mode, device.sku, device.id);
+      this.log(`Dreamview scene "${device.name}" ${action}`);
+      return true;
+    } catch (error) {
+      this.error('Failed to toggle Dreamview scene:', error);
+      throw new Error(`Failed to ${state === 'on' ? 'activate' : 'deactivate'} scene: ${error.message}`);
+    }
   }
 }
 

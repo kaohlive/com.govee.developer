@@ -65,889 +65,52 @@
     }
   },
   "flow": {
-    "triggers": [
-      {
-        "deprecated": true,
-        "id": "alarm_online.air_purifier_false",
-        "title": {
-          "en": "The air purifier is online"
-        },
-        "hint": {
-          "en": "When the air purifier is reported online"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-airpurifier&capabilities=alarm_online.air_purifier"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.air_purifier_true",
-        "title": {
-          "en": "The air purifier is offline"
-        },
-        "hint": {
-          "en": "When the air purifier is reported to be offline"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-airpurifier&capabilities=alarm_online.air_purifier"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.appliance_false",
-        "title": {
-          "en": "The appliance is online"
-        },
-        "hint": {
-          "en": "When the appliance is reported online"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-appliance&capabilities=alarm_online.appliance"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.appliance_true",
-        "title": {
-          "en": "The appliance is offline"
-        },
-        "hint": {
-          "en": "When the appliance is reported to be offline"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-appliance&capabilities=alarm_online.appliance"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.aroma_diffuser_false",
-        "title": {
-          "en": "The aroma diffuser is online"
-        },
-        "hint": {
-          "en": "When the aroma diffuser is online"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-aromadiffuser&capabilities=alarm_online.aroma_diffuser"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.aroma_diffuser_true",
-        "title": {
-          "en": "The aroma diffuser is offline"
-        },
-        "hint": {
-          "en": "When the aroma diffuser is reported to be offline"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-aromadiffuser&capabilities=alarm_online.aroma_diffuser"
-          }
-        ]
-      },
-      {
-        "id": "event_lackWater.aroma_diffuser",
-        "title": {
-          "en": "The aroma diffures is lacking water"
-        },
-        "hint": {
-          "en": "When the aroma diffuser generates the lacking water event"
-        },
-        "tokens": [
-          {
-            "name": "lack",
-            "type": "number",
-            "title": {
-              "en": "Water lacking"
-            },
-            "example": 1
-          },
-          {
-            "name": "message",
-            "type": "string",
-            "title": {
-              "en": "Event message"
-            },
-            "example": {
-              "en": "Lack of Water"
-            }
-          }
-        ],
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-aromadiffuser&capabilities=lackWater.aroma_diffuser"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.box_false",
-        "title": {
-          "en": "The box is online"
-        },
-        "hint": {
-          "en": "When the box is reported online"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-box&capabilities=alarm_online.box"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.box_true",
-        "title": {
-          "en": "The box is offline"
-        },
-        "hint": {
-          "en": "When the box is reported to be offline"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-box&capabilities=alarm_online.box"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.dehumidifier_false",
-        "title": {
-          "en": "The dehumidifier is online"
-        },
-        "hint": {
-          "en": "When the dehumidifier is reported online"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-dehumidifier&capabilities=alarm_online.dehumidifier"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.dehumidifier_true",
-        "title": {
-          "en": "The dehumidifier is offline"
-        },
-        "hint": {
-          "en": "When the dehumidifier is reported to be offline"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-dehumidifier&capabilities=alarm_online.dehumidifier"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.light_false",
-        "title": {
-          "en": "The light is online"
-        },
-        "hint": {
-          "en": "When the light is reported online"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-device&capabilities=alarm_online.light"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.light_true",
-        "title": {
-          "en": "The light is offline"
-        },
-        "hint": {
-          "en": "When the light is reported to be offline"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-device&capabilities=alarm_online.light"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.fan_false",
-        "title": {
-          "en": "The fan is online"
-        },
-        "hint": {
-          "en": "When the fan is reported online"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-fan&capabilities=alarm_online.fan"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.heater_false",
-        "title": {
-          "en": "The heater is online"
-        },
-        "hint": {
-          "en": "When the heater is reported online"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-heater&capabilities=alarm_online.heater"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.heater_true",
-        "title": {
-          "en": "The heater is offline"
-        },
-        "hint": {
-          "en": "When the heater is reported to be offline"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-heater&capabilities=alarm_online.heater"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.humidifier_false",
-        "title": {
-          "en": "The humidifier is online"
-        },
-        "hint": {
-          "en": "When the humidifier is reported online"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-humidifier&capabilities=alarm_online.humidifier"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.humidifier_true",
-        "title": {
-          "en": "The humidifier is offline"
-        },
-        "hint": {
-          "en": "When the humidifier is reported to be offline"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-humidifier&capabilities=alarm_online.humidifier"
-          }
-        ]
-      },
-      {
-        "id": "event_lackWater.humidifier",
-        "title": {
-          "en": "The humidifier is lacking water"
-        },
-        "hint": {
-          "en": "When the humidifier generates the lacking water event"
-        },
-        "tokens": [
-          {
-            "name": "lack",
-            "type": "number",
-            "title": {
-              "en": "Water lacking"
-            },
-            "example": 1
-          },
-          {
-            "name": "message",
-            "type": "string",
-            "title": {
-              "en": "Event message"
-            },
-            "example": {
-              "en": "Lack of Water"
-            }
-          }
-        ],
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-humidifier&capabilities=lackWater.humidifier"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.ice_maker_false",
-        "title": {
-          "en": "The ice maker is online"
-        },
-        "hint": {
-          "en": "When the ice maker is reported online"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-icemaker&capabilities=alarm_online.ice_maker"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.ice_maker_true",
-        "title": {
-          "en": "The ice maker is offline"
-        },
-        "hint": {
-          "en": "When the ice maker is reported to be offline"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-icemaker&capabilities=alarm_online.ice_maker"
-          }
-        ]
-      },
-      {
-        "id": "event_lackWater.ice_maker",
-        "title": {
-          "en": "The ice maker is lacking water"
-        },
-        "hint": {
-          "en": "When the ice maker generates the lacking water event"
-        },
-        "tokens": [
-          {
-            "name": "lack",
-            "type": "number",
-            "title": {
-              "en": "Water lacking"
-            },
-            "example": 1
-          },
-          {
-            "name": "message",
-            "type": "string",
-            "title": {
-              "en": "Event message"
-            },
-            "example": {
-              "en": "Lack of Water"
-            }
-          }
-        ],
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-icemaker&capabilities=lackWater.ice_maker"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.sensor_false",
-        "title": {
-          "en": "The sensor is online"
-        },
-        "hint": {
-          "en": "When the sensor is reported online"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-sensor&capabilities=alarm_online.sensor"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.sensor_true",
-        "title": {
-          "en": "The sensor is offline"
-        },
-        "hint": {
-          "en": "When the sensor is reported to be offline"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-sensor&capabilities=alarm_online.sensor"
-          }
-        ]
-      },
-      {
-        "id": "event_bodyAppearedEvent.sensor",
-        "title": {
-          "en": "The presence state changed"
-        },
-        "hint": {
-          "en": "When the presence state changes, for example presence is newly detected or no longer detected"
-        },
-        "tokens": [
-          {
-            "name": "presence",
-            "type": "number",
-            "title": {
-              "en": "Is the body present"
-            },
-            "example": 1
-          }
-        ],
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-sensor&capabilities=bodyAppeared.sensor"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.socket_false",
-        "title": {
-          "en": "The socket is online"
-        },
-        "hint": {
-          "en": "When the socket is reported online"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-socket&capabilities=alarm_online.socket"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.socket_true",
-        "title": {
-          "en": "The socket is offline"
-        },
-        "hint": {
-          "en": "When the socket is reported to be offline"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-socket&capabilities=alarm_online.socket"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.thermometer_false",
-        "title": {
-          "en": "The thermometer is online"
-        },
-        "hint": {
-          "en": "When the thermometer is reported online"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-thermometer&capabilities=alarm_online.thermometer"
-          }
-        ]
-      },
-      {
-        "deprecated": true,
-        "id": "alarm_online.thermometer_true",
-        "title": {
-          "en": "The thermometer is offline"
-        },
-        "hint": {
-          "en": "When the thermometer is reported to be offline"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-thermometer&capabilities=alarm_online.thermometer"
-          }
-        ]
-      }
-    ],
-    "conditions": [
-      {
-        "id": "nightlightscene-active.air_purifier",
-        "title": {
-          "en": "A specific nightlight scene is active"
-        },
-        "titleFormatted": {
-          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
-        },
-        "hint": {
-          "en": "Current active nightlight scene"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-airpurifier&capabilities=nightlightScenes.air_purifier"
-          },
-          {
-            "type": "autocomplete",
-            "name": "nightlightScene",
-            "title": {
-              "en": "Nightlight scene"
-            },
-            "placeholder": {
-              "en": "Nightlight scene"
-            }
-          }
-        ]
-      },
-      {
-        "id": "nightlightscene-active.aroma_diffuser",
-        "title": {
-          "en": "A specific nightlight scene is active"
-        },
-        "titleFormatted": {
-          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
-        },
-        "hint": {
-          "en": "Current active nightlight scene"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-aromadiffuser&capabilities=nightlightScenes.aroma_diffuser"
-          },
-          {
-            "type": "autocomplete",
-            "name": "nightlightScene",
-            "title": {
-              "en": "Nightlight scene"
-            },
-            "placeholder": {
-              "en": "Nightlight scene"
-            }
-          }
-        ]
-      },
-      {
-        "id": "nightlightscene-active.dehumidifier",
-        "title": {
-          "en": "A specific nightlight scene is active"
-        },
-        "titleFormatted": {
-          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
-        },
-        "hint": {
-          "en": "Current active nightlight scene"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-dehumidifier&capabilities=nightlightScenes.dehumidifier"
-          },
-          {
-            "type": "autocomplete",
-            "name": "nightlightScene",
-            "title": {
-              "en": "Nightlight scene"
-            },
-            "placeholder": {
-              "en": "Nightlight scene"
-            }
-          }
-        ]
-      },
-      {
-        "id": "lightDiyscene-active.light",
-        "title": {
-          "en": "A specific DIY scene is active"
-        },
-        "titleFormatted": {
-          "en": "The DIY scene [[diyScene]] !{{Is|Isn't}} active"
-        },
-        "hint": {
-          "en": "Current active DIY scene"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-device&capabilities=lightDiyScenes.light"
-          },
-          {
-            "type": "autocomplete",
-            "name": "diyScene",
-            "title": {
-              "en": "DIY scene"
-            },
-            "placeholder": {
-              "en": "DIY scene"
-            }
-          }
-        ]
-      },
-      {
-        "id": "lightscene-active.light",
-        "title": {
-          "en": "A specific light scene is active"
-        },
-        "titleFormatted": {
-          "en": "The light scene [[lightScene]] !{{Is|Isn't}} active"
-        },
-        "hint": {
-          "en": "Current active light scene"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-device&capabilities=lightScenes.light"
-          },
-          {
-            "type": "autocomplete",
-            "name": "lightScene",
-            "title": {
-              "en": "Light scene"
-            },
-            "placeholder": {
-              "en": "Light scene"
-            }
-          }
-        ]
-      },
-      {
-        "id": "nightlightscene-active.light",
-        "title": {
-          "en": "A specific nightlight scene is active"
-        },
-        "titleFormatted": {
-          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
-        },
-        "hint": {
-          "en": "Current active nightlight scene"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-device&capabilities=nightlightScenes.light"
-          },
-          {
-            "type": "autocomplete",
-            "name": "nightlightScene",
-            "title": {
-              "en": "Nightlight scene"
-            },
-            "placeholder": {
-              "en": "Nightlight scene"
-            }
-          }
-        ]
-      },
-      {
-        "id": "nightlightscene-active.heater",
-        "title": {
-          "en": "A specific nightlight scene is active"
-        },
-        "titleFormatted": {
-          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
-        },
-        "hint": {
-          "en": "Current active nightlight scene"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-heater&capabilities=nightlightScenes.heater"
-          },
-          {
-            "type": "autocomplete",
-            "name": "nightlightScene",
-            "title": {
-              "en": "Nightlight scene"
-            },
-            "placeholder": {
-              "en": "Nightlight scene"
-            }
-          }
-        ]
-      },
-      {
-        "id": "nightlightscene-active.humidifier",
-        "title": {
-          "en": "A specific nightlight scene is active"
-        },
-        "titleFormatted": {
-          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
-        },
-        "hint": {
-          "en": "Current active nightlight scene"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-humidifier&capabilities=nightlightScenes.humidifier"
-          },
-          {
-            "type": "autocomplete",
-            "name": "nightlightScene",
-            "title": {
-              "en": "Nightlight scene"
-            },
-            "placeholder": {
-              "en": "Nightlight scene"
-            }
-          }
-        ]
-      },
-      {
-        "id": "lightDiyscene-active.localdevice",
-        "title": {
-          "en": "A specific DIY scene is active"
-        },
-        "titleFormatted": {
-          "en": "The DIY scene [[diyScene]] !{{Is|Isn't}} active"
-        },
-        "hint": {
-          "en": "Current active DIY scene"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-local-device&capabilities=lightDiyScenes.localdevice"
-          },
-          {
-            "type": "autocomplete",
-            "name": "diyScene",
-            "title": {
-              "en": "DIY scene"
-            },
-            "placeholder": {
-              "en": "DIY scene"
-            }
-          }
-        ]
-      },
-      {
-        "id": "lightscene-active.localdevice",
-        "title": {
-          "en": "A specific light scene is active"
-        },
-        "titleFormatted": {
-          "en": "The light scene [[lightScene]] !{{Is|Isn't}} active"
-        },
-        "hint": {
-          "en": "Current active light scene"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-local-device&capabilities=lightScenes.localdevice"
-          },
-          {
-            "type": "autocomplete",
-            "name": "lightScene",
-            "title": {
-              "en": "Light scene"
-            },
-            "placeholder": {
-              "en": "Light scene"
-            }
-          }
-        ]
-      },
-      {
-        "id": "nightlightscene-active.localdevice",
-        "title": {
-          "en": "A specific nightlight scene is active"
-        },
-        "titleFormatted": {
-          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
-        },
-        "hint": {
-          "en": "Current active nightlight scene"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=govee-local-device&capabilities=nightlightScenes.localdevice"
-          },
-          {
-            "type": "autocomplete",
-            "name": "nightlightScene",
-            "title": {
-              "en": "Nightlight scene"
-            },
-            "placeholder": {
-              "en": "Nightlight scene"
-            }
-          }
-        ]
-      }
-    ],
     "actions": [
+      {
+        "title": {
+          "en": "Toggle Dreamview scene"
+        },
+        "titleFormatted": {
+          "en": "[[state]] Dreamview scene [[device]]"
+        },
+        "hint": {
+          "en": "Activate or deactivate a Dreamview scene using the cloud API"
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "device",
+            "title": {
+              "en": "Scene"
+            },
+            "placeholder": {
+              "en": "Select a Dreamview scene"
+            }
+          },
+          {
+            "type": "dropdown",
+            "name": "state",
+            "title": {
+              "en": "Action"
+            },
+            "values": [
+              {
+                "id": "on",
+                "label": {
+                  "en": "Activate"
+                }
+              },
+              {
+                "id": "off",
+                "label": {
+                  "en": "Deactivate"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "toggle-dreamview-device"
+      },
       {
         "id": "set-work-mode.air_purifier",
         "title": {
@@ -2417,6 +1580,888 @@
           }
         ]
       }
+    ],
+    "triggers": [
+      {
+        "deprecated": true,
+        "id": "alarm_online.air_purifier_false",
+        "title": {
+          "en": "The air purifier is online"
+        },
+        "hint": {
+          "en": "When the air purifier is reported online"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-airpurifier&capabilities=alarm_online.air_purifier"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.air_purifier_true",
+        "title": {
+          "en": "The air purifier is offline"
+        },
+        "hint": {
+          "en": "When the air purifier is reported to be offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-airpurifier&capabilities=alarm_online.air_purifier"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.appliance_false",
+        "title": {
+          "en": "The appliance is online"
+        },
+        "hint": {
+          "en": "When the appliance is reported online"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-appliance&capabilities=alarm_online.appliance"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.appliance_true",
+        "title": {
+          "en": "The appliance is offline"
+        },
+        "hint": {
+          "en": "When the appliance is reported to be offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-appliance&capabilities=alarm_online.appliance"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.aroma_diffuser_false",
+        "title": {
+          "en": "The aroma diffuser is online"
+        },
+        "hint": {
+          "en": "When the aroma diffuser is online"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-aromadiffuser&capabilities=alarm_online.aroma_diffuser"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.aroma_diffuser_true",
+        "title": {
+          "en": "The aroma diffuser is offline"
+        },
+        "hint": {
+          "en": "When the aroma diffuser is reported to be offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-aromadiffuser&capabilities=alarm_online.aroma_diffuser"
+          }
+        ]
+      },
+      {
+        "id": "event_lackWater.aroma_diffuser",
+        "title": {
+          "en": "The aroma diffures is lacking water"
+        },
+        "hint": {
+          "en": "When the aroma diffuser generates the lacking water event"
+        },
+        "tokens": [
+          {
+            "name": "lack",
+            "type": "number",
+            "title": {
+              "en": "Water lacking"
+            },
+            "example": 1
+          },
+          {
+            "name": "message",
+            "type": "string",
+            "title": {
+              "en": "Event message"
+            },
+            "example": {
+              "en": "Lack of Water"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-aromadiffuser&capabilities=lackWater.aroma_diffuser"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.box_false",
+        "title": {
+          "en": "The box is online"
+        },
+        "hint": {
+          "en": "When the box is reported online"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-box&capabilities=alarm_online.box"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.box_true",
+        "title": {
+          "en": "The box is offline"
+        },
+        "hint": {
+          "en": "When the box is reported to be offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-box&capabilities=alarm_online.box"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.dehumidifier_false",
+        "title": {
+          "en": "The dehumidifier is online"
+        },
+        "hint": {
+          "en": "When the dehumidifier is reported online"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-dehumidifier&capabilities=alarm_online.dehumidifier"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.dehumidifier_true",
+        "title": {
+          "en": "The dehumidifier is offline"
+        },
+        "hint": {
+          "en": "When the dehumidifier is reported to be offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-dehumidifier&capabilities=alarm_online.dehumidifier"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.light_false",
+        "title": {
+          "en": "The light is online"
+        },
+        "hint": {
+          "en": "When the light is reported online"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-device&capabilities=alarm_online.light"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.light_true",
+        "title": {
+          "en": "The light is offline"
+        },
+        "hint": {
+          "en": "When the light is reported to be offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-device&capabilities=alarm_online.light"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.fan_false",
+        "title": {
+          "en": "The fan is online"
+        },
+        "hint": {
+          "en": "When the fan is reported online"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-fan&capabilities=alarm_online.fan"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.heater_false",
+        "title": {
+          "en": "The heater is online"
+        },
+        "hint": {
+          "en": "When the heater is reported online"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-heater&capabilities=alarm_online.heater"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.heater_true",
+        "title": {
+          "en": "The heater is offline"
+        },
+        "hint": {
+          "en": "When the heater is reported to be offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-heater&capabilities=alarm_online.heater"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.humidifier_false",
+        "title": {
+          "en": "The humidifier is online"
+        },
+        "hint": {
+          "en": "When the humidifier is reported online"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-humidifier&capabilities=alarm_online.humidifier"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.humidifier_true",
+        "title": {
+          "en": "The humidifier is offline"
+        },
+        "hint": {
+          "en": "When the humidifier is reported to be offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-humidifier&capabilities=alarm_online.humidifier"
+          }
+        ]
+      },
+      {
+        "id": "event_lackWater.humidifier",
+        "title": {
+          "en": "The humidifier is lacking water"
+        },
+        "hint": {
+          "en": "When the humidifier generates the lacking water event"
+        },
+        "tokens": [
+          {
+            "name": "lack",
+            "type": "number",
+            "title": {
+              "en": "Water lacking"
+            },
+            "example": 1
+          },
+          {
+            "name": "message",
+            "type": "string",
+            "title": {
+              "en": "Event message"
+            },
+            "example": {
+              "en": "Lack of Water"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-humidifier&capabilities=lackWater.humidifier"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.ice_maker_false",
+        "title": {
+          "en": "The ice maker is online"
+        },
+        "hint": {
+          "en": "When the ice maker is reported online"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-icemaker&capabilities=alarm_online.ice_maker"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.ice_maker_true",
+        "title": {
+          "en": "The ice maker is offline"
+        },
+        "hint": {
+          "en": "When the ice maker is reported to be offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-icemaker&capabilities=alarm_online.ice_maker"
+          }
+        ]
+      },
+      {
+        "id": "event_lackWater.ice_maker",
+        "title": {
+          "en": "The ice maker is lacking water"
+        },
+        "hint": {
+          "en": "When the ice maker generates the lacking water event"
+        },
+        "tokens": [
+          {
+            "name": "lack",
+            "type": "number",
+            "title": {
+              "en": "Water lacking"
+            },
+            "example": 1
+          },
+          {
+            "name": "message",
+            "type": "string",
+            "title": {
+              "en": "Event message"
+            },
+            "example": {
+              "en": "Lack of Water"
+            }
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-icemaker&capabilities=lackWater.ice_maker"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.sensor_false",
+        "title": {
+          "en": "The sensor is online"
+        },
+        "hint": {
+          "en": "When the sensor is reported online"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-sensor&capabilities=alarm_online.sensor"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.sensor_true",
+        "title": {
+          "en": "The sensor is offline"
+        },
+        "hint": {
+          "en": "When the sensor is reported to be offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-sensor&capabilities=alarm_online.sensor"
+          }
+        ]
+      },
+      {
+        "id": "event_bodyAppearedEvent.sensor",
+        "title": {
+          "en": "The presence state changed"
+        },
+        "hint": {
+          "en": "When the presence state changes, for example presence is newly detected or no longer detected"
+        },
+        "tokens": [
+          {
+            "name": "presence",
+            "type": "number",
+            "title": {
+              "en": "Is the body present"
+            },
+            "example": 1
+          }
+        ],
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-sensor&capabilities=bodyAppeared.sensor"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.socket_false",
+        "title": {
+          "en": "The socket is online"
+        },
+        "hint": {
+          "en": "When the socket is reported online"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-socket&capabilities=alarm_online.socket"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.socket_true",
+        "title": {
+          "en": "The socket is offline"
+        },
+        "hint": {
+          "en": "When the socket is reported to be offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-socket&capabilities=alarm_online.socket"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.thermometer_false",
+        "title": {
+          "en": "The thermometer is online"
+        },
+        "hint": {
+          "en": "When the thermometer is reported online"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-thermometer&capabilities=alarm_online.thermometer"
+          }
+        ]
+      },
+      {
+        "deprecated": true,
+        "id": "alarm_online.thermometer_true",
+        "title": {
+          "en": "The thermometer is offline"
+        },
+        "hint": {
+          "en": "When the thermometer is reported to be offline"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-thermometer&capabilities=alarm_online.thermometer"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "nightlightscene-active.air_purifier",
+        "title": {
+          "en": "A specific nightlight scene is active"
+        },
+        "titleFormatted": {
+          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
+        },
+        "hint": {
+          "en": "Current active nightlight scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-airpurifier&capabilities=nightlightScenes.air_purifier"
+          },
+          {
+            "type": "autocomplete",
+            "name": "nightlightScene",
+            "title": {
+              "en": "Nightlight scene"
+            },
+            "placeholder": {
+              "en": "Nightlight scene"
+            }
+          }
+        ]
+      },
+      {
+        "id": "nightlightscene-active.aroma_diffuser",
+        "title": {
+          "en": "A specific nightlight scene is active"
+        },
+        "titleFormatted": {
+          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
+        },
+        "hint": {
+          "en": "Current active nightlight scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-aromadiffuser&capabilities=nightlightScenes.aroma_diffuser"
+          },
+          {
+            "type": "autocomplete",
+            "name": "nightlightScene",
+            "title": {
+              "en": "Nightlight scene"
+            },
+            "placeholder": {
+              "en": "Nightlight scene"
+            }
+          }
+        ]
+      },
+      {
+        "id": "nightlightscene-active.dehumidifier",
+        "title": {
+          "en": "A specific nightlight scene is active"
+        },
+        "titleFormatted": {
+          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
+        },
+        "hint": {
+          "en": "Current active nightlight scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-dehumidifier&capabilities=nightlightScenes.dehumidifier"
+          },
+          {
+            "type": "autocomplete",
+            "name": "nightlightScene",
+            "title": {
+              "en": "Nightlight scene"
+            },
+            "placeholder": {
+              "en": "Nightlight scene"
+            }
+          }
+        ]
+      },
+      {
+        "id": "lightDiyscene-active.light",
+        "title": {
+          "en": "A specific DIY scene is active"
+        },
+        "titleFormatted": {
+          "en": "The DIY scene [[diyScene]] !{{Is|Isn't}} active"
+        },
+        "hint": {
+          "en": "Current active DIY scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-device&capabilities=lightDiyScenes.light"
+          },
+          {
+            "type": "autocomplete",
+            "name": "diyScene",
+            "title": {
+              "en": "DIY scene"
+            },
+            "placeholder": {
+              "en": "DIY scene"
+            }
+          }
+        ]
+      },
+      {
+        "id": "lightscene-active.light",
+        "title": {
+          "en": "A specific light scene is active"
+        },
+        "titleFormatted": {
+          "en": "The light scene [[lightScene]] !{{Is|Isn't}} active"
+        },
+        "hint": {
+          "en": "Current active light scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-device&capabilities=lightScenes.light"
+          },
+          {
+            "type": "autocomplete",
+            "name": "lightScene",
+            "title": {
+              "en": "Light scene"
+            },
+            "placeholder": {
+              "en": "Light scene"
+            }
+          }
+        ]
+      },
+      {
+        "id": "nightlightscene-active.light",
+        "title": {
+          "en": "A specific nightlight scene is active"
+        },
+        "titleFormatted": {
+          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
+        },
+        "hint": {
+          "en": "Current active nightlight scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-device&capabilities=nightlightScenes.light"
+          },
+          {
+            "type": "autocomplete",
+            "name": "nightlightScene",
+            "title": {
+              "en": "Nightlight scene"
+            },
+            "placeholder": {
+              "en": "Nightlight scene"
+            }
+          }
+        ]
+      },
+      {
+        "id": "nightlightscene-active.heater",
+        "title": {
+          "en": "A specific nightlight scene is active"
+        },
+        "titleFormatted": {
+          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
+        },
+        "hint": {
+          "en": "Current active nightlight scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-heater&capabilities=nightlightScenes.heater"
+          },
+          {
+            "type": "autocomplete",
+            "name": "nightlightScene",
+            "title": {
+              "en": "Nightlight scene"
+            },
+            "placeholder": {
+              "en": "Nightlight scene"
+            }
+          }
+        ]
+      },
+      {
+        "id": "nightlightscene-active.humidifier",
+        "title": {
+          "en": "A specific nightlight scene is active"
+        },
+        "titleFormatted": {
+          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
+        },
+        "hint": {
+          "en": "Current active nightlight scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-humidifier&capabilities=nightlightScenes.humidifier"
+          },
+          {
+            "type": "autocomplete",
+            "name": "nightlightScene",
+            "title": {
+              "en": "Nightlight scene"
+            },
+            "placeholder": {
+              "en": "Nightlight scene"
+            }
+          }
+        ]
+      },
+      {
+        "id": "lightDiyscene-active.localdevice",
+        "title": {
+          "en": "A specific DIY scene is active"
+        },
+        "titleFormatted": {
+          "en": "The DIY scene [[diyScene]] !{{Is|Isn't}} active"
+        },
+        "hint": {
+          "en": "Current active DIY scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-local-device&capabilities=lightDiyScenes.localdevice"
+          },
+          {
+            "type": "autocomplete",
+            "name": "diyScene",
+            "title": {
+              "en": "DIY scene"
+            },
+            "placeholder": {
+              "en": "DIY scene"
+            }
+          }
+        ]
+      },
+      {
+        "id": "lightscene-active.localdevice",
+        "title": {
+          "en": "A specific light scene is active"
+        },
+        "titleFormatted": {
+          "en": "The light scene [[lightScene]] !{{Is|Isn't}} active"
+        },
+        "hint": {
+          "en": "Current active light scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-local-device&capabilities=lightScenes.localdevice"
+          },
+          {
+            "type": "autocomplete",
+            "name": "lightScene",
+            "title": {
+              "en": "Light scene"
+            },
+            "placeholder": {
+              "en": "Light scene"
+            }
+          }
+        ]
+      },
+      {
+        "id": "nightlightscene-active.localdevice",
+        "title": {
+          "en": "A specific nightlight scene is active"
+        },
+        "titleFormatted": {
+          "en": "The nightlight scene [[nightlightScene]] !{{Is|Isn't}} active"
+        },
+        "hint": {
+          "en": "Current active nightlight scene"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-local-device&capabilities=nightlightScenes.localdevice"
+          },
+          {
+            "type": "autocomplete",
+            "name": "nightlightScene",
+            "title": {
+              "en": "Nightlight scene"
+            },
+            "placeholder": {
+              "en": "Nightlight scene"
+            }
+          }
+        ]
+      }
     ]
   },
   "drivers": [
@@ -3595,6 +3640,39 @@
       ]
     }
   ],
+  "widgets": {
+    "dreamview-scenes": {
+      "name": {
+        "en": "Dreamview Scenes"
+      },
+      "height": 120,
+      "transparent": true,
+      "settings": [
+        {
+          "id": "scene",
+          "type": "autocomplete",
+          "title": {
+            "en": "Dreamview Scene"
+          }
+        }
+      ],
+      "api": {
+        "getScenes": {
+          "method": "GET",
+          "path": "/"
+        },
+        "getSceneStatus": {
+          "method": "GET",
+          "path": "/status"
+        },
+        "toggleScene": {
+          "method": "POST",
+          "path": "/toggle"
+        }
+      },
+      "id": "dreamview-scenes"
+    }
+  },
   "capabilities": {
     "alarm_online": {
       "type": "boolean",
