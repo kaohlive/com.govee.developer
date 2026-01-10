@@ -208,5 +208,8 @@
   },
   "2.15.4": {
     "en": "Improved local discovery and error handling, new BLE beta driver"
+  },
+  "2.16.0": {
+    "en": "First version of dreamViewScene features and widget"
   }
 }
