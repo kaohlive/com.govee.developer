@@ -134,22 +134,33 @@ class GoveeLocalDevice extends Device {
         return deviceData;
       }
       //Lets retrive the v2 capabilities of this device from the API
-      var devicelist = await this.driver.coudapi.deviceList();
-      var thisdevice = devicelist.data.find(function(e) { return e.device === deviceData.mac })
-      if(thisdevice!=null){
-        this.log('Device '+deviceData.mac+' needs to be upgraded, retrieved its capabilities');
-        this.log(JSON.stringify(thisdevice.capabilities));
-        //Now make sure we store these, so we can consider the device upgraded
-        this.setStoreValue('capabilityList',thisdevice.capabilities);
-        this.setStoreValue('deviceVersion','v2');
-        deviceData.cloudcapabilitieslist=thisdevice.capabilities;
-        //Update our settings based on current values in the device
-        await this.setSettings({
-          // only provide keys for the settings you want to change
-          devicemodel: deviceData.model,
-          devicecapabilities: JSON.stringify(deviceData.cloudcapabilitieslist)
-        });
-        this.setSettings
+      try {
+        var devicelist = await this.driver.coudapi.deviceList();
+        if(!devicelist || !devicelist.data) {
+          this.error('Cloud API returned empty or invalid response');
+          deviceData.cloudcapabilitieslist=[];
+          return deviceData;
+        }
+        var thisdevice = devicelist.data.find(function(e) { return e.device === deviceData.mac })
+        if(thisdevice!=null){
+          this.log('Device '+deviceData.mac+' needs to be upgraded, retrieved its capabilities');
+          this.log(JSON.stringify(thisdevice.capabilities));
+          //Now make sure we store these, so we can consider the device upgraded
+          this.setStoreValue('capabilityList',thisdevice.capabilities);
+          this.setStoreValue('deviceVersion','v2');
+          deviceData.cloudcapabilitieslist=thisdevice.capabilities;
+          //Update our settings based on current values in the device
+          await this.setSettings({
+            // only provide keys for the settings you want to change
+            devicemodel: deviceData.model,
+            devicecapabilities: JSON.stringify(deviceData.cloudcapabilitieslist)
+          });
+          this.setSettings
+          return deviceData;
+        }
+      } catch (error) {
+        this.error('Failed to fetch device capabilities from cloud API:', error.message);
+        deviceData.cloudcapabilitieslist=[];
         return deviceData;
       }
     } else {
@@ -264,9 +275,7 @@ class GoveeLocalDevice extends Device {
       this.registerCapabilityListener('lightScenes.'+this.goveedevicetype, this.onCapabilityLightScenes.bind(this));
     if (this.hasCapability('lightDiyScenes.'+this.goveedevicetype))
       this.registerCapabilityListener('lightDiyScenes.'+this.goveedevicetype, this.onCapabilityDIYLightScenes.bind(this));
-    //The dreamview is not available of you eable local api on dream view devices.
-    if (this.hasCapability('dreamViewToggle.'+this.goveedevicetype))
-      this.removeCapability('dreamViewToggle.'+this.goveedevicetype); 
+    // Note: dreamViewToggle is handled in govee-shared-device.js (not available for local devices)
     if (this.hasCapability('lackWater.'+this.goveedevicetype))
       this.registerCapabilityListener('lackWater.'+this.goveedevicetype, this.onLackWaterOnoff.bind(this));
 
@@ -291,14 +300,18 @@ class GoveeLocalDevice extends Device {
 
   async enableCloudEnhancement(newSettings)
   {
-    if(newSettings.cloud_enhance) {
-      await this.driver.cloudInit();
+    try {
+      if(newSettings.cloud_enhance) {
+        await this.driver.cloudInit();
+      }
+      //Rebuild the device
+      this.cloudEnhance=newSettings.cloud_enhance;
+      this.data = await this.getDeviceData(newSettings.cloud_enhance);
+      this.log('Now (de)register the cloud capabilitities with data ['+JSON.stringify(this.data.cloudcapabilitieslist)+']');
+      await this.sharedDevice.createDynamicCapabilities(this.data.model,this.data.id,this.data.cloudcapabilitieslist,this);
+    } catch (error) {
+      this.error('Failed to enable cloud enhancement:', error.message);
     }
-    //Rebuild the device
-    this.cloudEnhance=newSettings.cloud_enhance;
-    this.data = await this.getDeviceData(newSettings.cloud_enhance);
-    this.log('Now (de)register the cloud capabilitities with data ['+JSON.stringify(this.data.cloudcapabilitieslist)+']');
-    await this.sharedDevice.createDynamicCapabilities(this.data.model,this.data.id,this.data.cloudcapabilitieslist,this);
   }
 
   /**
@@ -464,7 +477,25 @@ class GoveeLocalDevice extends Device {
     await this.driver.setLightScene(this.diyScenes.options[value].value, "diyScene", this.data.model, this.data.mac, this.goveedevicetype);
     this.unsetWarning();
   }
-  
+
+  async onCapabilityGradient( value, opts ) {
+    if(value){
+      await this.driver.toggle(1, 'gradientToggle', this.data.model, this.data.mac, this.goveedevicetype);
+    } else {
+      await this.driver.toggle(0, 'gradientToggle', this.data.model, this.data.mac, this.goveedevicetype);
+    }
+    this.setIfHasCapability('gradientToggle.'+this.goveedevicetype, value);
+  }
+
+  async onCapabilityDreamview( value, opts ) {
+    if(value){
+      await this.driver.toggle(1, 'dreamViewToggle', this.data.model, this.data.mac, this.goveedevicetype);
+    } else {
+      await this.driver.toggle(0, 'dreamViewToggle', this.data.model, this.data.mac, this.goveedevicetype);
+    }
+    this.setIfHasCapability('dreamViewToggle.'+this.goveedevicetype, value);
+  }
+
 }
 
 module.exports = GoveeLocalDevice;

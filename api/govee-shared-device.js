@@ -44,18 +44,37 @@ class GoveeSharedDeviceClient {
         } else if(device.hasCapability('nightlightToggle.'+device.goveedevicetype))
           await device.removeCapability('nightlightToggle.'+device.goveedevicetype); 
         //Now setup the dreamview button
-        if(capabilitieslist.find(function(e) { return e.instance == "dreamViewToggle" })) {
-          if(!device.hasCapability('dreamViewToggle.'+device.goveedevicetype))
-            await device.addCapability('dreamViewToggle.'+device.goveedevicetype);
-          await this.setupFlowDreamView(device);
-        } else if(device.hasCapability('dreamViewToggle.'+device.goveedevicetype))
+        // DreamView is not available via local API, but can work for cloud-enhanced local devices
+        const canUseDreamView = device.goveedevicetype !== 'localdevice' || device.cloudEnhance;
+        if(canUseDreamView) {
+          if(capabilitieslist.find(function(e) { return e.instance == "dreamViewToggle" })) {
+            if(!device.hasCapability('dreamViewToggle.'+device.goveedevicetype))
+              await device.addCapability('dreamViewToggle.'+device.goveedevicetype);
+            // Register listener for local devices (cloud devices register in setupCapabilities)
+            if(device.goveedevicetype === 'localdevice' && device.hasCapability('dreamViewToggle.'+device.goveedevicetype) && device.onCapabilityDreamview) {
+              device.registerCapabilityListener('dreamViewToggle.'+device.goveedevicetype, device.onCapabilityDreamview.bind(device));
+            }
+            await this.setupFlowDreamView(device);
+          } else if(device.hasCapability('dreamViewToggle.'+device.goveedevicetype))
+            await device.removeCapability('dreamViewToggle.'+device.goveedevicetype);
+        } else if(device.hasCapability('dreamViewToggle.'+device.goveedevicetype)) {
+          // Remove dreamViewToggle from local devices without cloud enhancement
           await device.removeCapability('dreamViewToggle.'+device.goveedevicetype);
+        }
         //Now setup the gradient toggle button
-        if(capabilitieslist.find(function(e) { return e.instance == "gradientToggle" })) {
-          if(!device.hasCapability('gradientToggle'))
-            await device.addCapability('gradientToggle');
-        } else if(device.hasCapability('gradientToggle'))
+        // Remove old generic capability if it exists (migration to device-type suffix)
+        if(device.hasCapability('gradientToggle'))
           await device.removeCapability('gradientToggle');
+        if(capabilitieslist.find(function(e) { return e.instance == "gradientToggle" })) {
+          if(!device.hasCapability('gradientToggle.'+device.goveedevicetype)) {
+            await device.addCapability('gradientToggle.'+device.goveedevicetype);
+          }
+          // Always register the capability listener (handles both new and existing capabilities)
+          if(device.hasCapability('gradientToggle.'+device.goveedevicetype) && device.onCapabilityGradient) {
+            device.registerCapabilityListener('gradientToggle.'+device.goveedevicetype, device.onCapabilityGradient.bind(device));
+          }
+        } else if(device.hasCapability('gradientToggle.'+device.goveedevicetype))
+          await device.removeCapability('gradientToggle.'+device.goveedevicetype);
         //Use the mode capability for Dynamic LightScenes
         if(capabilitieslist.find(function(e) {return e.instance == "lightScene" }))
         {

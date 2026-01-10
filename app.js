@@ -67,6 +67,13 @@ class GoveeApp extends Homey.App {
         return; // Don't re-throw, this is a known library bug
       }
 
+      // Handle JSON parsing errors from corrupted UDP messages in govee-lan-control
+      // This happens when the library receives garbled or partial network data
+      if (err instanceof SyntaxError && err.stack && err.stack.includes('govee-lan-control')) {
+        this.error('[GoveeApp] Govee LAN library received malformed data (ignoring):', err.message);
+        return; // Don't re-throw, network corruption is expected occasionally
+      }
+
       // Handle other govee-lan-control errors gracefully
       if (err.stack && err.stack.includes('govee-lan-control')) {
         this.error('[GoveeApp] Govee LAN library error (ignoring):', err.message);

@@ -6,7 +6,7 @@
   "class": "light",
   "platforms": ["local","cloud"],
   "connectivity": [ "cloud" ],
-  "capabilities": ["alarm_connectivity", "alarm_online.light", "onoff","dim","light_saturation","light_hue","light_temperature","light_mode","lightScenes.light","lightDiyScenes.light","snapshots.light","musicMode.light","dreamViewToggle.light","segmentControlColor.light","segmentControlBrightness.light"],
+  "capabilities": ["alarm_connectivity", "alarm_online.light", "onoff","dim","light_saturation","light_hue","light_temperature","light_mode","lightScenes.light","lightDiyScenes.light","snapshots.light","musicMode.light","dreamViewToggle.light","gradientToggle.light","segmentControlColor.light","segmentControlBrightness.light"],
   "images": {
     "small": "/drivers/govee-device/assets/images/small.png",
     "large": "/drivers/govee-device/assets/images/large.png",

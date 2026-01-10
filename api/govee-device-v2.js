@@ -8,20 +8,26 @@ class GoveeDevice extends Device {
    * onInit is called when the device is initialized.
    */
   async setupDevice() {
-    this.sharedDevice = new GoveeSharedDevice.SharedDevice();
-    this.data = await this.getDeviceData();
-    //Check if the device is fully setup
-    await this.addRemoveStandardCapabilities();
-    //Lets create any missing capability based on the capabilitiesList
-    await this.sharedDevice.createDynamicCapabilities(this.data.model,this.data.mac,this.data.capabilitieslist,this);
-    await this.cleanOldCapabilities();
-    //Now lets hook those capabilities to events
-    await this.setupCapabilities();
-    this.log('govee.device.'+this.data.model+': '+this.data.name+' of type '+this.goveedevicetype+' has been setup');
-    //Give the device its correct state
-    this.refreshState();
-    //Lets connect the update sequence to keep track of the state
-    this.start_update_loop();
+    try {
+      this.sharedDevice = new GoveeSharedDevice.SharedDevice();
+      this.data = await this.getDeviceData();
+      //Check if the device is fully setup
+      await this.addRemoveStandardCapabilities();
+      //Lets create any missing capability based on the capabilitiesList
+      await this.sharedDevice.createDynamicCapabilities(this.data.model,this.data.mac,this.data.capabilitieslist,this);
+      await this.cleanOldCapabilities();
+      //Now lets hook those capabilities to events
+      await this.setupCapabilities();
+      this.log('govee.device.'+this.data.model+': '+this.data.name+' of type '+this.goveedevicetype+' has been setup');
+      //Give the device its correct state
+      this.refreshState();
+      //Lets connect the update sequence to keep track of the state
+      this.start_update_loop();
+    } catch (err) {
+      this.error('Failed to setup device:', err.message);
+      // Still try to start the update loop so the device can recover
+      this.start_update_loop();
+    }
   }
 
   async onUninit() {
@@ -233,10 +239,18 @@ class GoveeDevice extends Device {
   async addRemoveStandardCapabilities()
   {
     //Now create/update the capabilties based on the device
-    if(!this.hasCapability('alarm_online.'+this.goveedevicetype))
-      await this.addCapability('alarm_online.'+this.goveedevicetype);
-    if(!this.hasCapability('alarm_connectivity'))
-      await this.addCapability('alarm_connectivity');
+    try {
+      if(!this.hasCapability('alarm_online.'+this.goveedevicetype))
+        await this.addCapability('alarm_online.'+this.goveedevicetype);
+    } catch (err) {
+      this.error('Failed to add alarm_online capability:', err.message);
+    }
+    try {
+      if(!this.hasCapability('alarm_connectivity'))
+        await this.addCapability('alarm_connectivity');
+    } catch (err) {
+      this.error('Failed to add alarm_connectivity capability:', err.message);
+    }
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "powerSwitch" })) {
       if(!this.hasCapability('onoff'))
         await this.addCapability('onoff');
@@ -370,8 +384,8 @@ class GoveeDevice extends Device {
       this.registerCapabilityListener('dreamViewToggle.'+this.goveedevicetype, this.onCapabilityDreamview.bind(this));
     if (this.hasCapability('nightlightToggle.'+this.goveedevicetype))
       this.registerCapabilityListener('nightlightToggle.'+this.goveedevicetype, this.onCapabilityNightlight.bind(this));
-    if (this.hasCapability('gradientToggle'))
-      this.registerCapabilityListener('gradientToggle', this.onCapabilityGradient.bind(this));
+    if (this.hasCapability('gradientToggle.'+this.goveedevicetype))
+      this.registerCapabilityListener('gradientToggle.'+this.goveedevicetype, this.onCapabilityGradient.bind(this));
     if (this.hasCapability('dim'))
       this.registerCapabilityListener('dim', this.onCapabilityDim.bind(this));
     if (this.hasCapability('light_temperature'))
@@ -496,7 +510,7 @@ class GoveeDevice extends Device {
     } else {
       await this.driver.toggle(0, 'gradientToggle', this.data.model, this.data.mac, this.goveedevicetype);
     }
-    this.setIfHasCapability('gradientToggle', value);
+    this.setIfHasCapability('gradientToggle.'+this.goveedevicetype, value);
   }
 
   /**
