@@ -78,7 +78,7 @@ module.exports = {
    * Toggle a Dreamview scene on/off
    */
   async toggleScene({ homey, body }) {
-    const { sceneId, state } = body;
+    const { sceneId, sku, state } = body;
 
     if (!sceneId) {
       throw new Error('Scene ID is required');
@@ -94,9 +94,11 @@ module.exports = {
     }
 
     const mode = state ? 1 : 0;
+    // Use provided sku or fall back to DreamViewScenic
+    const deviceSku = sku || 'DreamViewScenic';
 
     try {
-      await homey.app.cloudApi.devicesTurn(mode, 'DreamViewScenic', sceneId);
+      await homey.app.cloudApi.devicesTurn(mode, deviceSku, sceneId);
       return {
         success: true,
         id: sceneId,

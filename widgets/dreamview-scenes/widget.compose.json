@@ -2,25 +2,22 @@
   "name": {
     "en": "Dreamview Scenes"
   },
-  "height": 120,
+  "height": 150,
   "transparent": true,
   "settings": [
     {
-      "id": "scene",
+      "id": "scenes",
       "type": "autocomplete",
       "title": {
-        "en": "Dreamview Scene"
-      }
+        "en": "Dreamview Scenes"
+      },
+      "multi": true
     }
   ],
   "api": {
     "getScenes": {
       "method": "GET",
       "path": "/"
-    },
-    "getSceneStatus": {
-      "method": "GET",
-      "path": "/status"
     },
     "toggleScene": {
       "method": "POST",

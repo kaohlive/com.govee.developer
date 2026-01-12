@@ -11,198 +11,215 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-family: var(--homey-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif);
       background: transparent;
-      color: white;
-      height: 120px;
+      color: var(--homey-text-color, white);
+      min-height: 100%;
       overflow: hidden;
     }
 
     .widget-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: var(--homey-su-2, 8px);
+      padding: var(--homey-su-2, 8px);
+      width: 100%;
+    }
+
+    .scene-tile {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100%;
-      padding: 12px;
-      background: linear-gradient(135deg, rgba(0, 172, 231, 0.15) 0%, rgba(0, 100, 150, 0.25) 100%);
-      border-radius: 12px;
-      border: 1px solid rgba(0, 172, 231, 0.3);
+      justify-content: space-between;
+      aspect-ratio: 1;
+      padding: var(--homey-su-2, 8px) var(--homey-su-1, 4px);
+      background: var(--homey-color-mono-100, rgba(0, 172, 231, 0.1));
+      border-radius: var(--homey-border-radius-default, 12px);
+      border: var(--homey-line, 1px solid rgba(0, 172, 231, 0.2));
+      transition: all 0.2s ease;
     }
 
-    .widget-container.active {
-      background: linear-gradient(135deg, rgba(0, 172, 231, 0.3) 0%, rgba(0, 150, 200, 0.4) 100%);
-      border-color: rgba(0, 172, 231, 0.6);
-      box-shadow: 0 0 20px rgba(0, 172, 231, 0.3);
+    .scene-tile:hover {
+      background: var(--homey-color-mono-150, rgba(0, 172, 231, 0.15));
     }
 
     .scene-icon {
-      width: 36px;
-      height: 36px;
-      margin-bottom: 8px;
-      opacity: 0.7;
-      transition: opacity 0.3s ease;
-    }
-
-    .widget-container.active .scene-icon {
-      opacity: 1;
+      width: var(--homey-icon-size-medium, 20px);
+      height: var(--homey-icon-size-medium, 20px);
+      color: #00ACE7;
+      opacity: 0.9;
+      flex-shrink: 0;
     }
 
     .scene-name {
-      font-size: 14px;
-      font-weight: 500;
+      font-size: var(--homey-font-size-small, 14px);
+      font-weight: var(--homey-font-weight-medium, 500);
+      line-height: var(--homey-line-height-small, 20px);
       text-align: center;
-      margin-bottom: 10px;
-      opacity: 0.9;
+      color: var(--homey-text-color, inherit);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 100%;
+      flex-shrink: 0;
+    }
+
+    .button-row {
+      display: flex;
+      gap: var(--homey-su-1, 4px);
+      width: 100%;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
     .toggle-button {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 70px;
-      height: 32px;
-      border-radius: 16px;
+      flex: 1;
+      max-width: 42px;
+      height: 28px;
+      border-radius: var(--homey-border-radius-small, 6px);
       border: none;
       cursor: pointer;
-      font-size: 12px;
-      font-weight: 600;
+      font-size: var(--homey-font-size-small, 14px);
+      font-weight: var(--homey-font-weight-medium, 500);
       text-transform: uppercase;
-      transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.15);
-      color: rgba(255, 255, 255, 0.8);
+      transition: all 0.2s ease;
+      background: var(--homey-color-mono-200, rgba(255, 255, 255, 0.15));
+      color: var(--homey-text-color-light, rgba(255, 255, 255, 0.7));
     }
 
     .toggle-button:hover {
-      background: rgba(255, 255, 255, 0.25);
+      background: var(--homey-color-mono-300, rgba(255, 255, 255, 0.25));
     }
 
     .toggle-button:active {
       transform: scale(0.95);
     }
 
-    .toggle-button.on {
-      background: linear-gradient(135deg, #00ACE7 0%, #0088cc 100%);
-      color: white;
+    .toggle-button.on-btn:hover {
+      background: #00ACE7;
+      color: var(--homey-text-color-white, white);
+    }
+
+    .toggle-button.off-btn:hover {
+      background: var(--homey-color-red-500, #ff6b6b);
+      color: var(--homey-text-color-white, white);
     }
 
     .toggle-button.loading {
-      opacity: 0.6;
+      opacity: 0.5;
       pointer-events: none;
     }
 
     .error-message {
-      font-size: 12px;
-      color: rgba(255, 100, 100, 0.9);
+      font-size: var(--homey-font-size-small, 14px);
+      color: var(--homey-text-color-danger, #ff6b6b);
       text-align: center;
-      padding: 20px;
+      padding: var(--homey-su-4, 16px);
     }
 
-    .no-scene {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.6);
+    .no-scenes {
+      font-size: var(--homey-font-size-small, 14px);
+      color: var(--homey-text-color-light, rgba(255, 255, 255, 0.6));
       text-align: center;
+      padding: var(--homey-su-4, 16px);
     }
   </style>
 </head>
-<body>
+<body class="homey-widget-small">
   <div id="widget" class="widget-container">
-    <svg class="scene-icon" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-    </svg>
-    <div id="scene-name" class="scene-name">Loading...</div>
-    <button id="toggle-btn" class="toggle-button" onclick="toggleScene()">Off</button>
+    <div class="no-scenes">Loading...</div>
   </div>
 
   <script>
-    let scene = null;
-    let isOn = false;
-    let isLoading = false;
+    let scenes = [];
+    let loadingScenes = {};
 
     function onHomeyReady(Homey) {
       Homey.ready();
 
       Homey.getSettings().then(settings => {
-        if (settings && settings.scene) {
-          scene = settings.scene;
-          document.getElementById('scene-name').innerText = scene.name;
-          fetchStatus();
+        if (settings && settings.scenes && settings.scenes.length > 0) {
+          scenes = settings.scenes;
+          renderScenes();
         } else {
-          showNoScene();
+          showNoScenes();
         }
       }).catch(err => {
         showError('Failed to load settings');
       });
     }
 
-    function showNoScene() {
-      document.getElementById('scene-name').innerText = 'Select a scene';
-      document.getElementById('scene-name').classList.add('no-scene');
-      document.getElementById('toggle-btn').style.display = 'none';
+    function showNoScenes() {
+      document.getElementById('widget').innerHTML = '<div class="no-scenes">Select scenes in widget settings</div>';
     }
 
     function showError(message) {
       document.getElementById('widget').innerHTML = `<div class="error-message">${message}</div>`;
     }
 
-    function fetchStatus() {
-      if (!scene) return;
+    function renderScenes() {
+      const container = document.getElementById('widget');
+      container.innerHTML = '';
 
-      Homey.api('GET', `/status?sceneId=${scene.id}`)
-        .then(status => {
-          isOn = status.isOn;
-          updateUI();
-        })
-        .catch(err => {
-          console.error('Failed to fetch status:', err);
-          // Still show the widget, just with unknown state
-          updateUI();
-        });
+      scenes.forEach(scene => {
+        const tile = document.createElement('div');
+        tile.className = 'scene-tile';
+        tile.id = `tile-${scene.id}`;
+
+        tile.innerHTML = `
+          <svg class="scene-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          <div class="scene-name" title="${escapeHtml(scene.name)}">${escapeHtml(scene.name)}</div>
+          <div class="button-row">
+            <button class="toggle-button on-btn" onclick="toggleScene('${scene.id}', '${escapeHtml(scene.sku)}', true)">On</button>
+            <button class="toggle-button off-btn" onclick="toggleScene('${scene.id}', '${escapeHtml(scene.sku)}', false)">Off</button>
+          </div>
+        `;
+
+        container.appendChild(tile);
+      });
     }
 
-    function updateUI() {
-      const widget = document.getElementById('widget');
-      const btn = document.getElementById('toggle-btn');
-
-      if (isOn) {
-        widget.classList.add('active');
-        btn.classList.add('on');
-        btn.innerText = 'On';
-      } else {
-        widget.classList.remove('active');
-        btn.classList.remove('on');
-        btn.innerText = 'Off';
-      }
-
-      if (isLoading) {
-        btn.classList.add('loading');
-      } else {
-        btn.classList.remove('loading');
-      }
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>"']/g, function(m) {
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
+      });
     }
 
-    function toggleScene() {
-      if (!scene || isLoading) return;
+    function setButtonsLoading(sceneId, isLoading) {
+      const tile = document.getElementById(`tile-${sceneId}`);
+      if (!tile) return;
 
-      isLoading = true;
-      updateUI();
+      const buttons = tile.querySelectorAll('.toggle-button');
+      buttons.forEach(btn => {
+        if (isLoading) {
+          btn.classList.add('loading');
+        } else {
+          btn.classList.remove('loading');
+        }
+      });
+    }
 
-      const newState = !isOn;
+    function toggleScene(sceneId, sku, state) {
+      if (loadingScenes[sceneId]) return;
 
-      Homey.api('POST', '/toggle', { sceneId: scene.id, state: newState })
+      loadingScenes[sceneId] = true;
+      setButtonsLoading(sceneId, true);
+
+      Homey.api('POST', '/toggle', { sceneId: sceneId, sku: sku, state: state })
         .then(result => {
-          isOn = result.isOn;
-          isLoading = false;
-          updateUI();
+          loadingScenes[sceneId] = false;
+          setButtonsLoading(sceneId, false);
         })
         .catch(err => {
           console.error('Failed to toggle scene:', err);
-          isLoading = false;
-          updateUI();
+          loadingScenes[sceneId] = false;
+          setButtonsLoading(sceneId, false);
         });
     }
   </script>
