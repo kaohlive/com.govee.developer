@@ -31,8 +31,9 @@ class GoveeApp extends Homey.App {
 
     // Register Dreamview toggle action card
     this._toggleDreamviewDevice = this.homey.flow.getActionCard('toggle-dreamview-device');
-    this._toggleDreamviewDevice.registerRunListener(async (args, state) => {
-      return this.toggleDreamviewDevice(args.device, args.state.id);
+    this._toggleDreamviewDevice.registerRunListener(async (args) => {
+      // args.state is the dropdown ID string directly (e.g., "on" or "off")
+      return this.toggleDreamviewDevice(args.device, args.state);
     });
     this._toggleDreamviewDevice.registerArgumentAutocompleteListener('device', async (query, args) => {
       return this.getDreamviewDevices(query);
@@ -40,7 +41,7 @@ class GoveeApp extends Homey.App {
 
     // Register Dreamview Scenes widget autocomplete
     this.homey.dashboards.getWidget('dreamview-scenes')
-      .registerSettingAutocompleteListener('scene', async (query, settings) => {
+      .registerSettingAutocompleteListener('scenes', async (query, settings) => {
         return this.getDreamviewDevices(query);
       });
 
