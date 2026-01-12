@@ -211,5 +211,8 @@
   },
   "2.16.0": {
     "en": "First version of dreamViewScene features and widget"
+  },
+  "2.16.1": {
+    "en": "Improve dreamview widget"
   }
 }
