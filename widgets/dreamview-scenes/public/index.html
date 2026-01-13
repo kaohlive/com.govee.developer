@@ -10,103 +10,88 @@
       padding: 0;
     }
 
-    body {
+    html, body {
+      height: 100%;
       font-family: var(--homey-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif);
       background: transparent;
       color: var(--homey-text-color, white);
-      min-height: 100%;
       overflow: hidden;
     }
 
     .widget-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--homey-su-2, 8px);
-      padding: var(--homey-su-2, 8px);
+      display: flex;
+      gap: 8px;
+      padding: 8px;
       width: 100%;
       height: 100%;
     }
 
     .scene-tile {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      aspect-ratio: 1;
-      padding: var(--homey-su-2, 8px) var(--homey-su-1, 4px);
-      background: var(--homey-color-mono-100, rgba(0, 172, 231, 0.1));
-      border-radius: var(--homey-border-radius-default, 12px);
-      border: var(--homey-line, 1px solid rgba(0, 172, 231, 0.2));
-      transition: all 0.2s ease;
+      padding: 10px;
+      background: var(--homey-background-color-card, rgba(55, 55, 60, 0.95));
+      border-radius: 12px;
+      min-width: 0;
+      height: 100%;
     }
 
-    .scene-tile:hover {
-      background: var(--homey-color-mono-150, rgba(0, 172, 231, 0.15));
+    .scene-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      flex: 1;
+      min-height: 0;
     }
 
     .scene-icon {
-      width: var(--homey-icon-size-medium, 20px);
-      height: var(--homey-icon-size-medium, 20px);
-      color: #00ACE7;
-      opacity: 0.9;
+      font-size: 18px;
+      line-height: 1;
+      color: #4CAF50;
       flex-shrink: 0;
+      margin-top: 2px;
     }
 
     .scene-name {
-      font-size: var(--homey-font-size-small, 14px);
+      font-size: var(--homey-font-size-default, 16px);
       font-weight: var(--homey-font-weight-medium, 500);
-      line-height: var(--homey-line-height-small, 20px);
-      text-align: center;
-      color: var(--homey-text-color, inherit);
-      white-space: nowrap;
+      line-height: var(--homey-line-height-default, 24px);
+      color: var(--homey-text-color, white);
       overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-      flex-shrink: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      word-break: break-word;
     }
 
     .button-row {
       display: flex;
-      gap: var(--homey-su-1, 4px);
-      width: 100%;
-      justify-content: center;
+      gap: 4px;
+      margin-top: 8px;
       flex-shrink: 0;
     }
 
     .toggle-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
       flex: 1;
-      max-width: 42px;
-      height: 28px;
-      border-radius: var(--homey-border-radius-small, 6px);
+      height: 32px;
+      border-radius: 6px;
       border: none;
       cursor: pointer;
-      font-size: var(--homey-font-size-small, 14px);
-      font-weight: var(--homey-font-weight-medium, 500);
+      font-size: 12px;
+      font-weight: 600;
       text-transform: uppercase;
-      transition: all 0.2s ease;
-      background: var(--homey-color-mono-200, rgba(255, 255, 255, 0.15));
-      color: var(--homey-text-color-light, rgba(255, 255, 255, 0.7));
-    }
-
-    .toggle-button:hover {
-      background: var(--homey-color-mono-300, rgba(255, 255, 255, 0.25));
+      background: rgba(80, 80, 85, 0.8);
+      color: rgba(255, 255, 255, 0.7);
     }
 
     .toggle-button:active {
-      transform: scale(0.95);
+      transform: scale(0.96);
     }
 
-    .toggle-button.on-btn:hover {
-      background: #00ACE7;
-      color: var(--homey-text-color-white, white);
-    }
-
-    .toggle-button.off-btn:hover {
-      background: var(--homey-color-red-500, #ff6b6b);
-      color: var(--homey-text-color-white, white);
+    .toggle-button.on-btn:active {
+      background: #4CAF50;
+      color: white;
     }
 
     .toggle-button.loading {
@@ -114,22 +99,20 @@
       pointer-events: none;
     }
 
-    .error-message {
-      font-size: var(--homey-font-size-small, 14px);
-      color: var(--homey-text-color-danger, #ff6b6b);
-      text-align: center;
-      padding: var(--homey-su-4, 16px);
-    }
-
     .no-scenes {
-      font-size: var(--homey-font-size-small, 14px);
-      color: var(--homey-text-color-light, rgba(255, 255, 255, 0.6));
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
       text-align: center;
-      padding: var(--homey-su-4, 16px);
+      padding: 16px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
     }
   </style>
 </head>
-<body class="homey-widget-small">
+<body>
   <div id="widget" class="widget-container">
     <div class="no-scenes">Loading...</div>
   </div>
@@ -140,45 +123,26 @@
 
     function onHomeyReady(Homey) {
       Homey.ready();
+      loadScenes();
+    }
 
-      Homey.getSettings().then(settings => {
-        // Debug: show settings structure if something goes wrong
-        if (!settings) {
-          showError('No settings received');
-          return;
-        }
+    function loadScenes() {
+      const { scene1, scene2, scene3 } = Homey.getSettings();
 
-        // Collect scenes from individual scene settings (scene1, scene2, scene3)
-        scenes = [];
-        for (let i = 1; i <= 3; i++) {
-          const scene = settings[`scene${i}`];
-          if (scene && scene.id) {
-            scenes.push(scene);
-          }
-        }
+      scenes = [];
+      if (scene1 && scene1.id) scenes.push(scene1);
+      if (scene2 && scene2.id) scenes.push(scene2);
+      if (scene3 && scene3.id) scenes.push(scene3);
 
-        if (scenes.length > 0) {
-          renderScenes();
-        } else {
-          // Show debug info about what we received
-          const keys = Object.keys(settings);
-          if (keys.length > 0) {
-            showError('Settings found but no scenes: ' + keys.join(', '));
-          } else {
-            showNoScenes();
-          }
-        }
-      }).catch(err => {
-        showError('Error: ' + (err.message || err));
-      });
+      if (scenes.length > 0) {
+        renderScenes();
+      } else {
+        showNoScenes();
+      }
     }
 
     function showNoScenes() {
       document.getElementById('widget').innerHTML = '<div class="no-scenes">Select scenes in widget settings</div>';
-    }
-
-    function showError(message) {
-      document.getElementById('widget').innerHTML = `<div class="error-message">${message}</div>`;
     }
 
     function renderScenes() {
@@ -191,13 +155,13 @@
         tile.id = `tile-${scene.id}`;
 
         tile.innerHTML = `
-          <svg class="scene-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-          </svg>
-          <div class="scene-name" title="${escapeHtml(scene.name)}">${escapeHtml(scene.name)}</div>
+          <div class="scene-header">
+            <span class="scene-icon">★</span>
+            <div class="scene-name" title="${escapeHtml(scene.name)}">${escapeHtml(scene.name)}</div>
+          </div>
           <div class="button-row">
-            <button class="toggle-button on-btn" onclick="toggleScene('${scene.id}', '${escapeHtml(scene.sku)}', true)">On</button>
-            <button class="toggle-button off-btn" onclick="toggleScene('${scene.id}', '${escapeHtml(scene.sku)}', false)">Off</button>
+            <button class="toggle-button on-btn" onclick="toggleScene('${scene.id}', '${escapeHtml(scene.sku)}', true)">ON</button>
+            <button class="toggle-button off-btn" onclick="toggleScene('${scene.id}', '${escapeHtml(scene.sku)}', false)">OFF</button>
           </div>
         `;
 
@@ -232,13 +196,12 @@
       loadingScenes[sceneId] = true;
       setButtonsLoading(sceneId, true);
 
-      Homey.api('POST', '/toggle', { sceneId: sceneId, sku: sku, state: state })
+      Homey.api('POST', `/toggle`, { sceneId: sceneId, sku: sku, state: state })
         .then(result => {
           loadingScenes[sceneId] = false;
           setButtonsLoading(sceneId, false);
         })
         .catch(err => {
-          console.error('Failed to toggle scene:', err);
           loadingScenes[sceneId] = false;
           setButtonsLoading(sceneId, false);
         });
