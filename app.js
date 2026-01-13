@@ -39,11 +39,13 @@ class GoveeApp extends Homey.App {
       return this.getDreamviewDevices(query);
     });
 
-    // Register Dreamview Scenes widget autocomplete
-    this.homey.dashboards.getWidget('dreamview-scenes')
-      .registerSettingAutocompleteListener('scenes', async (query, settings) => {
+    // Register Dreamview Scenes widget autocomplete for each scene slot (3 scenes per row)
+    const dreamviewWidget = this.homey.dashboards.getWidget('dreamview-scenes');
+    for (let i = 1; i <= 3; i++) {
+      dreamviewWidget.registerSettingAutocompleteListener(`scene${i}`, async (query) => {
         return this.getDreamviewDevices(query);
       });
+    }
 
     // Handle uncaught errors from the govee-lan-control library
     // This prevents the app from crashing due to library bugs or network issues

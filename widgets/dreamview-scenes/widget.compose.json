@@ -6,12 +6,25 @@
   "transparent": true,
   "settings": [
     {
-      "id": "scenes",
+      "id": "scene1",
       "type": "autocomplete",
       "title": {
-        "en": "Dreamview Scenes"
-      },
-      "multi": true
+        "en": "Scene 1"
+      }
+    },
+    {
+      "id": "scene2",
+      "type": "autocomplete",
+      "title": {
+        "en": "Scene 2"
+      }
+    },
+    {
+      "id": "scene3",
+      "type": "autocomplete",
+      "title": {
+        "en": "Scene 3"
+      }
     }
   ],
   "api": {

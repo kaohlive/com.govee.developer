@@ -20,10 +20,11 @@
 
     .widget-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: var(--homey-su-2, 8px);
       padding: var(--homey-su-2, 8px);
       width: 100%;
+      height: 100%;
     }
 
     .scene-tile {
@@ -141,8 +142,16 @@
       Homey.ready();
 
       Homey.getSettings().then(settings => {
-        if (settings && settings.scenes && settings.scenes.length > 0) {
-          scenes = settings.scenes;
+        // Collect scenes from individual scene settings (scene1, scene2, scene3)
+        scenes = [];
+        for (let i = 1; i <= 3; i++) {
+          const scene = settings[`scene${i}`];
+          if (scene && scene.id) {
+            scenes.push(scene);
+          }
+        }
+
+        if (scenes.length > 0) {
           renderScenes();
         } else {
           showNoScenes();
