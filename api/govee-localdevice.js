@@ -67,7 +67,9 @@ class GoveeLocalDevice extends Device {
 
   start_update_loop() {
     this._discoveryAttempts = 0;
-    const MAX_DISCOVERY_ATTEMPTS = 120; // 2 minutes max
+    this._hasTimedOut = false;
+    const INITIAL_TIMEOUT_ATTEMPTS = 120; // 2 minutes for initial discovery
+    const RETRY_INTERVAL = 30000; // Check every 30 seconds after timeout
 
     this._timer = this.homey.setInterval(() => {
       this._discoveryAttempts++;
@@ -75,10 +77,10 @@ class GoveeLocalDevice extends Device {
       // Check if localApiClient is available
       if (!this.homey.app.localApiClient) {
         this.log('Local API client not available, waiting...');
-        if (this._discoveryAttempts >= MAX_DISCOVERY_ATTEMPTS) {
+        if (this._discoveryAttempts >= INITIAL_TIMEOUT_ATTEMPTS && !this._hasTimedOut) {
           this.setWarning('Local API unavailable - UDP port may be in use');
-          this.homey.clearInterval(this._timer);
-          this._timer = null;
+          this._hasTimedOut = true;
+          this._switchToSlowPolling(RETRY_INTERVAL);
         }
         return;
       }
@@ -87,8 +89,10 @@ class GoveeLocalDevice extends Device {
       const initError = this.homey.app.localApiClient.getInitError();
       if (initError) {
         this.setWarning('Local API error: ' + initError.message);
-        this.homey.clearInterval(this._timer);
-        this._timer = null;
+        if (!this._hasTimedOut) {
+          this._hasTimedOut = true;
+          this._switchToSlowPolling(RETRY_INTERVAL);
+        }
         return;
       }
 
@@ -100,17 +104,44 @@ class GoveeLocalDevice extends Device {
         this.refreshState(discoveredDevice.state, ["onOff", "brightness", "color"]);
         this.homey.clearInterval(this._timer);
         this._timer = null;
+        this._hasTimedOut = false;
         this.log('Device discovered and connected: ' + this.data.id);
-      } else if (this._discoveryAttempts >= MAX_DISCOVERY_ATTEMPTS) {
-        this.setWarning('Device not found after 2 minutes - check device is on network');
-        this.log('Device discovery timed out for: ' + this.data.id);
-        this.homey.clearInterval(this._timer);
-        this._timer = null;
-      } else if (this._discoveryAttempts % 30 === 0) {
-        // Log progress every 30 seconds
+      } else if (this._discoveryAttempts >= INITIAL_TIMEOUT_ATTEMPTS && !this._hasTimedOut) {
+        this.setWarning('Device not found after 2 minutes - will keep trying');
+        this.log('Device discovery timed out for: ' + this.data.id + ' - switching to slow polling');
+        this._hasTimedOut = true;
+        this._switchToSlowPolling(RETRY_INTERVAL);
+      } else if (!this._hasTimedOut && this._discoveryAttempts % 30 === 0) {
+        // Log progress every 30 seconds during initial discovery
         this.log('Still searching for device: ' + this.data.id + ' (attempt ' + this._discoveryAttempts + ')');
       }
     }, 1000);
+  }
+
+  _switchToSlowPolling(interval) {
+    // Clear the fast 1-second timer and switch to slower polling
+    if (this._timer) {
+      this.homey.clearInterval(this._timer);
+    }
+
+    this._timer = this.homey.setInterval(() => {
+      // Check if localApiClient is available
+      if (!this.homey.app.localApiClient || this.homey.app.localApiClient.getInitError()) {
+        return;
+      }
+
+      var discoveredDevice = this.homey.app.localApiClient.getDeviceById(this.data.id);
+      if (discoveredDevice != null) {
+        this.setWarning(null);
+        this.setAvailable();
+        this.registerUpdateEvent(discoveredDevice);
+        this.refreshState(discoveredDevice.state, ["onOff", "brightness", "color"]);
+        this.homey.clearInterval(this._timer);
+        this._timer = null;
+        this._hasTimedOut = false;
+        this.log('Device discovered and connected (after slow poll): ' + this.data.id);
+      }
+    }, interval);
   }
 
   async getDeviceData(enhanced)
