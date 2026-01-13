@@ -142,6 +142,12 @@
       Homey.ready();
 
       Homey.getSettings().then(settings => {
+        // Debug: show settings structure if something goes wrong
+        if (!settings) {
+          showError('No settings received');
+          return;
+        }
+
         // Collect scenes from individual scene settings (scene1, scene2, scene3)
         scenes = [];
         for (let i = 1; i <= 3; i++) {
@@ -154,10 +160,16 @@
         if (scenes.length > 0) {
           renderScenes();
         } else {
-          showNoScenes();
+          // Show debug info about what we received
+          const keys = Object.keys(settings);
+          if (keys.length > 0) {
+            showError('Settings found but no scenes: ' + keys.join(', '));
+          } else {
+            showNoScenes();
+          }
         }
       }).catch(err => {
-        showError('Failed to load settings');
+        showError('Error: ' + (err.message || err));
       });
     }
 

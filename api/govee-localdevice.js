@@ -24,9 +24,41 @@ class GoveeLocalDevice extends Device {
     this.log('govee.device.'+this.data.model+': '+this.data.id+' of type '+this.goveedevicetype+' has been setup');
     this.setWarning('Discovering the device....');
     this.setUnavailable('Discovering the device....');
+
+    // Ensure alarm_connectivity capability exists (for existing devices that don't have it yet)
+    if (!this.hasCapability('alarm_connectivity')) {
+      await this.addCapability('alarm_connectivity');
+      this.log('Added alarm_connectivity capability to existing device');
+    }
+    // Set initial connectivity state to disconnected (alarm_connectivity = true means disconnected)
+    this.setCapabilityValue('alarm_connectivity', true).catch(this.error);
+
+    // Register for connectivity events from the local API client
+    this.registerConnectivityListener();
+
     //Register the update event
     //We need to wait for this device to be discovered
     this.start_update_loop();
+  }
+
+  registerConnectivityListener() {
+    // Listen for device online/offline events from the eventBus
+    this._connectivityHandler = (isOnline) => {
+      this.log(`Connectivity event received for ${this.data.id}: ${isOnline ? 'online' : 'offline'}`);
+      if (this.hasCapability('alarm_connectivity')) {
+        // alarm_connectivity = true means disconnected, false means connected
+        this.setCapabilityValue('alarm_connectivity', !isOnline).catch(this.error);
+      }
+    };
+
+    this.homey.app.eventBus.on(`local_device_online_${this.data.id}`, this._connectivityHandler);
+  }
+
+  unregisterConnectivityListener() {
+    if (this._connectivityHandler && this.data) {
+      this.homey.app.eventBus.removeListener(`local_device_online_${this.data.id}`, this._connectivityHandler);
+      this._connectivityHandler = null;
+    }
   }
 
   updateHandler = (state, stateChanged) => { 
@@ -56,6 +88,8 @@ class GoveeLocalDevice extends Device {
       this.homey.clearInterval(this._timer);
       this._timer = null;
     }
+    // Unregister connectivity listener
+    this.unregisterConnectivityListener();
     // Check if localApiClient exists before trying to use it
     if (this.homey.app.localApiClient && this.data) {
       var discoveredDevice = this.homey.app.localApiClient.getDeviceById(this.data.id);
@@ -100,6 +134,10 @@ class GoveeLocalDevice extends Device {
       if (discoveredDevice != null) {
         this.setWarning(null);
         this.setAvailable();
+        // Set connectivity to connected (alarm_connectivity = false means connected)
+        if (this.hasCapability('alarm_connectivity')) {
+          this.setCapabilityValue('alarm_connectivity', false).catch(this.error);
+        }
         this.registerUpdateEvent(discoveredDevice);
         this.refreshState(discoveredDevice.state, ["onOff", "brightness", "color"]);
         this.homey.clearInterval(this._timer);
@@ -134,6 +172,10 @@ class GoveeLocalDevice extends Device {
       if (discoveredDevice != null) {
         this.setWarning(null);
         this.setAvailable();
+        // Set connectivity to connected (alarm_connectivity = false means connected)
+        if (this.hasCapability('alarm_connectivity')) {
+          this.setCapabilityValue('alarm_connectivity', false).catch(this.error);
+        }
         this.registerUpdateEvent(discoveredDevice);
         this.refreshState(discoveredDevice.state, ["onOff", "brightness", "color"]);
         this.homey.clearInterval(this._timer);

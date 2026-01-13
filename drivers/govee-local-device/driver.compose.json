@@ -5,6 +5,7 @@
   "class": "light",
   "platforms": ["local"],
   "capabilities": [
+    "alarm_connectivity",
     "onoff",
     "dim",
     "light_saturation",
