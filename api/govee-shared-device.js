@@ -259,11 +259,11 @@ class GoveeSharedDeviceClient {
           await device.homey.app.setupMqttReceiver();
           //We are going to emit the recieved mqtt events, so lets subscribe to them
           device.log('Registering device ['+device.data.mac+'] to the eventHub to receive mqtt messages');
-          device.homey.app.eventBus.on('device_event_'+device.data.mac, (message) => {
-            // Check if the message is targetting this device
+          device._mqttEventHandler = (message) => {
             device.log('Received an event from the mqtt, start processing it.')
             this.processReceivedDeviceEvent(device,message);
-          });
+          };
+          device.homey.app.eventBus.on('device_event_'+device.data.mac, device._mqttEventHandler);
 
           //Now hook the Flow event to the events the device supports
           if(capabilitieslist.find(function(e) {return e.instance == "lackWaterEvent" }))
@@ -297,6 +297,14 @@ class GoveeSharedDeviceClient {
         }
     }
 
+    unregisterMqttEventListener(device) {
+      if (device._mqttEventHandler && device.data) {
+        device.homey.app.eventBus.removeListener('device_event_'+device.data.mac, device._mqttEventHandler);
+        device._mqttEventHandler = null;
+        device.log('Unregistered MQTT event listener for device ['+device.data.mac+']');
+      }
+    }
+
     async processReceivedDeviceEvent(device, message)
     {
       device.log(JSON.stringify(message));
@@ -311,8 +319,8 @@ class GoveeSharedDeviceClient {
         device.setIfHasCapability('alarm_presence', (tokens.presence==1));
         //And trigger the flowcard
         device._bodyAppearedTrigger.trigger(device, tokens, {})
-          .then(this.log)
-          .catch(this.error);
+          .then(() => device.log('bodyAppearedEvent flow triggered'))
+          .catch(err => device.error('bodyAppearedEvent flow trigger failed:', err.message));
       }
       if(message.capabilities.find(function(e) {return e.instance == "lackWaterEvent" }))
         {
@@ -326,8 +334,8 @@ class GoveeSharedDeviceClient {
           device.setIfHasCapability('lackWater.'+device.goveedevicetype, (tokens.lack==1));
           //And trigger the flowcard
           device._lackWaterTrigger.trigger(device, tokens, {})
-            .then(this.log)
-            .catch(this.error);
+            .then(() => device.log('lackWaterEvent flow triggered'))
+            .catch(err => device.error('lackWaterEvent flow trigger failed:', err.message));
         }
     }
 

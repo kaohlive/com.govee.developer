@@ -33,6 +33,10 @@ class GoveeDevice extends Device {
   async onUninit() {
     //Clear any listeners
     this.homey.clearInterval(this._timer);
+    // Unregister MQTT event listener
+    if (this.sharedDevice) {
+      this.sharedDevice.unregisterMqttEventListener(this);
+    }
   }
 
   async getDeviceData()
@@ -72,6 +76,10 @@ class GoveeDevice extends Device {
       this.setSettings
       return deviceData;
     }
+    // Device not found in API list — return with empty capabilities so the update loop doesn't crash
+    this.error('Device ' + deviceData.mac + ' not found in cloud API device list');
+    deviceData.capabilitieslist = [];
+    return deviceData;
   }
 
   start_update_loop() {
@@ -88,6 +96,10 @@ class GoveeDevice extends Device {
 
   async refreshState()
   {
+    if (!this.data) {
+      this.error('Cannot refresh state: device data not initialized');
+      return;
+    }
     this.log('govee.'+this.goveedevicetype+'.'+this.data.model+': '+this.data.name+' device state to be retrieved');
     this.driver.deviceState(this.data.model, this.data.mac, this.data.type).then(currentState => {
       console.log(JSON.stringify(currentState.capabilitieslist));
@@ -446,6 +458,10 @@ class GoveeDevice extends Device {
     this.log('govee.device.'+this.data.model+': '+this.data.name+' has been deleted');
     if (this._timer) {
       clearInterval(this._timer)
+    }
+    // Unregister MQTT event listener
+    if (this.sharedDevice) {
+      this.sharedDevice.unregisterMqttEventListener(this);
     }
   }
 

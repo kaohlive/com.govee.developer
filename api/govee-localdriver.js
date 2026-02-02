@@ -23,9 +23,14 @@ class GoveeDriver extends Driver {
             this.homey.app.eventBus.emit(`local_device_online_${device.deviceID}`, true);
           });
 
-          this.homey.app.localApiClient.GoveeClient.on('deviceRemoved', (device) => {
-            this.log(`Local device disconnected: ${device.deviceID} (${device.model})`);
+          this.homey.app.localApiClient.GoveeClient.on('deviceOffline', (device) => {
+            this.log(`Local device offline: ${device.deviceID} (${device.model})`);
             this.homey.app.eventBus.emit(`local_device_online_${device.deviceID}`, false);
+          });
+
+          this.homey.app.localApiClient.GoveeClient.on('deviceOnline', (device) => {
+            this.log(`Local device back online: ${device.deviceID} (${device.model})`);
+            this.homey.app.eventBus.emit(`local_device_online_${device.deviceID}`, true);
           });
         }
 

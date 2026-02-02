@@ -69,10 +69,10 @@ class GoveeLocalClient {
         }
       });
 
-      this.GoveeClient.on("deviceRemoved", (device) => {
+      this.GoveeClient.on("deviceOffline", (device) => {
         if (this._destroyed) return;
-        console.log('[GoveeLocalClient] Device removed: [', device.model, ']');
-        this.localDevices = this.localDevices.filter(d => d.deviceID !== device.deviceID);
+        console.log('[GoveeLocalClient] Device offline: [', device.model, '] - keeping in device list for commands');
+        // Don't remove from localDevices — device stays commandable
       });
 
       // Handle errors from the underlying library (including EADDRINUSE)
@@ -215,7 +215,8 @@ class GoveeLocalClient {
       console.log('[GoveeLocalClient] Sending scan packet to 239.255.255.250:4001');
       console.log('[GoveeLocalClient] Active interfaces: ' + interfaces.map(i => i.address).join(', '));
       console.log('[GoveeLocalClient] Current device count before scan: ' + this.localDevices.length);
-      this.GoveeClient.discover();
+      // Pass false to avoid incrementing the removal counter on manual scans
+      this.GoveeClient.discover(false);
     } else {
       console.warn('[GoveeLocalClient] Cannot trigger discovery - client not available');
     }
