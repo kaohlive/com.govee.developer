@@ -223,5 +223,8 @@
   },
   "2.16.4": {
     "en": "Improved stability"
+  },
+  "2.16.5": {
+    "en": "Added manual ip based discovery for local lan devices"
   }
 }
