@@ -55,10 +55,14 @@ class GoveeLocalDevice extends Device {
   }
 
   unregisterConnectivityListener() {
-    if (this._connectivityHandler && this.data) {
-      this.homey.app.eventBus.removeListener(`local_device_online_${this.data.id}`, this._connectivityHandler);
-      this._connectivityHandler = null;
+    try {
+      if (this._connectivityHandler && this.data) {
+        this.homey.app.eventBus.removeListener(`local_device_online_${this.data.id}`, this._connectivityHandler);
+      }
+    } catch (err) {
+      // App instance may already be destroyed during shutdown, ignore
     }
+    this._connectivityHandler = null;
   }
 
   updateHandler = (state, stateChanged) => { 
@@ -88,14 +92,19 @@ class GoveeLocalDevice extends Device {
       this.homey.clearInterval(this._timer);
       this._timer = null;
     }
-    // Unregister connectivity listener
-    this.unregisterConnectivityListener();
-    // Check if localApiClient exists before trying to use it
-    if (this.homey.app.localApiClient && this.data) {
-      var discoveredDevice = this.homey.app.localApiClient.getDeviceById(this.data.id);
-      if (discoveredDevice != null) {
-        this.unregisterUpdateEvent(discoveredDevice);
+    // Wrap in try-catch because onUninit can be called after the app instance is destroyed
+    try {
+      // Unregister connectivity listener
+      this.unregisterConnectivityListener();
+      // Check if localApiClient exists before trying to use it
+      if (this.homey.app.localApiClient && this.data) {
+        var discoveredDevice = this.homey.app.localApiClient.getDeviceById(this.data.id);
+        if (discoveredDevice != null) {
+          this.unregisterUpdateEvent(discoveredDevice);
+        }
       }
+    } catch (err) {
+      // App instance may already be destroyed during shutdown, ignore
     }
   }
 
@@ -104,6 +113,9 @@ class GoveeLocalDevice extends Device {
     this._hasTimedOut = false;
     const INITIAL_TIMEOUT_ATTEMPTS = 120; // 2 minutes for initial discovery
     const RETRY_INTERVAL = 30000; // Check every 30 seconds after timeout
+
+    // On startup, send a targeted scan to the last known IP for faster discovery
+    this._sendTargetedScan();
 
     this._timer = this.homey.setInterval(() => {
       this._discoveryAttempts++;
@@ -130,6 +142,11 @@ class GoveeLocalDevice extends Device {
         return;
       }
 
+      // Periodically send targeted scans to last known IP during initial discovery
+      if (!this._hasTimedOut && this._discoveryAttempts % 10 === 0) {
+        this._sendTargetedScan();
+      }
+
       var discoveredDevice = this.homey.app.localApiClient.getDeviceById(this.data.id);
       if (discoveredDevice != null) {
         this.setWarning(null);
@@ -138,6 +155,8 @@ class GoveeLocalDevice extends Device {
         if (this.hasCapability('alarm_connectivity')) {
           this.setCapabilityValue('alarm_connectivity', false).catch(this.error);
         }
+        // Store the device's current IP for faster rediscovery after restart
+        this._storeDeviceIP(discoveredDevice.ip);
         this.registerUpdateEvent(discoveredDevice);
         this.refreshState(discoveredDevice.state, ["onOff", "brightness", "color"]);
         this.homey.clearInterval(this._timer);
@@ -156,17 +175,43 @@ class GoveeLocalDevice extends Device {
     }, 1000);
   }
 
+  _storeDeviceIP(ip) {
+    if (ip) {
+      this.setStoreValue('lastKnownIP', ip).catch(err => {
+        this.error('Failed to store device IP:', err.message);
+      });
+      this.setSettings({ lastKnownIP: ip }).catch(err => {
+        this.error('Failed to update IP in settings:', err.message);
+      });
+    }
+  }
+
+  _sendTargetedScan() {
+    const lastIP = this.getStoreValue('lastKnownIP');
+    if (lastIP && this.homey.app.localApiClient) {
+      this.log('Sending targeted scan to last known IP: ' + lastIP + ' for device ' + this.data.id);
+      this.homey.app.localApiClient.scanByIP(lastIP);
+    }
+  }
+
   _switchToSlowPolling(interval) {
     // Clear the fast 1-second timer and switch to slower polling
     if (this._timer) {
       this.homey.clearInterval(this._timer);
     }
 
+    this._slowPollAttempts = 0;
+
     this._timer = this.homey.setInterval(() => {
+      this._slowPollAttempts++;
+
       // Check if localApiClient is available
       if (!this.homey.app.localApiClient || this.homey.app.localApiClient.getInitError()) {
         return;
       }
+
+      // Send a targeted scan to last known IP every cycle to improve rediscovery
+      this._sendTargetedScan();
 
       var discoveredDevice = this.homey.app.localApiClient.getDeviceById(this.data.id);
       if (discoveredDevice != null) {
@@ -176,6 +221,8 @@ class GoveeLocalDevice extends Device {
         if (this.hasCapability('alarm_connectivity')) {
           this.setCapabilityValue('alarm_connectivity', false).catch(this.error);
         }
+        // Store the device's current IP for faster rediscovery after restart
+        this._storeDeviceIP(discoveredDevice.ip);
         this.registerUpdateEvent(discoveredDevice);
         this.refreshState(discoveredDevice.state, ["onOff", "brightness", "color"]);
         this.homey.clearInterval(this._timer);

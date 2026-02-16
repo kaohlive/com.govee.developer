@@ -36,6 +36,12 @@
         "type": "label",
         "label": { "en": "Capabilities" },
         "value": "{}"
+      },
+      {
+        "id": "lastKnownIP",
+        "type": "label",
+        "label": { "en": "Last known IP" },
+        "value": "-"
       }
     ]
   }

@@ -1,0 +1,110 @@
+<header class="homey-header">
+  <h1 class="homey-title">Device Discovery</h1>
+  <p class="homey-subtitle">
+    Choose how to find your Govee device. Automatic discovery uses multicast to scan your network.
+    If your device is not found, you can enter its IP address manually.
+  </p>
+</header>
+
+<div id="choice-view">
+  <button class="homey-button-primary-full" id="btn-auto">Search automatically</button>
+  <br/>
+  <button class="homey-button-primary-full" id="btn-manual">Enter IP address manually</button>
+</div>
+
+<div id="manual-view" style="display:none;">
+  <fieldset class="homey-form-fieldset">
+    <legend class="homey-form-legend">Manual Discovery</legend>
+    <div class="homey-form-group">
+      <label class="homey-form-label" for="ip">Device IP Address</label>
+      <input class="homey-form-input" id="ip" type="text" value="" placeholder="192.168.1.100" />
+    </div>
+  </fieldset>
+  <div id="scan-result" style="display:none; padding: 8px 0; font-size: 14px;"></div>
+  <button class="homey-button-primary-full" id="btn-scan">Scan IP</button>
+  <br/>
+  <button class="homey-button-primary-full" id="btn-back" style="opacity:0.6;">Back</button>
+</div>
+
+<script type="text/javascript">
+  Homey.ready();
+
+  var choiceView = document.getElementById('choice-view');
+  var manualView = document.getElementById('manual-view');
+  var ipElement = document.getElementById('ip');
+  var scanResult = document.getElementById('scan-result');
+
+  document.getElementById('btn-auto').addEventListener('click', function() {
+    Homey.emit('set_discovery_mode', { mode: 'auto' });
+    Homey.showView('list_devices');
+  });
+
+  document.getElementById('btn-manual').addEventListener('click', function() {
+    choiceView.style.display = 'none';
+    manualView.style.display = 'block';
+  });
+
+  document.getElementById('btn-back').addEventListener('click', function() {
+    manualView.style.display = 'none';
+    choiceView.style.display = 'block';
+    scanResult.style.display = 'none';
+  });
+
+  document.getElementById('btn-scan').addEventListener('click', function() {
+    var ip = ipElement.value.trim();
+    if (!ip) {
+      Homey.alert('Please enter an IP address.');
+      return;
+    }
+
+    // Basic IP format validation
+    var ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+    if (!ipRegex.test(ip)) {
+      Homey.alert('Please enter a valid IP address (e.g. 192.168.1.100).');
+      return;
+    }
+
+    scanResult.style.display = 'block';
+    scanResult.style.color = '';
+    scanResult.innerText = 'Scanning ' + ip + '...';
+    Homey.showLoadingOverlay();
+
+    Homey.emit('scan_ip', { ip: ip })
+      .then(function(result) {
+        Homey.hideLoadingOverlay();
+        if (result.success) {
+          scanResult.style.display = 'block';
+          scanResult.style.color = '#4CAF50';
+          scanResult.innerText = 'Device found: ' + result.model + '. Adding device...';
+
+          Homey.createDevice({
+            name: result.model,
+            data: {
+              id: result.deviceId,
+              name: result.deviceId,
+              model: result.model
+            },
+            store: {
+              lastKnownIP: ip
+            }
+          })
+          .then(function() {
+            Homey.done();
+          })
+          .catch(function(err) {
+            Homey.alert('Error adding device: ' + err.message);
+          });
+        } else {
+          scanResult.style.display = 'block';
+          scanResult.style.color = '#f44336';
+          scanResult.innerText = result.message || 'No device found at this IP address.';
+        }
+      })
+      .catch(function(err) {
+        Homey.hideLoadingOverlay();
+        scanResult.style.display = 'block';
+        scanResult.style.color = '#f44336';
+        scanResult.innerText = 'Scan failed: ' + (err.message || err);
+      });
+  });
+</script>

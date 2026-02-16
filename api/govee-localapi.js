@@ -223,6 +223,19 @@ class GoveeLocalClient {
   }
 
   /**
+   * Send a targeted scan to a specific IP address.
+   * Does not affect the removal counter.
+   * @param {string} ipAddress
+   */
+  scanByIP(ipAddress) {
+    if (this.GoveeClient && typeof this.GoveeClient.scanByIP === 'function') {
+      this.GoveeClient.scanByIP(ipAddress);
+    } else {
+      console.warn('[GoveeLocalClient] Cannot scan by IP - client not available');
+    }
+  }
+
+  /**
    * Reinitialize the client (destroy and recreate)
    * Useful when the UDP socket needs to be recreated after an error
    * @returns {Promise<boolean>} True if reinitialization succeeded
