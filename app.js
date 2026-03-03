@@ -39,11 +39,37 @@ class GoveeApp extends Homey.App {
       return this.getDreamviewDevices(query);
     });
 
+    // Register BaseGroup toggle action card
+    this._toggleGroupDevice = this.homey.flow.getActionCard('toggle-group-device');
+    this._toggleGroupDevice.registerRunListener(async (args) => {
+      return this.toggleVirtualDevice(args.device, args.state);
+    });
+    this._toggleGroupDevice.registerArgumentAutocompleteListener('device', async (query, args) => {
+      return this.getVirtualDevicesBySkus(['BaseGroup'], query, 'Device Group');
+    });
+
+    // Register SameModeGroup toggle action card
+    this._toggleSamemodelGroup = this.homey.flow.getActionCard('toggle-samemodel-group');
+    this._toggleSamemodelGroup.registerRunListener(async (args) => {
+      return this.toggleVirtualDevice(args.device, args.state);
+    });
+    this._toggleSamemodelGroup.registerArgumentAutocompleteListener('device', async (query, args) => {
+      return this.getVirtualDevicesBySkus(['SameModeGroup'], query, 'Same-Model Group');
+    });
+
     // Register Dreamview Scenes widget autocomplete for each scene slot (3 scenes per row)
     const dreamviewWidget = this.homey.dashboards.getWidget('dreamview-scenes');
     for (let i = 1; i <= 3; i++) {
       dreamviewWidget.registerSettingAutocompleteListener(`scene${i}`, async (query) => {
         return this.getDreamviewDevices(query);
+      });
+    }
+
+    // Register Govee Groups widget autocomplete for each group slot (3 groups per row)
+    const groupsWidget = this.homey.dashboards.getWidget('govee-groups');
+    for (let i = 1; i <= 3; i++) {
+      groupsWidget.registerSettingAutocompleteListener(`group${i}`, async (query) => {
+        return this.getVirtualDevicesBySkus(['BaseGroup', 'SameModeGroup'], query, 'Group');
       });
     }
 
@@ -153,6 +179,62 @@ class GoveeApp extends Homey.App {
     if (apiKey) {
       this.cloudApi = new gvCloud.GoveeClient({ api_key: apiKey });
       this.log('Cloud API initialized for app-level flow cards');
+    }
+  }
+
+  /**
+   * Get virtual devices of specific SKU types for autocomplete
+   */
+  async getVirtualDevicesBySkus(skus, query, description) {
+    const apiKey = this.homey.settings.get('api_key');
+    if (!apiKey) {
+      throw new Error('Cloud API key not configured. Please add your Govee API key in the app settings.');
+    }
+
+    if (!this.cloudApi) {
+      this.initCloudApi();
+    }
+
+    try {
+      const response = await this.cloudApi.deviceList();
+      return response.data
+        .filter(device => skus.includes(device.sku))
+        .filter(device => device.deviceName.toLowerCase().includes(query.toLowerCase()))
+        .map(device => ({
+          name: device.deviceName,
+          description,
+          id: device.device,
+          sku: device.sku
+        }));
+    } catch (error) {
+      this.error('Failed to fetch virtual devices:', error);
+      throw new Error('Failed to fetch devices from Govee cloud. Please check your API key.');
+    }
+  }
+
+  /**
+   * Activate or deactivate any virtual device (group, scene) via cloud API
+   */
+  async toggleVirtualDevice(device, state) {
+    const apiKey = this.homey.settings.get('api_key');
+    if (!apiKey) {
+      throw new Error('Cloud API key not configured. Please add your Govee API key in the app settings.');
+    }
+
+    if (!this.cloudApi) {
+      this.initCloudApi();
+    }
+
+    const mode = state === 'on' ? 1 : 0;
+    const action = state === 'on' ? 'activated' : 'deactivated';
+
+    try {
+      await this.cloudApi.devicesTurn(mode, device.sku, device.id);
+      this.log(`Virtual device "${device.name}" ${action}`);
+      return true;
+    } catch (error) {
+      this.error('Failed to toggle virtual device:', error);
+      throw new Error(`Failed to ${state === 'on' ? 'activate' : 'deactivate'} device: ${error.message}`);
     }
   }
 

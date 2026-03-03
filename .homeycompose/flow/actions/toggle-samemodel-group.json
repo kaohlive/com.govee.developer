@@ -1,0 +1,44 @@
+{
+  "title": {
+    "en": "Toggle same-model group"
+  },
+  "titleFormatted": {
+    "en": "[[state]] same-model group [[device]]"
+  },
+  "hint": {
+    "en": "Activate or deactivate a Govee same-model group using the cloud API"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "device",
+      "title": {
+        "en": "Group"
+      },
+      "placeholder": {
+        "en": "Select a same-model group"
+      }
+    },
+    {
+      "type": "dropdown",
+      "name": "state",
+      "title": {
+        "en": "Action"
+      },
+      "values": [
+        {
+          "id": "on",
+          "label": {
+            "en": "Activate"
+          }
+        },
+        {
+          "id": "off",
+          "label": {
+            "en": "Deactivate"
+          }
+        }
+      ]
+    }
+  ]
+}

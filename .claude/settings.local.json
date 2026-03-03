@@ -6,7 +6,8 @@
       "Bash(npm view:*)",
       "Bash(npm run build:*)",
       "WebFetch(domain:developer.govee.com)",
-      "Bash(xargs -I {} sh -c 'echo \"\"=== {} ===\"\" && cat {}')"
+      "Bash(xargs -I {} sh -c 'echo \"\"=== {} ===\"\" && cat {}')",
+      "Bash(homey app build)"
     ]
   }
 }

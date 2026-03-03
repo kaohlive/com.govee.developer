@@ -1,0 +1,44 @@
+{
+  "title": {
+    "en": "Toggle device group"
+  },
+  "titleFormatted": {
+    "en": "[[state]] device group [[device]]"
+  },
+  "hint": {
+    "en": "Activate or deactivate a Govee device group using the cloud API"
+  },
+  "args": [
+    {
+      "type": "autocomplete",
+      "name": "device",
+      "title": {
+        "en": "Group"
+      },
+      "placeholder": {
+        "en": "Select a device group"
+      }
+    },
+    {
+      "type": "dropdown",
+      "name": "state",
+      "title": {
+        "en": "Action"
+      },
+      "values": [
+        {
+          "id": "on",
+          "label": {
+            "en": "Activate"
+          }
+        },
+        {
+          "id": "off",
+          "label": {
+            "en": "Deactivate"
+          }
+        }
+      ]
+    }
+  ]
+}

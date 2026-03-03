@@ -1,0 +1,40 @@
+{
+  "name": {
+    "en": "Govee Groups"
+  },
+  "height": 150,
+  "transparent": true,
+  "settings": [
+    {
+      "id": "group1",
+      "type": "autocomplete",
+      "title": {
+        "en": "Group 1"
+      }
+    },
+    {
+      "id": "group2",
+      "type": "autocomplete",
+      "title": {
+        "en": "Group 2"
+      }
+    },
+    {
+      "id": "group3",
+      "type": "autocomplete",
+      "title": {
+        "en": "Group 3"
+      }
+    }
+  ],
+  "api": {
+    "getGroups": {
+      "method": "GET",
+      "path": "/"
+    },
+    "toggleGroup": {
+      "method": "POST",
+      "path": "/toggle"
+    }
+  }
+}
