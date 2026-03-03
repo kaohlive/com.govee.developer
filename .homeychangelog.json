@@ -226,5 +226,8 @@
   },
   "2.16.5": {
     "en": "Added manual ip based discovery for local lan devices"
+  },
+  "2.17.0": {
+    "en": "Added device group support"
   }
 }
