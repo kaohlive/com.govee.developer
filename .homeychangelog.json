@@ -238,5 +238,8 @@
   },
   "2.17.3": {
     "en": "fixed H5074 BLE sensor temperature reading (was off by ~20°C)"
+  },
+  "2.17.4": {
+    "en": "fixed crash on late local-device update events after uninit"
   }
 }
