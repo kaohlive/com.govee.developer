@@ -65,10 +65,13 @@ class GoveeLocalDevice extends Device {
     this._connectivityHandler = null;
   }
 
-  updateHandler = (state, stateChanged) => { 
-    if (stateChanged.length > 0) { 
-      this.log("Received an update for device [" + this.data.id + "]"); 
-      this.refreshState(state, stateChanged); 
+  updateHandler = (state, stateChanged) => {
+    // Late events can fire after onUninit if onUninit's listener cleanup
+    // missed (e.g. localApiClient.getDeviceById returned null). Drop them.
+    if (!this.data) return;
+    if (stateChanged.length > 0) {
+      this.log("Received an update for device [" + this.data.id + "]");
+      this.refreshState(state, stateChanged);
     }
   }
 
