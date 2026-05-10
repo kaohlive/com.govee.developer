@@ -1,6 +1,7 @@
 'use strict';
 
 const { Device } = require('homey');
+const { parseTempHumidBattery } = require('../../lib/ble-parser');
 
 // Polling interval for BLE advertisements (30 seconds)
 const POLL_INTERVAL_MS = 30000;
@@ -207,20 +208,11 @@ class GoveeBLESensorDevice extends Device {
    * @returns {Object|null}
    */
   _parseH5074Format(data) {
-    try {
-      const temperature = data.readInt16LE(1) / 100;
-      const humidity = data.readUInt16LE(3) / 100;
-      const battery = Math.min(data[5] & 0x7F, 100);
-
-      if (temperature < -40 || temperature > 100) return null;
-      if (humidity < 0 || humidity > 100) return null;
-
-      this.log(`Parsed H5074: ${temperature}°C, ${humidity}%, battery ${battery}%`);
-      return { temperature, humidity, battery, hasError: false };
-    } catch (err) {
-      this.error('Error parsing H5074:', err.message);
-      return null;
+    const result = parseTempHumidBattery(data);
+    if (result) {
+      this.log(`Parsed H5074: ${result.temperature}°C, ${result.humidity}%, battery ${result.battery}%`);
     }
+    return result;
   }
 
   /**
@@ -229,20 +221,11 @@ class GoveeBLESensorDevice extends Device {
    * @returns {Object|null}
    */
   _parse9ByteFormat(data) {
-    try {
-      const temperature = data.readInt16LE(1) / 100;
-      const humidity = data.readUInt16LE(3) / 100;
-      const battery = Math.min(data[5] & 0x7F, 100);
-
-      if (temperature < -40 || temperature > 100) return null;
-      if (humidity < 0 || humidity > 100) return null;
-
-      this.log(`Parsed 9-byte: ${temperature}°C, ${humidity}%, battery ${battery}%`);
-      return { temperature, humidity, battery, hasError: false };
-    } catch (err) {
-      this.error('Error parsing 9-byte format:', err.message);
-      return null;
+    const result = parseTempHumidBattery(data);
+    if (result) {
+      this.log(`Parsed 9-byte: ${result.temperature}°C, ${result.humidity}%, battery ${result.battery}%`);
     }
+    return result;
   }
 
   /**
