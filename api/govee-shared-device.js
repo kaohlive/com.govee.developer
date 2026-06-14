@@ -10,7 +10,7 @@ class GoveeSharedDeviceClient {
           device.log('Processing the nightlight state');
           var nightlight = currentState.capabilitieslist.find(function(e) {return e.instance == "nightlightToggle" })
           device.log(JSON.stringify(nightlight))
-          device.setCapabilityValue('nightlightToggle.'+device.goveedevicetype, (nightlight.state.value == 1)).catch( reason => args.device.log('Error while updating capability: '+reason) );
+          device.setCapabilityValue('nightlightToggle.'+device.goveedevicetype, (nightlight.state.value == 1)).catch( reason => device.log('Error while updating capability: '+reason) );
         }
     }
 
