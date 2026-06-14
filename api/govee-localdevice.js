@@ -22,6 +22,15 @@ class GoveeLocalDevice extends Device {
     this.log('Now (de)register the cloud capabilitities');
     await this.sharedDevice.createDynamicCapabilities(this.data.model,this.data.id,this.data.cloudcapabilitieslist,this);
     this.log('govee.device.'+this.data.model+': '+this.data.id+' of type '+this.goveedevicetype+' has been setup');
+
+    // Register stored IP as a control fallback so commands work even when
+    // the device cannot be discovered (e.g. on a different VLAN). Mirrors
+    // whatever IP was last auto-detected or manually set in device settings.
+    const storedIP = this.getStoreValue('lastKnownIP');
+    if (storedIP && this.homey.app.localApiClient) {
+      this.homey.app.localApiClient.registerDeviceIP(this.data.id, storedIP);
+    }
+
     this.setWarning('Discovering the device....');
     this.setUnavailable('Discovering the device....');
 
@@ -191,6 +200,9 @@ class GoveeLocalDevice extends Device {
       this.setSettings({ lastKnownIP: ip }).catch(err => {
         this.error('Failed to update IP in settings:', err.message);
       });
+      if (this.homey.app.localApiClient && this.data) {
+        this.homey.app.localApiClient.registerDeviceIP(this.data.id, ip);
+      }
     }
   }
 
@@ -423,6 +435,25 @@ class GoveeLocalDevice extends Device {
     {
       this.homey.setTimeout(this.enableCloudEnhancement.bind(this, newSettings), 1000);
     }
+    if (changedKeys.includes('lastKnownIP')) {
+      const newIP = (newSettings.lastKnownIP || '').trim();
+      if (newIP && !/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(newIP)) {
+        throw new Error('Last known IP must be a valid IPv4 address (e.g. 192.168.1.42).');
+      }
+      await this.setStoreValue('lastKnownIP', newIP || null).catch(err => {
+        this.error('Failed to update stored IP:', err.message);
+      });
+      if (this.homey.app.localApiClient) {
+        if (newIP) {
+          this.homey.app.localApiClient.registerDeviceIP(this.data.id, newIP);
+          // Try a targeted scan in case the device IS reachable for discovery —
+          // gives us the regular state-feedback path when possible.
+          this.homey.app.localApiClient.scanByIP(newIP);
+        } else {
+          this.homey.app.localApiClient.unregisterDeviceIP(this.data.id);
+        }
+      }
+    }
     return true;
   }
 
@@ -458,6 +489,9 @@ class GoveeLocalDevice extends Device {
     this.log('govee.device.'+this.data.model+': '+this.data.name+' has been deleted');
     if (this._timer) {
       clearInterval(this._timer)
+    }
+    if (this.homey.app.localApiClient && this.data) {
+      this.homey.app.localApiClient.unregisterDeviceIP(this.data.id);
     }
   }
 

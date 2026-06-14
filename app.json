@@ -3628,11 +3628,14 @@
             },
             {
               "id": "lastKnownIP",
-              "type": "label",
+              "type": "text",
               "label": {
                 "en": "Last known IP"
               },
-              "value": "-"
+              "value": "",
+              "hint": {
+                "en": "Updated automatically on discovery. Override manually only if Homey and the Govee device are on different VLANs/subnets where multicast discovery fails — control packets will then be sent directly to this IP. Note: when used as a manual override, device state (brightness/color/on-off feedback) refreshes only on the next successful discovery cycle."
+              }
             }
           ]
         }

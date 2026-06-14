@@ -1,12 +1,16 @@
 //Based on the govee-lan-control npm package
 
 const localapi = require("govee-lan-control");
+const dgram = require("dgram");
 const os = require("os");
+const { buildTurn, buildBrightness, buildColor } = require("../lib/lan-control-messages");
 
 // Discovery interval reduced from 60s to 30s for better device detection
 const DISCOVERY_INTERVAL_MS = 30000;
 // Timeout for initial socket creation to prevent infinite blocking
 const INIT_TIMEOUT_MS = 15000;
+// Govee device UDP port for incoming commands
+const DEVICE_CONTROL_PORT = 4003;
 
 class GoveeLocalClient {
   constructor() {
@@ -15,6 +19,12 @@ class GoveeLocalClient {
     this.initError = null;
     this.GoveeClient = null;
     this._destroyed = false;
+    // Fallback control: deviceID -> IP. Used when a paired device cannot be
+    // discovered (e.g. on a different VLAN where multicast and the library's
+    // scan→devStatus handshake do not complete), but control packets can
+    // still be sent directly.
+    this._fallbackIPs = new Map();
+    this._fallbackSocket = null;
 
     this._initializeClient();
   }
@@ -158,15 +168,18 @@ class GoveeLocalClient {
         return;
       }
       var device = this.getDeviceById(deviceid);
-      if (device == null) {
-        reject(new Error("Could not locate device with id [" + deviceid + "]"));
-      } else {
+      if (device != null) {
         console.log('[GoveeLocalClient] Attempt to switch device [' + device.deviceID + ':' + device.model + '] to new mode: ' + mode);
-        if (mode)
-          resolve(device.actions.setOn());
-        else
-          resolve(device.actions.setOff());
+        resolve(mode ? device.actions.setOn() : device.actions.setOff());
+        return;
       }
+      const fallbackIP = this._fallbackIPs.get(deviceid);
+      if (fallbackIP) {
+        console.log('[GoveeLocalClient] Device [' + deviceid + '] not discovered, sending turn via fallback IP ' + fallbackIP);
+        this._sendFallbackUDP(fallbackIP, buildTurn(!!mode)).then(resolve, reject);
+        return;
+      }
+      reject(new Error("Could not locate device with id [" + deviceid + "]"));
     });
   }
 
@@ -176,15 +189,23 @@ class GoveeLocalClient {
         reject(new Error("Local API client not ready - " + (this.initError?.message || "initialization pending")));
         return;
       }
-      var device = this.getDeviceById(deviceid);
       if (dim < 0 || dim > 100) {
         reject(new Error("Incorrect dim level"));
-      } else if (device == null) {
-        reject(new Error("Could not locate device with id [" + deviceid + "]"));
-      } else {
+        return;
+      }
+      var device = this.getDeviceById(deviceid);
+      if (device != null) {
         console.log('[GoveeLocalClient] Attempt dim device [' + device.deviceID + ':' + device.model + '] to new level: ' + dim);
         resolve(device.actions.setBrightness(dim));
+        return;
       }
+      const fallbackIP = this._fallbackIPs.get(deviceid);
+      if (fallbackIP) {
+        console.log('[GoveeLocalClient] Device [' + deviceid + '] not discovered, sending brightness via fallback IP ' + fallbackIP);
+        this._sendFallbackUDP(fallbackIP, buildBrightness(dim)).then(resolve, reject);
+        return;
+      }
+      reject(new Error("Could not locate device with id [" + deviceid + "]"));
     });
   }
 
@@ -196,11 +217,73 @@ class GoveeLocalClient {
         return;
       }
       var device = this.getDeviceById(deviceid);
-      if (device == null) {
-        reject(new Error("Could not locate device with id [" + deviceid + "]"));
-      } else {
+      if (device != null) {
         console.log('[GoveeLocalClient] Attempt set color of device [' + device.deviceID + ':' + device.model + '] to new color: ' + JSON.stringify(color));
         resolve(device.actions.setColor(color));
+        return;
+      }
+      const fallbackIP = this._fallbackIPs.get(deviceid);
+      if (fallbackIP) {
+        console.log('[GoveeLocalClient] Device [' + deviceid + '] not discovered, sending color via fallback IP ' + fallbackIP);
+        try {
+          this._sendFallbackUDP(fallbackIP, buildColor(color)).then(resolve, reject);
+        } catch (err) {
+          reject(err);
+        }
+        return;
+      }
+      reject(new Error("Could not locate device with id [" + deviceid + "]"));
+    });
+  }
+
+  /**
+   * Register a fallback IP for a paired device so control commands can be
+   * sent even when the device cannot be discovered (e.g. cross-VLAN where
+   * the scan→devStatus handshake does not complete).
+   * @param {string} deviceId
+   * @param {string} ip
+   */
+  registerDeviceIP(deviceId, ip) {
+    if (!deviceId || !ip) return;
+    this._fallbackIPs.set(deviceId, ip);
+    console.log('[GoveeLocalClient] Registered fallback IP ' + ip + ' for device ' + deviceId);
+  }
+
+  /**
+   * Remove a fallback IP registration (called on device uninit/delete).
+   * @param {string} deviceId
+   */
+  unregisterDeviceIP(deviceId) {
+    if (this._fallbackIPs.delete(deviceId)) {
+      console.log('[GoveeLocalClient] Unregistered fallback IP for device ' + deviceId);
+    }
+  }
+
+  /**
+   * Send a control message via a dedicated UDP socket that bypasses the
+   * library's discovery cache. Used only for the cross-VLAN fallback —
+   * response packets land on this socket's ephemeral port (not the library's
+   * :4002 listener), so state-feedback updates are not propagated. State
+   * will refresh on the next polling cycle that does reach the device.
+   * @param {string} ip
+   * @param {string} message JSON-encoded Govee LAN command
+   * @returns {Promise<void>}
+   */
+  _sendFallbackUDP(ip, message) {
+    return new Promise((resolve, reject) => {
+      try {
+        if (!this._fallbackSocket) {
+          this._fallbackSocket = dgram.createSocket('udp4');
+          this._fallbackSocket.on('error', (err) => {
+            console.error('[GoveeLocalClient] Fallback socket error:', err.message);
+          });
+        }
+        this._fallbackSocket.send(message, 0, message.length, DEVICE_CONTROL_PORT, ip, (err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      } catch (err) {
+        reject(err);
       }
     });
   }
@@ -402,6 +485,15 @@ class GoveeLocalClient {
       }
       this.GoveeClient = null;
     }
+    if (this._fallbackSocket) {
+      try {
+        this._fallbackSocket.close();
+      } catch (err) {
+        console.error('[GoveeLocalClient] Error closing fallback socket:', err.message);
+      }
+      this._fallbackSocket = null;
+    }
+    this._fallbackIPs.clear();
     this.localDevices = [];
     this.isReady = false;
     console.log('[GoveeLocalClient] Client destroyed');
