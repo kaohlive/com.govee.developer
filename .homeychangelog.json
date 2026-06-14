@@ -247,5 +247,8 @@
   },
   "2.17.6": {
     "en": "reduced log noise when the Homey cloud is slow to store device values"
+  },
+  "2.17.7": {
+    "en": "fixed crash in nightlight capability refresh when Homey cloud is slow"
   }
 }
