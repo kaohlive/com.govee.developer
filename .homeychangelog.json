@@ -250,5 +250,8 @@
   },
   "2.17.7": {
     "en": "fixed crash in nightlight capability refresh when Homey cloud is slow"
+  },
+  "2.17.8": {
+    "en": "fixed unhandled rejections from local-device polling when driver is briefly unavailable"
   }
 }
