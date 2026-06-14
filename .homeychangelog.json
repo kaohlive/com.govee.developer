@@ -244,5 +244,8 @@
   },
   "2.17.5": {
     "en": "added cross-VLAN fallback control: local devices can now be controlled using a manually-set IP when discovery fails across subnets"
+  },
+  "2.17.6": {
+    "en": "reduced log noise when the Homey cloud is slow to store device values"
   }
 }
