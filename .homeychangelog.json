@@ -253,5 +253,8 @@
   },
   "2.17.8": {
     "en": "fixed unhandled rejections from local-device polling when driver is briefly unavailable"
+  },
+  "2.17.9": {
+    "en": "added Cross-VLAN mode setting: when enabled, local devices are marked available immediately so the manual IP fallback can be used"
   }
 }
