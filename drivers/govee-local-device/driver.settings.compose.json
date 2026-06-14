@@ -45,6 +45,15 @@
         "hint": {
           "en": "Updated automatically on discovery. Override manually only if Homey and the Govee device are on different VLANs/subnets where multicast discovery fails — control packets will then be sent directly to this IP. Note: when used as a manual override, device state (brightness/color/on-off feedback) refreshes only on the next successful discovery cycle."
         }
+      },
+      {
+        "id": "cross_vlan_mode",
+        "type": "checkbox",
+        "label": { "en": "Cross-VLAN mode (skip discovery)" },
+        "value": false,
+        "hint": {
+          "en": "Mark this device as available immediately without waiting for local discovery. Use only when Homey and the Govee device are on different VLANs/subnets and multicast discovery cannot complete. Requires Last known IP to be set above. State feedback (current brightness/color/on-off) will not update — only commands are sent. An App restart is necessary for the changes to become visible."
+        }
       }
     ]
   }

@@ -31,8 +31,23 @@ class GoveeLocalDevice extends Device {
       this.homey.app.localApiClient.registerDeviceIP(this.data.id, storedIP);
     }
 
-    this.setWarning('Discovering the device....');
-    this.setUnavailable('Discovering the device....');
+    // Cross-VLAN mode: skip the "wait until discovered" gate and mark the
+    // device available immediately. Discovery polling still runs so we get
+    // bonus state-sync if the network ever does allow it through.
+    this._crossVlanMode = await this.getSetting('cross_vlan_mode');
+    if (this._crossVlanMode) {
+      if (!storedIP) {
+        this.log('Cross-VLAN mode is on but no Last known IP is set — control will fail until you set one in settings.');
+        this.setWarning('Cross-VLAN mode: set Last known IP in settings to enable control.').catch(err => this.error('setWarning failed:', err.message));
+      } else {
+        this.log('Cross-VLAN mode is on, marking device available without waiting for discovery.');
+        this.setWarning(null).catch(err => this.error('setWarning failed:', err.message));
+      }
+      this.setAvailable().catch(err => this.error('setAvailable failed:', err.message));
+    } else {
+      this.setWarning('Discovering the device....').catch(err => this.error('setWarning failed:', err.message));
+      this.setUnavailable('Discovering the device....').catch(err => this.error('setUnavailable failed:', err.message));
+    }
 
     // Ensure alarm_connectivity capability exists (for existing devices that don't have it yet)
     if (!this.hasCapability('alarm_connectivity')) {
@@ -176,7 +191,11 @@ class GoveeLocalDevice extends Device {
         this._hasTimedOut = false;
         this.log('Device discovered and connected: ' + this.data.id);
       } else if (this._discoveryAttempts >= INITIAL_TIMEOUT_ATTEMPTS && !this._hasTimedOut) {
-        this.setWarning('Device not found after 2 minutes - will keep trying').catch(err => this.error('setWarning failed:', err.message));
+        // In cross-VLAN mode the device is already marked available via the
+        // fallback IP; skip the misleading "not found" warning.
+        if (!this._crossVlanMode) {
+          this.setWarning('Device not found after 2 minutes - will keep trying').catch(err => this.error('setWarning failed:', err.message));
+        }
         this.log('Device discovery timed out for: ' + this.data.id + ' - switching to slow polling');
         this._hasTimedOut = true;
         this._switchToSlowPolling(RETRY_INTERVAL);
