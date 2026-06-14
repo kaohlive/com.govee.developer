@@ -64,8 +64,8 @@ class GoveeDevice extends Device {
       this.log('Device '+deviceData.mac+' needs to be upgraded, retrieved its capabilities');
       console.log(JSON.stringify(thisdevice.capabilities));
       //Now make sure we store these, so we can consider the device upgraded
-      this.setStoreValue('capabilityList',thisdevice.capabilities);
-      this.setStoreValue('deviceVersion','v2');
+      this.setStoreValue('capabilityList',thisdevice.capabilities).catch(err => this.error('Failed to store capabilityList:', err.message));
+      this.setStoreValue('deviceVersion','v2').catch(err => this.error('Failed to store deviceVersion:', err.message));
       deviceData.capabilitieslist=thisdevice.capabilities;
       //Update our settings based on current values in the device
       await this.setSettings({
@@ -360,8 +360,8 @@ class GoveeDevice extends Device {
     this.log('govee.device.'+this.data.model+': '+this.data.name+' has been added');
     this.log('Lets connect capabilities:'+JSON.stringify(this.data.capabilitieslist));
     //Lets make the capabilities list more flexible, lets store it in the storevalues
-    this.setStoreValue('capabilityList',this.data.capabilitieslist);
-    this.setStoreValue('deviceVersion','v2');
+    this.setStoreValue('capabilityList',this.data.capabilitieslist).catch(err => this.error('Failed to store capabilityList:', err.message));
+    this.setStoreValue('deviceVersion','v2').catch(err => this.error('Failed to store deviceVersion:', err.message));
     //Lets create all its capabilities
     await this.addRemoveStandardCapabilities();
     //Now we need to link our capbilities with the ones we left or added

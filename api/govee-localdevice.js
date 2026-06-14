@@ -286,8 +286,8 @@ class GoveeLocalDevice extends Device {
           this.log('Device '+deviceData.mac+' needs to be upgraded, retrieved its capabilities');
           this.log(JSON.stringify(thisdevice.capabilities));
           //Now make sure we store these, so we can consider the device upgraded
-          this.setStoreValue('capabilityList',thisdevice.capabilities);
-          this.setStoreValue('deviceVersion','v2');
+          this.setStoreValue('capabilityList',thisdevice.capabilities).catch(err => this.error('Failed to store capabilityList:', err.message));
+          this.setStoreValue('deviceVersion','v2').catch(err => this.error('Failed to store deviceVersion:', err.message));
           deviceData.cloudcapabilitieslist=thisdevice.capabilities;
           //Update our settings based on current values in the device
           await this.setSettings({
