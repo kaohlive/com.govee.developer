@@ -136,7 +136,7 @@ class GoveeLocalDevice extends Device {
       if (!this.homey.app.localApiClient) {
         this.log('Local API client not available, waiting...');
         if (this._discoveryAttempts >= INITIAL_TIMEOUT_ATTEMPTS && !this._hasTimedOut) {
-          this.setWarning('Local API unavailable - UDP port may be in use');
+          this.setWarning('Local API unavailable - UDP port may be in use').catch(err => this.error('setWarning failed:', err.message));
           this._hasTimedOut = true;
           this._switchToSlowPolling(RETRY_INTERVAL);
         }
@@ -146,7 +146,7 @@ class GoveeLocalDevice extends Device {
       // Check if client has initialization error
       const initError = this.homey.app.localApiClient.getInitError();
       if (initError) {
-        this.setWarning('Local API error: ' + initError.message);
+        this.setWarning('Local API error: ' + initError.message).catch(err => this.error('setWarning failed:', err.message));
         if (!this._hasTimedOut) {
           this._hasTimedOut = true;
           this._switchToSlowPolling(RETRY_INTERVAL);
@@ -161,13 +161,8 @@ class GoveeLocalDevice extends Device {
 
       var discoveredDevice = this.homey.app.localApiClient.getDeviceById(this.data.id);
       if (discoveredDevice != null) {
-        try {
-          this.setWarning(null);
-          this.setAvailable();
-        } catch (err) {
-          this.error('Failed to set device available (driver may not be registered on this platform):', err.message);
-          return;
-        }
+        this.setWarning(null).catch(err => this.error('setWarning failed:', err.message));
+        this.setAvailable().catch(err => this.error('setAvailable failed:', err.message));
         // Set connectivity to connected (alarm_connectivity = false means connected)
         if (this.hasCapability('alarm_connectivity')) {
           this.setCapabilityValue('alarm_connectivity', false).catch(this.error);
@@ -181,7 +176,7 @@ class GoveeLocalDevice extends Device {
         this._hasTimedOut = false;
         this.log('Device discovered and connected: ' + this.data.id);
       } else if (this._discoveryAttempts >= INITIAL_TIMEOUT_ATTEMPTS && !this._hasTimedOut) {
-        this.setWarning('Device not found after 2 minutes - will keep trying');
+        this.setWarning('Device not found after 2 minutes - will keep trying').catch(err => this.error('setWarning failed:', err.message));
         this.log('Device discovery timed out for: ' + this.data.id + ' - switching to slow polling');
         this._hasTimedOut = true;
         this._switchToSlowPolling(RETRY_INTERVAL);
@@ -235,8 +230,8 @@ class GoveeLocalDevice extends Device {
 
       var discoveredDevice = this.homey.app.localApiClient.getDeviceById(this.data.id);
       if (discoveredDevice != null) {
-        this.setWarning(null);
-        this.setAvailable();
+        this.setWarning(null).catch(err => this.error('setWarning failed:', err.message));
+        this.setAvailable().catch(err => this.error('setAvailable failed:', err.message));
         // Set connectivity to connected (alarm_connectivity = false means connected)
         if (this.hasCapability('alarm_connectivity')) {
           this.setCapabilityValue('alarm_connectivity', false).catch(this.error);
