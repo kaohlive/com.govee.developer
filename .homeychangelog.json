@@ -256,5 +256,8 @@
   },
   "2.17.9": {
     "en": "added Cross-VLAN mode setting: when enabled, local devices are marked available immediately so the manual IP fallback can be used"
+  },
+  "2.17.10": {
+    "en": "added Timer device driver (H5901 water timers and similar); patched dependency security advisories"
   }
 }
