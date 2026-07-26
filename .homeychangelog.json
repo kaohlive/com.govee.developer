@@ -259,5 +259,8 @@
   },
   "2.17.10": {
     "en": "added Timer device driver (H5901 water timers and similar); patched dependency security advisories"
+  },
+  "2.17.11": {
+    "en": "polished Timer driver: proper H5901 line-art icon and product photos for pairing"
   }
 }
