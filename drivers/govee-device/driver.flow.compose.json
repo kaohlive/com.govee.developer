@@ -165,7 +165,7 @@
           "type": "range",
           "name": "sensitivity",
           "title": {
-            "en": "Sensituvity"
+            "en": "Sensitivity"
           },
           "placeholder": {
             "en": "Sensitivity"
@@ -185,7 +185,7 @@
           "en": "Activate snapshot"
       },
       "hint": {
-          "en": "Activates a previously created snapshot for yor light configuration"
+          "en": "Activates a previously created snapshot for your light configuration"
       },
       "titleFormatted": {
           "en": "Activate snapshot [[snapshot]]"
@@ -324,7 +324,7 @@
             "en": "DIY Scene"
           },
           "placeholder": {
-            "en": "Valantine special"
+            "en": "Valentine special"
           }
         }
       ]

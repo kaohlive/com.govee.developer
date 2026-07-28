@@ -360,7 +360,7 @@
             "type": "range",
             "name": "sensitivity",
             "title": {
-              "en": "Sensituvity"
+              "en": "Sensitivity"
             },
             "placeholder": {
               "en": "Sensitivity"
@@ -380,7 +380,7 @@
           "en": "Activate snapshot"
         },
         "hint": {
-          "en": "Activates a previously created snapshot for yor appliance configuration"
+          "en": "Activates a previously created snapshot for your appliance configuration"
         },
         "titleFormatted": {
           "en": "Activate snapshot [[snapshot]]"
@@ -770,7 +770,7 @@
             "type": "range",
             "name": "sensitivity",
             "title": {
-              "en": "Sensituvity"
+              "en": "Sensitivity"
             },
             "placeholder": {
               "en": "Sensitivity"
@@ -790,7 +790,7 @@
           "en": "Activate snapshot"
         },
         "hint": {
-          "en": "Activates a previously created snapshot for yor light configuration"
+          "en": "Activates a previously created snapshot for your light configuration"
         },
         "titleFormatted": {
           "en": "Activate snapshot [[snapshot]]"
@@ -945,7 +945,7 @@
               "en": "DIY Scene"
             },
             "placeholder": {
-              "en": "Valantine special"
+              "en": "Valentine special"
             }
           }
         ]
@@ -1462,7 +1462,7 @@
             "type": "range",
             "name": "sensitivity",
             "title": {
-              "en": "Sensituvity"
+              "en": "Sensitivity"
             },
             "placeholder": {
               "en": "Sensitivity"
@@ -1482,7 +1482,7 @@
           "en": "Activate snapshot"
         },
         "hint": {
-          "en": "Activates a previously created snapshot for yor light configuration"
+          "en": "Activates a previously created snapshot for your light configuration"
         },
         "titleFormatted": {
           "en": "Activate snapshot [[snapshot]]"
@@ -1637,7 +1637,7 @@
               "en": "DIY Scene"
             },
             "placeholder": {
-              "en": "Valantine special"
+              "en": "Valentine special"
             }
           }
         ]
@@ -1816,7 +1816,7 @@
       {
         "id": "event_lackWater.aroma_diffuser",
         "title": {
-          "en": "The aroma diffures is lacking water"
+          "en": "The aroma diffuser is lacking water"
         },
         "hint": {
           "en": "When the aroma diffuser generates the lacking water event"
@@ -3341,7 +3341,7 @@
               "type": "checkbox",
               "value": false,
               "hint": {
-                "en": "Enable this option to get additional slider components to interact with nighlight scenes. An App restart is necessary for the changes to become visible"
+                "en": "Enable this option to get additional slider components to interact with nightlight scenes. An App restart is necessary for the changes to become visible"
               },
               "label": {
                 "en": "Nightlight Scene components"

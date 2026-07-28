@@ -5,7 +5,7 @@ Official app for the Govee WIFI enabled devices. This app supports the main ligh
 Getting started
 
 Cloud devices
-For cloud features you need to use the Govee mobile app to request the API key for you account. After installing the Homey Govee app you can set the API key in the app settings (or during first deviec pairing). Now you can add the Govee devices.
+For cloud features you need to use the Govee mobile app to request the API key for you account. After installing the Homey Govee app you can set the API key in the app settings (or during first device pairing). Now you can add the Govee devices.
 
 Local devices (Pro only)
 Local API devices can be added using the special device type. These work fully local without any cloud. These functions are limited, for example scene support will not work. However you can enable a hybrid mode by selecting the cloud enhancement features. This does require the API key as described in the cloud devices section.

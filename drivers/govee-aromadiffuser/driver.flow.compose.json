@@ -25,7 +25,7 @@
       {
         "id": "event_lackWater.aroma_diffuser",
         "title": {
-          "en": "The aroma diffures is lacking water"
+          "en": "The aroma diffuser is lacking water"
         },
         "hint": {
           "en": "When the aroma diffuser generates the lacking water event"
