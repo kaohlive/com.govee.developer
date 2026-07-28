@@ -48,14 +48,15 @@ module.exports = {
     }
 
     try {
-      // Get device state from cloud API
-      const response = await homey.app.cloudApi.deviceState('DreamViewScenic', sceneId);
+      // Get device state from cloud API. cloudApi.state returns the Govee
+      // response payload directly, which is { sku, device, capabilities: [...] }.
+      const payload = await homey.app.cloudApi.state('DreamViewScenic', sceneId);
 
       // Find the powerSwitch capability state
       let isOn = false;
-      if (response.payload && response.payload.capabilities) {
-        const powerSwitch = response.payload.capabilities.find(cap => cap.instance === 'powerSwitch');
-        if (powerSwitch) {
+      if (payload && Array.isArray(payload.capabilities)) {
+        const powerSwitch = payload.capabilities.find(cap => cap.instance === 'powerSwitch');
+        if (powerSwitch && powerSwitch.state) {
           isOn = powerSwitch.state.value === 1;
         }
       }
