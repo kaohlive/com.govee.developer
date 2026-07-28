@@ -262,5 +262,8 @@
   },
   "2.17.11": {
     "en": "polished Timer driver: proper H5901 line-art icon and product photos for pairing"
+  },
+  "2.17.12": {
+    "en": "store review fixes: Dreamview Scenes widget no longer calls a nonexistent API method, and spelling errors in flow cards / settings hints / READMEs are corrected"
   }
 }
