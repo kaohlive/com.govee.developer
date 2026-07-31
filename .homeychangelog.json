@@ -265,5 +265,8 @@
   },
   "2.17.12": {
     "en": "store review fixes: Dreamview Scenes widget no longer calls a nonexistent API method, and spelling errors in flow cards / settings hints / READMEs are corrected"
+  },
+  "2.17.13": {
+    "en": "fixed socket driver crash on devices with a nightlight; added per-device 'Poll State' button in settings so support tickets can include exact cloud responses"
   }
 }
