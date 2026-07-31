@@ -62,6 +62,10 @@
     "checkDeviceReachability": {
       "method": "GET",
       "path": "/check-device-reachability"
+    },
+    "testDeviceState": {
+      "method": "GET",
+      "path": "/test-device-state"
     }
   },
   "flow": {

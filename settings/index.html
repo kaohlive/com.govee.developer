@@ -455,6 +455,16 @@
       </div>
     </div>
 
+    <!-- Per-device state response (used by "Poll State" buttons in the device list) -->
+    <div class="raw-response-container" id="device-state-container" style="display: none;">
+      <div class="raw-response-label">
+        <span class="raw-response-title">Device state response <span id="device-state-label" style="color: rgb(var(--tint-8)); font-weight: normal;"></span></span>
+        <button class="homey-button-secondary-small" id="copy-device-state">Copy to Clipboard</button>
+      </div>
+      <textarea class="homey-form-textarea" id="device-state-response" readonly placeholder="Click a Poll State button next to a device above to inspect its raw cloud state." style="min-height: 160px; font-family: monospace; font-size: 11px;"></textarea>
+      <div class="timestamp" id="device-state-timestamp"></div>
+    </div>
+
     <!-- Raw Response -->
     <div class="raw-response-container">
       <div class="raw-response-label">
@@ -706,12 +716,79 @@
                 <div class="cloud-device-model">${escapeHtml(device.model)} - ${escapeHtml(device.id)}</div>
               </div>
               <span class="device-type">${escapeHtml(device.type)}</span>
+              <button class="homey-button-secondary-small poll-state-btn"
+                      data-sku="${escapeHtml(device.model)}"
+                      data-device="${escapeHtml(device.id)}"
+                      data-name="${escapeHtml(device.name)}"
+                      style="margin-left: 8px;">Poll State</button>
             </div>
           `;
         });
 
         container.innerHTML = html;
+
+        // Wire up Poll State buttons
+        container.querySelectorAll('.poll-state-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const sku = btn.getAttribute('data-sku');
+            const deviceId = btn.getAttribute('data-device');
+            const deviceName = btn.getAttribute('data-name');
+            pollDeviceState(sku, deviceId, deviceName, btn);
+          });
+        });
       }
+
+      function pollDeviceState(sku, deviceId, deviceName, btn) {
+        const container = document.getElementById('device-state-container');
+        const label = document.getElementById('device-state-label');
+        const responseEl = document.getElementById('device-state-response');
+        const timestampEl = document.getElementById('device-state-timestamp');
+
+        container.style.display = 'block';
+        label.textContent = '— ' + deviceName + ' (' + sku + ')';
+        responseEl.value = 'Polling…';
+        timestampEl.textContent = '';
+
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Polling…';
+        }
+
+        const query = 'sku=' + encodeURIComponent(sku) + '&device=' + encodeURIComponent(deviceId);
+        Homey.api('GET', '/test-device-state?' + query, function(err, result) {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Poll State';
+          }
+
+          if (err) {
+            responseEl.value = 'Homey.api error: ' + err;
+            return;
+          }
+          responseEl.value = result && result.rawResponse ? result.rawResponse : JSON.stringify(result, null, 2);
+          timestampEl.textContent = result && result.timestamp ? 'Polled at ' + new Date(result.timestamp).toLocaleString() : '';
+          // Scroll the response area into view so the user immediately sees the result
+          container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+      }
+
+      // Copy device-state response
+      const copyDeviceStateBtn = document.getElementById('copy-device-state');
+      copyDeviceStateBtn.addEventListener('click', function() {
+        const ta = document.getElementById('device-state-response');
+        ta.select();
+        ta.setSelectionRange(0, 99999);
+        try {
+          navigator.clipboard.writeText(ta.value).then(function() {
+            copyDeviceStateBtn.textContent = 'Copied!';
+            setTimeout(function() { copyDeviceStateBtn.textContent = 'Copy to Clipboard'; }, 2000);
+          });
+        } catch (err) {
+          document.execCommand('copy');
+          copyDeviceStateBtn.textContent = 'Copied!';
+          setTimeout(function() { copyDeviceStateBtn.textContent = 'Copy to Clipboard'; }, 2000);
+        }
+      });
 
       // Copy to clipboard
       copyButton.addEventListener('click', function() {

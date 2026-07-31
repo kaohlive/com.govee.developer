@@ -230,6 +230,61 @@ module.exports = {
   },
 
   /**
+   * Poll the raw cloud state for a single device.
+   * Useful for support diagnostics: reporters can hit one button per device
+   * in the settings page and share the exact response Govee returned,
+   * instead of hoping the right poll ends up in a log window.
+   */
+  async testDeviceState({ homey, query }) {
+    const apiKey = homey.settings.get('api_key');
+
+    if (!apiKey) {
+      return {
+        success: false,
+        error: 'No API key configured. Add your Govee API key in the Cloud API tab first.',
+        rawResponse: null,
+        timestamp: new Date().toISOString()
+      };
+    }
+
+    const sku = query && query.sku;
+    const device = query && query.device;
+
+    if (!sku || !device) {
+      return {
+        success: false,
+        error: 'sku and device query parameters are required',
+        rawResponse: null,
+        timestamp: new Date().toISOString()
+      };
+    }
+
+    try {
+      const client = new GoveeCloudClient.GoveeClient({ api_key: apiKey });
+      const payload = await client.state(sku, device);
+
+      return {
+        success: true,
+        error: null,
+        sku,
+        device,
+        payload,
+        rawResponse: JSON.stringify(payload, null, 2),
+        timestamp: new Date().toISOString()
+      };
+    } catch (err) {
+      return {
+        success: false,
+        error: err.message || 'Unknown error occurred',
+        sku,
+        device,
+        rawResponse: JSON.stringify({ error: err.message, stack: err.stack }, null, 2),
+        timestamp: new Date().toISOString()
+      };
+    }
+  },
+
+  /**
    * Check if a device IP would be reachable from Homey's network interfaces
    * Useful for debugging why local discovery might not find certain devices
    */
