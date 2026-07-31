@@ -1265,6 +1265,47 @@
         ]
       },
       {
+        "id": "activate-nightlight.socket",
+        "title": {
+          "en": "Toggle the nightlight"
+        },
+        "titleFormatted": {
+          "en": "Activate the nightlight [[activate]]"
+        },
+        "titleTrue": {
+          "en": "Activate nightlight"
+        },
+        "titleFalse": {
+          "en": "Deactivate nightlight"
+        },
+        "insightsTitleTrue": {
+          "en": "Nightlight was activated"
+        },
+        "insightsTitleTFalse": {
+          "en": "Nightlight was deactivated"
+        },
+        "hint": {
+          "en": "Activates or deactivates the nightlight"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=govee-socket&capabilities=nightlightToggle.socket"
+          },
+          {
+            "type": "checkbox",
+            "name": "activate",
+            "title": {
+              "en": "Activate"
+            },
+            "placeholder": {
+              "en": "Activate"
+            }
+          }
+        ]
+      },
+      {
         "id": "switch-to-nightlight-scene.humidifier",
         "title": {
           "en": "Switch to light scene"
