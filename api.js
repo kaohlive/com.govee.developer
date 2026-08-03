@@ -362,16 +362,17 @@ module.exports = {
             });
           }
 
-          // Try each buffer through parseByModel — but only if the model is
-          // actually a known SENSOR. Random Govee devices (LED strips like
-          // H6062/H6072/H6052) also broadcast BLE ads whose bytes can slip
-          // through parseStandardFormat's fallback with plausible-looking
-          // temp/humid values. Showing those in the UI misleads reporters.
+          // Try each buffer through parseByModel. Govee ships new sensor
+          // models continuously and our hardcoded list will always lag, so
+          // we always attempt to parse — but we flag isKnownSensor in the
+          // response so the UI can label unknown-model results as
+          // "speculative" (parseStandardFormat's fallback will produce
+          // plausible-looking temp/humid values from arbitrary bytes).
           let parsed = null;
           let parsedFrom = null;
           let parseError = null;
           const isSensor = isKnownSensorModel(model);
-          if (model && isSensor) {
+          if (model) {
             for (const b of buffers) {
               try {
                 const r = parseByModel(model, Buffer.from(b.hex, 'hex'));

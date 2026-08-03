@@ -910,13 +910,15 @@
         sensors.forEach(function(s) {
           let parsedText;
           if (s.parsed) {
-            parsedText = (s.parsed.temperature != null ? s.parsed.temperature + '°C' : '') +
+            const values = (s.parsed.temperature != null ? s.parsed.temperature + '°C' : '') +
               (s.parsed.humidity != null ? ' / ' + s.parsed.humidity + '%' : '') +
               (s.parsed.battery != null ? ' / ' + s.parsed.battery + '% batt' : '');
+            // Govee keeps releasing new sensor models — flag anything we don't
+            // recognise so the reporter can double-check the values against
+            // the physical device instead of trusting a possible false match.
+            parsedText = s.isKnownSensor === false ? values + ' (speculative — unknown model, verify)' : values;
           } else if (!s.model) {
             parsedText = 'unrecognised model name';
-          } else if (s.isKnownSensor === false) {
-            parsedText = 'not a sensor (LED / plug / etc)';
           } else {
             parsedText = 'no parseable data';
           }
