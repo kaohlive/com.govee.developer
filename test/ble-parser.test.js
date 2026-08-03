@@ -5,6 +5,8 @@ const assert = require('node:assert/strict');
 const {
   hasGoveeManufacturerPrefix,
   parseTempHumidBattery,
+  parseH5179Format,
+  parseByModel,
 } = require('../lib/ble-parser');
 
 const buf = (hex) => Buffer.from(hex, 'hex');
@@ -67,4 +69,44 @@ test('hasGoveeManufacturerPrefix: detects 88 ec only on >=9 byte buffers', () =>
   assert.equal(hasGoveeManufacturerPrefix(buf('88ec00a108900d5302')), true);
   assert.equal(hasGoveeManufacturerPrefix(buf('00a108900d5302')), false); // 7 bytes
   assert.equal(hasGoveeManufacturerPrefix(buf('4c000215494e54454c4c495f524f434b535f48575075f2ffc2')), false);
+});
+
+test('parseH5179Format: real 11-byte advert (from a11bfc8c log)', () => {
+  // Real device: parsed as 21.4°C / 37.7% / battery 79% in the live log.
+  const result = parseH5179Format(buf('0188ec0001015c08ba0e4f'));
+  assert.deepEqual(result, {
+    temperature: 21.4,
+    humidity: 37.7,
+    battery: 79,
+    hasError: false,
+  });
+});
+
+test('parseH5179Format: rejects short buffers', () => {
+  assert.equal(parseH5179Format(buf('0188ec000101')), null);
+});
+
+test('parseByModel: dispatches H5074 to parseTempHumidBattery', () => {
+  const result = parseByModel('H5074', buf('88ec00a108900d5302'));
+  assert.equal(result.temperature, 22.09);
+  assert.equal(result.battery, 83);
+});
+
+test('parseByModel: dispatches H5179 to parseH5179Format', () => {
+  const result = parseByModel('H5179', buf('0188ec0001015c08ba0e4f'));
+  assert.equal(result.temperature, 21.4);
+  assert.equal(result.battery, 79);
+});
+
+test('parseByModel: unknown model returns null for buffers shorter than the minimum standard length', () => {
+  // Standard fallback needs >= 6 bytes; anything shorter must be dropped.
+  assert.equal(parseByModel('H99XX', buf('88')), null);
+  assert.equal(parseByModel('H99XX', buf('88ec')), null);
+  assert.equal(parseByModel('H99XX', buf('88ec0001')), null);
+});
+
+test('parseByModel: rejects too-short buffer for meat-thermometer families', () => {
+  assert.equal(parseByModel('H5181', buf('deadbeef')), null); // needs 14 bytes
+  assert.equal(parseByModel('H5182', buf('deadbeef')), null); // needs 17 bytes
+  assert.equal(parseByModel('H5185', buf('deadbeef')), null); // needs 20 bytes
 });
