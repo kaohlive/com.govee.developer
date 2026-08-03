@@ -222,9 +222,14 @@ class GoveeLocalDevice extends Device {
 
   _sendTargetedScan() {
     const lastIP = this.getStoreValue('lastKnownIP');
-    if (lastIP && this.homey.app.localApiClient) {
+    const client = this.homey.app.localApiClient;
+    // Guard on isClientReady() as well: at cold start every local device
+    // calls this from setupDevice before the shared UDP socket has bound,
+    // which otherwise produces ~1 "Cannot scan by IP - UDP socket not
+    // available" error per device × per scan attempt for the first ~800ms.
+    if (lastIP && client && client.isClientReady()) {
       this.log('Sending targeted scan to last known IP: ' + lastIP + ' for device ' + this.data.id);
-      this.homey.app.localApiClient.scanByIP(lastIP);
+      client.scanByIP(lastIP);
     }
   }
 
