@@ -271,5 +271,8 @@
   },
   "2.17.14": {
     "en": "added 'Scan for BLE Sensors' diagnostic in settings that dumps raw advertisement bytes and parsed values for every Govee BLE sensor in range"
+  },
+  "2.17.15": {
+    "en": "fixed BLE scan crash; BLE Scanner now has its own settings tab; each cloud device shows an inline state summary after polling"
   }
 }
