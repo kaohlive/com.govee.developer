@@ -903,16 +903,23 @@
       function updateBleSensorList(sensors) {
         const container = document.getElementById('ble-sensor-list-container');
         if (!sensors.length) {
-          container.innerHTML = '<div class="no-devices">No Govee BLE sensors in range. Make sure at least one sensor is within Bluetooth range of the Homey.</div>';
+          container.innerHTML = '<div class="no-devices">No Govee BLE devices in range. Make sure at least one Govee product is within Bluetooth range of the Homey.</div>';
           return;
         }
         let html = '';
         sensors.forEach(function(s) {
-          const parsedText = s.parsed
-            ? (s.parsed.temperature != null ? s.parsed.temperature + '°C' : '') +
+          let parsedText;
+          if (s.parsed) {
+            parsedText = (s.parsed.temperature != null ? s.parsed.temperature + '°C' : '') +
               (s.parsed.humidity != null ? ' / ' + s.parsed.humidity + '%' : '') +
-              (s.parsed.battery != null ? ' / ' + s.parsed.battery + '%' : '')
-            : (s.model ? 'no parseable data' : 'unknown model, no parse attempted');
+              (s.parsed.battery != null ? ' / ' + s.parsed.battery + '% batt' : '');
+          } else if (!s.model) {
+            parsedText = 'unrecognised model name';
+          } else if (s.isKnownSensor === false) {
+            parsedText = 'not a sensor (LED / plug / etc)';
+          } else {
+            parsedText = 'no parseable data';
+          }
           let bufferRows = '';
           s.buffers.forEach(function(b) {
             bufferRows +=

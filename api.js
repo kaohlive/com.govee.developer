@@ -1,13 +1,15 @@
 'use strict';
 
 const GoveeCloudClient = require('./api/govee-api-v2');
-const { parseByModel } = require('./lib/ble-parser');
+const { parseByModel, isKnownSensorModel } = require('./lib/ble-parser');
 
-// Extract the Govee model code (e.g. "H5075") from a BLE local name like
-// "Govee_H5075_54F6". Returns null when the name doesn't match.
+// Extract the Govee model code (e.g. "H5075", "H612F", "H614B") from a BLE
+// local name like "Govee_H5075_54F6". Govee's model IDs are H + 4
+// alphanumeric characters — not always all digits — so we accept [0-9A-Z]
+// after the H, not just \d. Returns null when the name doesn't match.
 function extractGoveeModel(localName) {
   if (!localName) return null;
-  const match = /^Govee_(H\d{4}[A-Z]?)/i.exec(localName);
+  const match = /^Govee_(H[0-9A-Z]{4})/i.exec(localName);
   return match ? match[1].toUpperCase() : null;
 }
 
@@ -360,11 +362,16 @@ module.exports = {
             });
           }
 
-          // Try each buffer through parseByModel; keep the first that yields a result.
+          // Try each buffer through parseByModel — but only if the model is
+          // actually a known SENSOR. Random Govee devices (LED strips like
+          // H6062/H6072/H6052) also broadcast BLE ads whose bytes can slip
+          // through parseStandardFormat's fallback with plausible-looking
+          // temp/humid values. Showing those in the UI misleads reporters.
           let parsed = null;
           let parsedFrom = null;
           let parseError = null;
-          if (model) {
+          const isSensor = isKnownSensorModel(model);
+          if (model && isSensor) {
             for (const b of buffers) {
               try {
                 const r = parseByModel(model, Buffer.from(b.hex, 'hex'));
@@ -383,6 +390,7 @@ module.exports = {
             address: adv.address || null,
             localName: adv.localName || null,
             model,
+            isKnownSensor: isSensor,
             rssi: typeof adv.rssi === 'number' ? adv.rssi : null,
             buffers,
             parsed,
