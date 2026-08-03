@@ -474,6 +474,40 @@
       <textarea class="homey-form-textarea" id="raw-response" readonly placeholder="API response will appear here after testing..." style="min-height: 200px; font-family: monospace; font-size: 11px;"></textarea>
       <div class="timestamp" id="response-timestamp"></div>
     </div>
+
+    <!-- BLE Sensor Diagnostic Scan -->
+    <header class="homey-header" style="margin-top: 32px;">
+      <h2 class="homey-title" style="font-size: 18px;">BLE Sensors</h2>
+      <p class="homey-subtitle">
+        Scan for Govee BLE sensors (H5074, H5075, H5179, etc.) in range and dump their raw advertisement bytes plus the current parser output. Use this if a sensor reports wrong temperature/humidity values — the raw hex tells us exactly what the sensor is broadcasting.
+      </p>
+    </header>
+
+    <button class="homey-button-primary-full" id="scan-ble-sensors">
+      <span id="scan-ble-icon">&#x27A4;</span>
+      <span id="scan-ble-text">Scan for BLE Sensors</span>
+    </button>
+
+    <div id="ble-scan-status"></div>
+
+    <div class="device-list">
+      <div class="device-list-header">
+        <span class="device-list-title">Discovered Govee BLE Sensors</span>
+        <span class="device-count" id="ble-sensor-count">0</span>
+      </div>
+      <div id="ble-sensor-list-container">
+        <div class="no-devices">Click "Scan for BLE Sensors" to run a live BLE discovery.</div>
+      </div>
+    </div>
+
+    <div class="raw-response-container">
+      <div class="raw-response-label">
+        <span class="raw-response-title">Raw BLE scan response (for support)</span>
+        <button class="homey-button-secondary-small" id="copy-ble-response">Copy to Clipboard</button>
+      </div>
+      <textarea class="homey-form-textarea" id="ble-scan-response" readonly placeholder="BLE scan result will appear here after scanning..." style="min-height: 160px; font-family: monospace; font-size: 11px;"></textarea>
+      <div class="timestamp" id="ble-scan-timestamp"></div>
+    </div>
   </div>
 
   <script type="text/javascript">
@@ -771,6 +805,98 @@
           container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
       }
+
+      // BLE Sensor scan
+      const scanBleBtn = document.getElementById('scan-ble-sensors');
+      const scanBleIcon = document.getElementById('scan-ble-icon');
+      const scanBleText = document.getElementById('scan-ble-text');
+      const bleResponseEl = document.getElementById('ble-scan-response');
+      const bleTimestampEl = document.getElementById('ble-scan-timestamp');
+
+      scanBleBtn.addEventListener('click', function() {
+        scanBleBtn.disabled = true;
+        scanBleBtn.classList.add('is-loading');
+        scanBleIcon.innerHTML = '<span class="spinner"></span>';
+        scanBleText.textContent = 'Scanning… (may take up to 10s)';
+
+        Homey.api('GET', '/scan-ble-sensors', function(err, result) {
+          scanBleBtn.disabled = false;
+          scanBleBtn.classList.remove('is-loading');
+          scanBleIcon.innerHTML = '&#x27A4;';
+          scanBleText.textContent = 'Scan for BLE Sensors';
+
+          const statusContainer = document.getElementById('ble-scan-status');
+          if (err) {
+            statusContainer.innerHTML = '<div class="error-message">' + escapeHtml('Homey.api error: ' + err) + '</div>';
+            bleResponseEl.value = JSON.stringify({ error: String(err) }, null, 2);
+            return;
+          }
+          if (!result.success) {
+            statusContainer.innerHTML = '<div class="error-message">' + escapeHtml(result.error || 'Scan failed') + '</div>';
+          } else {
+            statusContainer.innerHTML = '<div class="success-message">' + escapeHtml('Found ' + result.count + ' Govee sensor(s) out of ' + result.totalAdvertisements + ' total BLE advertisements.') + '</div>';
+          }
+
+          document.getElementById('ble-sensor-count').textContent = (result.sensors || []).length;
+          updateBleSensorList(result.sensors || []);
+          bleResponseEl.value = JSON.stringify(result, null, 2);
+          bleTimestampEl.textContent = result.timestamp ? 'Scanned at ' + new Date(result.timestamp).toLocaleString() : '';
+        });
+      });
+
+      function updateBleSensorList(sensors) {
+        const container = document.getElementById('ble-sensor-list-container');
+        if (!sensors.length) {
+          container.innerHTML = '<div class="no-devices">No Govee BLE sensors in range. Make sure at least one sensor is within Bluetooth range of the Homey.</div>';
+          return;
+        }
+        let html = '';
+        sensors.forEach(function(s) {
+          const parsedText = s.parsed
+            ? (s.parsed.temperature != null ? s.parsed.temperature + '°C' : '') +
+              (s.parsed.humidity != null ? ' / ' + s.parsed.humidity + '%' : '') +
+              (s.parsed.battery != null ? ' / ' + s.parsed.battery + '%' : '')
+            : (s.model ? 'no parseable data' : 'unknown model, no parse attempted');
+          let bufferRows = '';
+          s.buffers.forEach(function(b) {
+            bufferRows +=
+              '<div style="font-family: monospace; font-size: 11px; margin-top: 4px; word-break: break-all;">' +
+              '<strong>' + escapeHtml(b.source) + ' (' + b.length + ' bytes):</strong> ' +
+              escapeHtml(b.hex) +
+              '</div>';
+          });
+          html +=
+            '<div class="cloud-device-item" style="flex-direction: column; align-items: stretch;">' +
+              '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+                '<div class="cloud-device-info">' +
+                  '<div class="cloud-device-name">' + escapeHtml(s.localName || '(no name)') + '</div>' +
+                  '<div class="cloud-device-model">' + escapeHtml(s.model || 'unknown') + ' — ' + escapeHtml(s.address || '(no address)') + (s.rssi != null ? ' — RSSI ' + s.rssi + ' dBm' : '') + '</div>' +
+                '</div>' +
+                '<span class="device-type">' + escapeHtml(parsedText) + '</span>' +
+              '</div>' +
+              bufferRows +
+            '</div>';
+        });
+        container.innerHTML = html;
+      }
+
+      // Copy BLE scan response
+      const copyBleBtn = document.getElementById('copy-ble-response');
+      copyBleBtn.addEventListener('click', function() {
+        const ta = document.getElementById('ble-scan-response');
+        ta.select();
+        ta.setSelectionRange(0, 99999);
+        try {
+          navigator.clipboard.writeText(ta.value).then(function() {
+            copyBleBtn.textContent = 'Copied!';
+            setTimeout(function() { copyBleBtn.textContent = 'Copy to Clipboard'; }, 2000);
+          });
+        } catch (err) {
+          document.execCommand('copy');
+          copyBleBtn.textContent = 'Copied!';
+          setTimeout(function() { copyBleBtn.textContent = 'Copy to Clipboard'; }, 2000);
+        }
+      });
 
       // Copy device-state response
       const copyDeviceStateBtn = document.getElementById('copy-device-state');

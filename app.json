@@ -66,6 +66,10 @@
     "testDeviceState": {
       "method": "GET",
       "path": "/test-device-state"
+    },
+    "scanBleSensors": {
+      "method": "GET",
+      "path": "/scan-ble-sensors"
     }
   },
   "flow": {

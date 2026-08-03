@@ -1,6 +1,15 @@
 'use strict';
 
 const GoveeCloudClient = require('./api/govee-api-v2');
+const { parseByModel } = require('./lib/ble-parser');
+
+// Extract the Govee model code (e.g. "H5075") from a BLE local name like
+// "Govee_H5075_54F6". Returns null when the name doesn't match.
+function extractGoveeModel(localName) {
+  if (!localName) return null;
+  const match = /^Govee_(H\d{4}[A-Z]?)/i.exec(localName);
+  return match ? match[1].toUpperCase() : null;
+}
 
 module.exports = {
   /**
@@ -280,6 +289,94 @@ module.exports = {
         device,
         rawResponse: JSON.stringify({ error: err.message, stack: err.stack }, null, 2),
         timestamp: new Date().toISOString()
+      };
+    }
+  },
+
+  /**
+   * Scan for Govee BLE sensors in range and dump their raw advertisement
+   * bytes + the current parser output. Used from the settings page so
+   * reporters can share exact hex bytes with support in one click,
+   * instead of trying to time an app log capture around a 30-second poll
+   * interval. Handles all sensor models supported by lib/ble-parser.js.
+   */
+  async scanBleSensors({ homey }) {
+    try {
+      const advertisements = await homey.ble.discover();
+
+      const govee = (advertisements || []).filter(adv => {
+        const name = adv.localName || '';
+        return name.indexOf('Govee_') === 0;
+      });
+
+      const sensors = govee.map(adv => {
+        const model = extractGoveeModel(adv.localName);
+
+        // Collect every candidate buffer the driver would try to parse:
+        // one entry per serviceData UUID plus the manufacturerData blob.
+        const buffers = [];
+        if (adv.serviceData) {
+          for (const [uuid, value] of Object.entries(adv.serviceData)) {
+            if (Buffer.isBuffer(value)) {
+              buffers.push({
+                source: 'serviceData:' + uuid,
+                hex: value.toString('hex'),
+                length: value.length,
+              });
+            }
+          }
+        }
+        if (adv.manufacturerData && Buffer.isBuffer(adv.manufacturerData)) {
+          buffers.push({
+            source: 'manufacturerData',
+            hex: adv.manufacturerData.toString('hex'),
+            length: adv.manufacturerData.length,
+          });
+        }
+
+        // Try each buffer through parseByModel; keep the first that yields a result.
+        let parsed = null;
+        let parsedFrom = null;
+        let parseError = null;
+        if (model) {
+          for (const b of buffers) {
+            try {
+              const r = parseByModel(model, Buffer.from(b.hex, 'hex'));
+              if (r) {
+                parsed = r;
+                parsedFrom = b.source;
+                break;
+              }
+            } catch (err) {
+              parseError = err.message;
+            }
+          }
+        }
+
+        return {
+          address: adv.address || null,
+          localName: adv.localName || null,
+          model,
+          rssi: typeof adv.rssi === 'number' ? adv.rssi : null,
+          buffers,
+          parsed,
+          parsedFrom,
+          parseError,
+        };
+      });
+
+      return {
+        success: true,
+        timestamp: new Date().toISOString(),
+        totalAdvertisements: advertisements ? advertisements.length : 0,
+        count: sensors.length,
+        sensors,
+      };
+    } catch (err) {
+      return {
+        success: false,
+        error: err.message || 'BLE scan failed',
+        timestamp: new Date().toISOString(),
       };
     }
   },
