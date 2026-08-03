@@ -277,5 +277,8 @@
   },
   "2.17.16": {
     "en": "BLE scanner now recognises Govee model names like H612F; parse results for unknown models are labelled speculative so you can verify against the physical device"
+  },
+  "2.17.17": {
+    "en": "reduced startup log noise: no more 'UDP socket not available' errors during the first second when many local devices initialise together"
   }
 }
