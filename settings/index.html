@@ -329,7 +329,8 @@
   <div class="tab-container">
     <button class="tab-button active" data-tab="cloud-api">Cloud API</button>
     <button class="tab-button" data-tab="local-api">Local API</button>
-    <button class="tab-button" data-tab="cloud-test">API Test</button>
+    <button class="tab-button" data-tab="cloud-test">Cloud API Test</button>
+    <button class="tab-button" data-tab="ble-scanner">BLE Scanner</button>
   </div>
 
   <!-- Cloud API Tab Content -->
@@ -455,33 +456,29 @@
       </div>
     </div>
 
-    <!-- Per-device state response (used by "Poll State" buttons in the device list) -->
-    <div class="raw-response-container" id="device-state-container" style="display: none;">
-      <div class="raw-response-label">
-        <span class="raw-response-title">Device state response <span id="device-state-label" style="color: rgb(var(--tint-8)); font-weight: normal;"></span></span>
-        <button class="homey-button-secondary-small" id="copy-device-state">Copy to Clipboard</button>
-      </div>
-      <textarea class="homey-form-textarea" id="device-state-response" readonly placeholder="Click a Poll State button next to a device above to inspect its raw cloud state." style="min-height: 160px; font-family: monospace; font-size: 11px;"></textarea>
-      <div class="timestamp" id="device-state-timestamp"></div>
-    </div>
-
-    <!-- Raw Response -->
+    <!-- Consolidated Raw Response: deviceList response first, per-device polls appended below -->
     <div class="raw-response-container">
       <div class="raw-response-label">
-        <span class="raw-response-title">Raw API Response (for support)</span>
+        <span class="raw-response-title">Raw API responses (for support)</span>
         <button class="homey-button-secondary-small" id="copy-response">Copy to Clipboard</button>
       </div>
-      <textarea class="homey-form-textarea" id="raw-response" readonly placeholder="API response will appear here after testing..." style="min-height: 200px; font-family: monospace; font-size: 11px;"></textarea>
+      <textarea class="homey-form-textarea" id="raw-response" readonly placeholder="API response will appear here after testing. Poll State results append below in the order you press them." style="min-height: 240px; font-family: monospace; font-size: 11px;"></textarea>
       <div class="timestamp" id="response-timestamp"></div>
     </div>
+  </div>
 
-    <!-- BLE Sensor Diagnostic Scan -->
-    <header class="homey-header" style="margin-top: 32px;">
-      <h2 class="homey-title" style="font-size: 18px;">BLE Sensors</h2>
+  <!-- BLE Scanner Tab Content -->
+  <div id="ble-scanner" class="tab-content">
+    <header class="homey-header">
+      <h1 class="homey-title">BLE Sensor Scanner</h1>
       <p class="homey-subtitle">
-        Scan for Govee BLE sensors (H5074, H5075, H5179, etc.) in range and dump their raw advertisement bytes plus the current parser output. Use this if a sensor reports wrong temperature/humidity values — the raw hex tells us exactly what the sensor is broadcasting.
+        Scan for Govee BLE sensors (H5074, H5075, H5179, meat thermometers, etc.) in range and dump their raw advertisement bytes plus the current parser output. Use this when a sensor reports wrong temperature/humidity — the raw hex shows exactly what the sensor is broadcasting.
       </p>
     </header>
+
+    <div class="info-box">
+      Requires the sensor to be within Bluetooth range of the Homey. A scan takes 2 to 10 seconds.
+    </div>
 
     <button class="homey-button-primary-full" id="scan-ble-sensors">
       <span id="scan-ble-icon">&#x27A4;</span>
@@ -505,7 +502,7 @@
         <span class="raw-response-title">Raw BLE scan response (for support)</span>
         <button class="homey-button-secondary-small" id="copy-ble-response">Copy to Clipboard</button>
       </div>
-      <textarea class="homey-form-textarea" id="ble-scan-response" readonly placeholder="BLE scan result will appear here after scanning..." style="min-height: 160px; font-family: monospace; font-size: 11px;"></textarea>
+      <textarea class="homey-form-textarea" id="ble-scan-response" readonly placeholder="BLE scan result will appear here after scanning..." style="min-height: 200px; font-family: monospace; font-size: 11px;"></textarea>
       <div class="timestamp" id="ble-scan-timestamp"></div>
     </div>
   </div>
@@ -716,11 +713,12 @@
           // Update device count
           document.getElementById('cloud-device-count').textContent = result.deviceCount || 0;
 
-          // Update device list
-          updateCloudDeviceList(result.devices || []);
+          // Reset the consolidated raw-response area with the deviceList JSON.
+          // Subsequent Poll State clicks will append below in the order they happen.
+          rawResponseTextarea.value = '// deviceList response\n' + (result.rawResponse || 'No response data') + '\n';
 
-          // Update raw response
-          rawResponseTextarea.value = result.rawResponse || 'No response data';
+          // Update device list (this also wires per-row Poll State buttons and state summaries)
+          updateCloudDeviceList(result.devices || []);
 
           // Update timestamp
           timestampEl.textContent = result.timestamp ? `Last tested: ${new Date(result.timestamp).toLocaleString()}` : '';
@@ -741,20 +739,28 @@
           return;
         }
 
+        // Reset the raw response to just the fresh deviceList — subsequent polls
+        // will append below.
+        // (deferred: main handler will set the initial value.)
+
         let html = '';
-        devices.forEach(device => {
+        devices.forEach((device, i) => {
           html += `
-            <div class="cloud-device-item">
-              <div class="cloud-device-info">
-                <div class="cloud-device-name">${escapeHtml(device.name)}</div>
-                <div class="cloud-device-model">${escapeHtml(device.model)} - ${escapeHtml(device.id)}</div>
+            <div class="cloud-device-item" style="flex-direction: column; align-items: stretch;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="cloud-device-info">
+                  <div class="cloud-device-name">${escapeHtml(device.name)}</div>
+                  <div class="cloud-device-model">${escapeHtml(device.model)} - ${escapeHtml(device.id)}</div>
+                </div>
+                <span class="device-type">${escapeHtml(device.type)}</span>
+                <button class="homey-button-secondary-small poll-state-btn"
+                        data-sku="${escapeHtml(device.model)}"
+                        data-device="${escapeHtml(device.id)}"
+                        data-name="${escapeHtml(device.name)}"
+                        data-row="${i}"
+                        style="margin-left: 8px;">Poll State</button>
               </div>
-              <span class="device-type">${escapeHtml(device.type)}</span>
-              <button class="homey-button-secondary-small poll-state-btn"
-                      data-sku="${escapeHtml(device.model)}"
-                      data-device="${escapeHtml(device.id)}"
-                      data-name="${escapeHtml(device.name)}"
-                      style="margin-left: 8px;">Poll State</button>
+              <div class="device-state-summary" id="device-state-summary-${i}" style="margin-top: 6px; font-size: 12px; color: rgb(var(--tint-8));"></div>
             </div>
           `;
         });
@@ -767,22 +773,51 @@
             const sku = btn.getAttribute('data-sku');
             const deviceId = btn.getAttribute('data-device');
             const deviceName = btn.getAttribute('data-name');
-            pollDeviceState(sku, deviceId, deviceName, btn);
+            const rowIdx = btn.getAttribute('data-row');
+            pollDeviceState(sku, deviceId, deviceName, btn, rowIdx);
           });
         });
       }
 
-      function pollDeviceState(sku, deviceId, deviceName, btn) {
-        const container = document.getElementById('device-state-container');
-        const label = document.getElementById('device-state-label');
-        const responseEl = document.getElementById('device-state-response');
-        const timestampEl = document.getElementById('device-state-timestamp');
+      // Format a compact one-line state summary from a Govee capabilities array.
+      // Picks out online / powerSwitch / brightness / colorTemperatureK so the
+      // reporter sees the important bits without opening the raw JSON.
+      function formatDeviceStateSummary(payload) {
+        if (!payload || !Array.isArray(payload.capabilities)) return 'no capabilities in response';
+        const capBy = (instance) => payload.capabilities.find(c => c && c.instance === instance);
+        const parts = [];
+        const online = capBy('online');
+        if (online && online.state) {
+          parts.push('online: ' + (online.state.value === true ? '✓ true' : online.state.value === false ? '✗ false' : String(online.state.value)));
+        }
+        const power = capBy('powerSwitch');
+        if (power && power.state) {
+          const v = power.state.value;
+          parts.push('power: ' + (v === 1 ? 'on' : v === 0 ? 'off' : v === '' ? '(never reported)' : String(v)));
+        }
+        const brightness = capBy('brightness');
+        if (brightness && brightness.state && brightness.state.value !== '' && brightness.state.value !== undefined) {
+          parts.push('brightness: ' + brightness.state.value);
+        }
+        const colorTemp = capBy('colorTemperatureK');
+        if (colorTemp && colorTemp.state && colorTemp.state.value !== 0 && colorTemp.state.value !== '' && colorTemp.state.value !== undefined) {
+          parts.push('colorTemp: ' + colorTemp.state.value + 'K');
+        }
+        return parts.length ? parts.join(' · ') : 'no notable state fields';
+      }
 
-        container.style.display = 'block';
-        label.textContent = '— ' + deviceName + ' (' + sku + ')';
-        responseEl.value = 'Polling…';
-        timestampEl.textContent = '';
+      // Append a chunk of raw text to the consolidated raw-response textarea.
+      function appendRawResponse(header, body) {
+        const ta = document.getElementById('raw-response');
+        const prefix = ta.value && ta.value.trim().length ? ta.value.replace(/\s+$/, '') + '\n\n' : '';
+        ta.value = prefix + '// ' + header + '\n' + body + '\n';
+        // Scroll the textarea to show the latest append
+        ta.scrollTop = ta.scrollHeight;
+      }
 
+      function pollDeviceState(sku, deviceId, deviceName, btn, rowIdx) {
+        const summaryEl = document.getElementById('device-state-summary-' + rowIdx);
+        if (summaryEl) summaryEl.textContent = 'Polling…';
         if (btn) {
           btn.disabled = true;
           btn.textContent = 'Polling…';
@@ -796,13 +831,27 @@
           }
 
           if (err) {
-            responseEl.value = 'Homey.api error: ' + err;
+            const msg = 'Homey.api error: ' + err;
+            if (summaryEl) summaryEl.textContent = msg;
+            appendRawResponse('Poll State — ' + deviceName + ' (' + sku + ') — FAILED', JSON.stringify({ error: String(err) }, null, 2));
             return;
           }
-          responseEl.value = result && result.rawResponse ? result.rawResponse : JSON.stringify(result, null, 2);
-          timestampEl.textContent = result && result.timestamp ? 'Polled at ' + new Date(result.timestamp).toLocaleString() : '';
-          // Scroll the response area into view so the user immediately sees the result
-          container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          if (!result) {
+            if (summaryEl) summaryEl.textContent = 'Empty response';
+            appendRawResponse('Poll State — ' + deviceName + ' (' + sku + ') — EMPTY RESPONSE', '(no result returned)');
+            return;
+          }
+
+          const timestamp = result.timestamp ? new Date(result.timestamp).toLocaleTimeString() : '';
+          if (result.success && result.payload) {
+            if (summaryEl) summaryEl.textContent = formatDeviceStateSummary(result.payload) + (timestamp ? ' — polled ' + timestamp : '');
+          } else if (result.success === false) {
+            if (summaryEl) summaryEl.textContent = 'Error: ' + (result.error || 'unknown');
+          } else {
+            if (summaryEl) summaryEl.textContent = 'Response received (see raw output).';
+          }
+          appendRawResponse('Poll State — ' + deviceName + ' (' + sku + ')' + (timestamp ? ' @ ' + timestamp : ''),
+            result.rawResponse ? result.rawResponse : JSON.stringify(result, null, 2));
         });
       }
 
@@ -829,6 +878,13 @@
           if (err) {
             statusContainer.innerHTML = '<div class="error-message">' + escapeHtml('Homey.api error: ' + err) + '</div>';
             bleResponseEl.value = JSON.stringify({ error: String(err) }, null, 2);
+            return;
+          }
+          if (!result) {
+            // Endpoint returned nothing at all — degrade gracefully instead of
+            // crashing on result.success.
+            statusContainer.innerHTML = '<div class="error-message">Empty response from scan-ble-sensors endpoint.</div>';
+            bleResponseEl.value = '(empty response)';
             return;
           }
           if (!result.success) {
@@ -895,24 +951,6 @@
           document.execCommand('copy');
           copyBleBtn.textContent = 'Copied!';
           setTimeout(function() { copyBleBtn.textContent = 'Copy to Clipboard'; }, 2000);
-        }
-      });
-
-      // Copy device-state response
-      const copyDeviceStateBtn = document.getElementById('copy-device-state');
-      copyDeviceStateBtn.addEventListener('click', function() {
-        const ta = document.getElementById('device-state-response');
-        ta.select();
-        ta.setSelectionRange(0, 99999);
-        try {
-          navigator.clipboard.writeText(ta.value).then(function() {
-            copyDeviceStateBtn.textContent = 'Copied!';
-            setTimeout(function() { copyDeviceStateBtn.textContent = 'Copy to Clipboard'; }, 2000);
-          });
-        } catch (err) {
-          document.execCommand('copy');
-          copyDeviceStateBtn.textContent = 'Copied!';
-          setTimeout(function() { copyDeviceStateBtn.textContent = 'Copy to Clipboard'; }, 2000);
         }
       });
 

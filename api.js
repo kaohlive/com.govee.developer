@@ -301,82 +301,119 @@ module.exports = {
    * interval. Handles all sensor models supported by lib/ble-parser.js.
    */
   async scanBleSensors({ homey }) {
+    // Wrap the entire body so any unexpected throw still returns a well-formed
+    // {success, error} object instead of letting Homey's wrapper produce an
+    // opaque "Cannot read properties of undefined" style error to the client.
     try {
-      const advertisements = await homey.ble.discover();
+      if (!homey || !homey.ble || typeof homey.ble.discover !== 'function') {
+        return {
+          success: false,
+          error: 'BLE manager not available on this Homey (homey.ble is undefined). Check that the app has the homey:wireless:ble permission and is running on a Homey with a BLE radio.',
+          timestamp: new Date().toISOString(),
+          sensors: [],
+        };
+      }
 
-      const govee = (advertisements || []).filter(adv => {
-        const name = adv.localName || '';
-        return name.indexOf('Govee_') === 0;
+      let advertisements;
+      try {
+        advertisements = await homey.ble.discover();
+      } catch (err) {
+        return {
+          success: false,
+          error: 'homey.ble.discover() threw: ' + (err && err.message ? err.message : String(err)),
+          timestamp: new Date().toISOString(),
+          sensors: [],
+        };
+      }
+
+      if (!Array.isArray(advertisements)) advertisements = [];
+
+      const govee = advertisements.filter(adv => {
+        if (!adv) return false;
+        const name = (adv && adv.localName) || '';
+        return typeof name === 'string' && name.indexOf('Govee_') === 0;
       });
 
       const sensors = govee.map(adv => {
-        const model = extractGoveeModel(adv.localName);
+        try {
+          const model = extractGoveeModel(adv.localName);
 
-        // Collect every candidate buffer the driver would try to parse:
-        // one entry per serviceData UUID plus the manufacturerData blob.
-        const buffers = [];
-        if (adv.serviceData) {
-          for (const [uuid, value] of Object.entries(adv.serviceData)) {
-            if (Buffer.isBuffer(value)) {
-              buffers.push({
-                source: 'serviceData:' + uuid,
-                hex: value.toString('hex'),
-                length: value.length,
-              });
-            }
-          }
-        }
-        if (adv.manufacturerData && Buffer.isBuffer(adv.manufacturerData)) {
-          buffers.push({
-            source: 'manufacturerData',
-            hex: adv.manufacturerData.toString('hex'),
-            length: adv.manufacturerData.length,
-          });
-        }
-
-        // Try each buffer through parseByModel; keep the first that yields a result.
-        let parsed = null;
-        let parsedFrom = null;
-        let parseError = null;
-        if (model) {
-          for (const b of buffers) {
-            try {
-              const r = parseByModel(model, Buffer.from(b.hex, 'hex'));
-              if (r) {
-                parsed = r;
-                parsedFrom = b.source;
-                break;
+          // Collect every candidate buffer the driver would try to parse:
+          // one entry per serviceData UUID plus the manufacturerData blob.
+          const buffers = [];
+          if (adv.serviceData && typeof adv.serviceData === 'object') {
+            for (const [uuid, value] of Object.entries(adv.serviceData)) {
+              if (Buffer.isBuffer(value)) {
+                buffers.push({
+                  source: 'serviceData:' + uuid,
+                  hex: value.toString('hex'),
+                  length: value.length,
+                });
               }
-            } catch (err) {
-              parseError = err.message;
             }
           }
-        }
+          if (adv.manufacturerData && Buffer.isBuffer(adv.manufacturerData)) {
+            buffers.push({
+              source: 'manufacturerData',
+              hex: adv.manufacturerData.toString('hex'),
+              length: adv.manufacturerData.length,
+            });
+          }
 
-        return {
-          address: adv.address || null,
-          localName: adv.localName || null,
-          model,
-          rssi: typeof adv.rssi === 'number' ? adv.rssi : null,
-          buffers,
-          parsed,
-          parsedFrom,
-          parseError,
-        };
+          // Try each buffer through parseByModel; keep the first that yields a result.
+          let parsed = null;
+          let parsedFrom = null;
+          let parseError = null;
+          if (model) {
+            for (const b of buffers) {
+              try {
+                const r = parseByModel(model, Buffer.from(b.hex, 'hex'));
+                if (r) {
+                  parsed = r;
+                  parsedFrom = b.source;
+                  break;
+                }
+              } catch (err) {
+                parseError = err && err.message ? err.message : String(err);
+              }
+            }
+          }
+
+          return {
+            address: adv.address || null,
+            localName: adv.localName || null,
+            model,
+            rssi: typeof adv.rssi === 'number' ? adv.rssi : null,
+            buffers,
+            parsed,
+            parsedFrom,
+            parseError,
+          };
+        } catch (err) {
+          return {
+            address: (adv && adv.address) || null,
+            localName: (adv && adv.localName) || null,
+            model: null,
+            buffers: [],
+            parsed: null,
+            parseError: 'per-advertisement processing failed: ' + (err && err.message ? err.message : String(err)),
+          };
+        }
       });
 
       return {
         success: true,
         timestamp: new Date().toISOString(),
-        totalAdvertisements: advertisements ? advertisements.length : 0,
+        totalAdvertisements: advertisements.length,
         count: sensors.length,
         sensors,
       };
     } catch (err) {
       return {
         success: false,
-        error: err.message || 'BLE scan failed',
+        error: 'scanBleSensors crashed: ' + (err && err.message ? err.message : String(err)),
         timestamp: new Date().toISOString(),
+        sensors: [],
       };
     }
   },
