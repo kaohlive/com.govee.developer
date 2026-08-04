@@ -283,5 +283,8 @@
   },
   "2.17.18": {
     "en": "store review fixes: fans no longer flip their on/off state when only the oscillation changes; corrected several spelling errors; cleaned up segment-control method signatures"
+  },
+  "2.17.19": {
+    "en": "fixed cold-start race where local devices were never discovered when the Homey app started before wifi was ready; the local API now waits for a network interface before initialising"
   }
 }
