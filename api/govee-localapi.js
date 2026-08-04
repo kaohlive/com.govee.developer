@@ -9,6 +9,11 @@ const { buildTurn, buildBrightness, buildColor } = require("../lib/lan-control-m
 const DISCOVERY_INTERVAL_MS = 30000;
 // Timeout for initial socket creation to prevent infinite blocking
 const INIT_TIMEOUT_MS = 15000;
+// When zero interfaces are available at startup (Homey cold-boot before DHCP),
+// poll this often until one appears.
+const NETWORK_WAIT_INTERVAL_MS = 5000;
+// Give up waiting for an interface after this many attempts (2 minutes).
+const NETWORK_WAIT_MAX_ATTEMPTS = 24;
 // Govee device UDP port for incoming commands
 const DEVICE_CONTROL_PORT = 4003;
 
@@ -30,17 +35,55 @@ class GoveeLocalClient {
   }
 
   _initializeClient() {
-    try {
-      // Log network interfaces for debugging
+    const interfaces = this._getNetworkInterfaces();
+
+    if (interfaces.length === 0) {
+      // Homey may have started the app before wifi association / DHCP completed.
+      // Creating the GoveeClient now would bind a socket that cannot join any
+      // multicast group, leaving us silently listening on nothing. Wait until
+      // an IPv4 interface appears, then initialize.
+      console.warn('[GoveeLocalClient] No network interfaces available yet — waiting for one to come up before initializing.');
+      this._waitForNetworkAndInit();
+      return;
+    }
+
+    this._createGoveeClient(interfaces);
+  }
+
+  _waitForNetworkAndInit() {
+    this._netWaitAttempts = 0;
+    this._netWaitTimer = setInterval(() => {
+      if (this._destroyed) {
+        clearInterval(this._netWaitTimer);
+        this._netWaitTimer = null;
+        return;
+      }
+      this._netWaitAttempts++;
       const interfaces = this._getNetworkInterfaces();
+      if (interfaces.length > 0) {
+        const waitedSec = this._netWaitAttempts * (NETWORK_WAIT_INTERVAL_MS / 1000);
+        console.log(`[GoveeLocalClient] Network interface(s) available after ${waitedSec}s, initializing.`);
+        clearInterval(this._netWaitTimer);
+        this._netWaitTimer = null;
+        this._createGoveeClient(interfaces);
+        return;
+      }
+      if (this._netWaitAttempts >= NETWORK_WAIT_MAX_ATTEMPTS) {
+        clearInterval(this._netWaitTimer);
+        this._netWaitTimer = null;
+        const waitedSec = NETWORK_WAIT_MAX_ATTEMPTS * (NETWORK_WAIT_INTERVAL_MS / 1000);
+        this.initError = new Error(`No network interfaces available after ${waitedSec}s — local device discovery unavailable`);
+        console.error('[GoveeLocalClient] ' + this.initError.message);
+      }
+    }, NETWORK_WAIT_INTERVAL_MS);
+  }
+
+  _createGoveeClient(interfaces) {
+    try {
       console.log('[GoveeLocalClient] Initializing with network interfaces:');
       interfaces.forEach(iface => {
         console.log(`  - ${iface.name}: ${iface.address} (netmask: ${iface.netmask})`);
       });
-
-      if (interfaces.length === 0) {
-        console.warn('[GoveeLocalClient] WARNING: No suitable network interfaces found for UDP discovery!');
-      }
 
       // Create client with reduced discovery interval (30s instead of 60s)
       this.GoveeClient = new localapi.default({
@@ -474,6 +517,10 @@ class GoveeLocalClient {
     if (this._initTimeout) {
       clearTimeout(this._initTimeout);
       this._initTimeout = null;
+    }
+    if (this._netWaitTimer) {
+      clearInterval(this._netWaitTimer);
+      this._netWaitTimer = null;
     }
     if (this.GoveeClient) {
       try {
