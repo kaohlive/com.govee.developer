@@ -280,5 +280,8 @@
   },
   "2.17.17": {
     "en": "reduced startup log noise: no more 'UDP socket not available' errors during the first second when many local devices initialise together"
+  },
+  "2.17.18": {
+    "en": "store review fixes: fans no longer flip their on/off state when only the oscillation changes; corrected several spelling errors; cleaned up segment-control method signatures"
   }
 }
