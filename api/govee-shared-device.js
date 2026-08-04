@@ -19,7 +19,7 @@ class GoveeSharedDeviceClient {
         let enhancedUI=null;
         if(await device.getSetting('ui_enhance')) enhancedUI="slider";
         device.log('Start adding dynamic cloud capabilities, scene components: '+enhancedUI);
-        //Add new feauters
+        //Add new features
         //Setup the segment color control capability, flow only
         if(capabilitieslist.find(function(e) { return e.instance == "segmentedColorRgb" })) {
           if(!device.hasCapability('segmentControlColor.'+device.goveedevicetype))

@@ -57,7 +57,7 @@ class GoveeDevice extends Device {
       return deviceData;
     }
     //Then its the old device, we need to map the capabilities
-    //Lets retreve the v2 capabilities of this device from the API
+    //Lets retrieve the v2 capabilities of this device from the API
     var devicelist = await this.driver.api.deviceList();
     var thisdevice = devicelist.data.find(function(e) { return e.device === deviceData.mac })
     if(thisdevice!=null){
@@ -133,7 +133,7 @@ class GoveeDevice extends Device {
       {
         this.log('Processing the Oscillating state');
         var options = currentState.capabilitieslist.find(function(e) { return e.instance == "oscillationToggle" })
-        this.setCapabilityValue('onoff', (options.state.value==1)).catch( reason => this.log('Error while updating capability: '+reason) );
+        this.setCapabilityValue('oscillating', (options.state.value==1)).catch( reason => this.log('Error while updating capability: '+reason) );
       }
       if (this.hasCapability('dim'))
       {
@@ -253,7 +253,7 @@ class GoveeDevice extends Device {
 
   async addRemoveStandardCapabilities()
   {
-    //Now create/update the capabilties based on the device
+    //Now create/update the capabilities based on the device
     try {
       if(!this.hasCapability('alarm_online.'+this.goveedevicetype))
         await this.addCapability('alarm_online.'+this.goveedevicetype);
@@ -354,7 +354,7 @@ class GoveeDevice extends Device {
 
   /**
    * onAdded is called when the user adds the device, called just after pairing.
-   * That is a good moment to map the static device capabilties of Govee with the Homey capabilities
+   * That is a good moment to map the static device capabilities of Govee with the Homey capabilities
    */
   async onAdded() {
     this.log('govee.device.'+this.data.model+': '+this.data.name+' has been added');
@@ -476,7 +476,7 @@ class GoveeDevice extends Device {
 
     /**
    * Sets the target temperature of thermostat devices
-   * @param {string} value the target temp value of the temperature within its definced range
+   * @param {string} value the target temp value of the temperature within its defined range
    * @param {*} opts 
    */
   async onCapabilityTargetTemperature( value, opts ) {
@@ -663,7 +663,7 @@ class GoveeDevice extends Device {
   }
 
   /**
-   * Sets the Light mode for color or tempurature
+   * Sets the Light mode for color or temperature
    * @param {string} value The light mode from the enum color,temperature
    * @param {*} opts 
    */

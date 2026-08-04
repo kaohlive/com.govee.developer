@@ -383,11 +383,11 @@ class GoveeLocalDevice extends Device {
 
   /**
    * onAdded is called when the user adds the device, called just after pairing.
-   * That is a good moment to map the device capabilties of Govee with the Homey capabilities
+   * That is a good moment to map the device capabilities of Govee with the Homey capabilities
    */
   async onAdded() {
     this.log('govee.device.'+this.data.model+': '+this.data.id+' has been added');
-    //Now create the capabilties based on the device
+    //Now create the capabilities based on the device
     if(!this.hasCapability('onoff'))
       await this.addCapability('onoff');    
     if(!this.hasCapability('dim'))
@@ -588,7 +588,7 @@ class GoveeLocalDevice extends Device {
   }
 
   /**
-   * Sets the Light mode for color or tempurature
+   * Sets the Light mode for color or temperature
    * @param {string} value The light mode from the enum color,temperature
    * @param {*} opts 
    */

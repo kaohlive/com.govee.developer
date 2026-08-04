@@ -7,7 +7,7 @@ class goveeSocket extends GoveeDevice {
    * onInit is called when the device is initialized.
    */
   async onInit() {
-    //Setup the matching capaciltities of this device
+    //Setup the matching capabilities of this device
     this.goveedevicetype='socket';
     await this.setupDevice();
   }

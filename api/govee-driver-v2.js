@@ -145,22 +145,18 @@ class GoveeDriver extends Driver {
 
   async setTargetTemperature(temperature, instance, model, device) {
     this.log("thermostat target temperature change requested ["+temperature+"] for instance "+instance);
-    return this.api.setTempuratureSettings(temperature, instance, model, device);
+    return this.api.setTemperatureSettings(temperature, instance, model, device);
   }
 
-  async setSegmentColor(segment, colorHex, mode, model, device, type) {
+  async setSegmentColor(segment, colorHex, model, device, type) {
     let colorParsed = this.colorHexCommandSetParser(colorHex);
     this.log('device segment change requested ['+segment+'] to color '+colorParsed);
-    return this.api.setSegmentColor(segment, parseInt(colorParsed, 16), mode, model, device);
-  }
-  async setSegmentBrightness(segment, brightness, mode, model, device, type) {
-    this.log('device segment change requested ['+segment+'] to brightness '+brightness);
-    return this.api.setSegmentBrightness(segment, brightness, mode, model, device);
+    return this.api.setSegmentColor(segment, parseInt(colorParsed, 16), model, device);
   }
 
-  async setSegmentBrightness(segment ,brightness, mode, model, device, type) {
+  async setSegmentBrightness(segment, brightness, model, device, type) {
     this.log('device segment change requested ['+segment+'] to brightness '+brightness);
-    return this.api.setSegmentBrightness(segment ,brightness, mode, model, device);
+    return this.api.setSegmentBrightness(segment, brightness, model, device);
   }
 
   async turn(mode, model, device, type) {

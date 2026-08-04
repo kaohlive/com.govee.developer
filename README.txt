@@ -1,4 +1,4 @@
-Official app for the Govee WIFI enabled devices. This app supports the main light functions and appliance opperations as they are available in the Govee Cloud API or through local API discovery (Pro only).
+Official app for the Govee WIFI enabled devices. This app supports the main light functions and appliance operations as they are available in the Govee Cloud API or through local API discovery (Pro only).
 
 Getting started
 
@@ -8,7 +8,7 @@ For cloud features you need to use the Govee mobile app to request the API key f
 Local devices (Pro only)
 Local API devices can be added using the special device type. These work fully local without any cloud. These functions are limited, for example scene support will not work. However you can enable a hybrid mode by selecting the cloud enhancement features. This does require the API key as described in the cloud devices section.
 
-Supprted devices
+Supported devices
 Currently the app supports the:
 All cloud API enabled devices/appliances
 All local API enabled devices

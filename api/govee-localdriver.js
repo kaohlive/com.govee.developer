@@ -250,19 +250,15 @@ class GoveeDriver extends Driver {
     return this.coudapi.setMusicMode(musicMode, sensitivity, model, device);
   }
 
-  async setSegmentColor(segment, colorHex, mode, model, device, type) {
+  async setSegmentColor(segment, colorHex, model, device, type) {
     let colorParsed = this.colorHexCommandSetParser(colorHex);
     this.log('device segment change requested ['+segment+'] to color '+colorParsed);
-    return this.coudapi.setSegmentColor(segment, parseInt(colorParsed, 16), mode, model, device);
-  }
-  async setSegmentBrightness(segment, brightness, mode, model, device, type) {
-    this.log('device segment change requested ['+segment+'] to brightness '+brightness);
-    return this.coudapi.setSegmentBrightness(segment, brightness, mode, model, device);
+    return this.coudapi.setSegmentColor(segment, parseInt(colorParsed, 16), model, device);
   }
 
-  async setSegmentBrightness(segment ,brightness, mode, model, device, type) {
+  async setSegmentBrightness(segment, brightness, model, device, type) {
     this.log('device segment change requested ['+segment+'] to brightness '+brightness);
-    return this.coudapi.setSegmentBrightness(segment ,brightness, mode, model, device);
+    return this.coudapi.setSegmentBrightness(segment, brightness, model, device);
   }
 }
 
