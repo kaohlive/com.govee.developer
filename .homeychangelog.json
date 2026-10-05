@@ -286,5 +286,8 @@
   },
   "2.17.19": {
     "en": "fixed cold-start race where local devices were never discovered when the Homey app started before wifi was ready; the local API now waits for a network interface before initialising"
+  },
+  "2.18.0": {
+    "en": "New [Beta] driver for the Govee H617A Bluetooth light strip: on/off, brightness and colour, directly over Bluetooth without the Govee cloud. Contributed by Gerard (gwesseling)."
   }
 }
