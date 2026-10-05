@@ -3,6 +3,31 @@
 const { Device } = require('homey');
 const GoveeSharedDevice = require('./govee-shared-device');
 
+const MIN_POLL_INTERVAL = 60000;
+// Govee allows 10,000 cloud API calls per account per day. State polling may
+// use this many of them; the rest stays free for control commands and pairing.
+const DAILY_POLL_BUDGET = 8000;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Milliseconds until the next midnight in the given time zone (plus a second of margin).
+ */
+function msUntilMidnight(timeZone) {
+  let elapsed;
+  try {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+      timeZone, hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit'
+    }).formatToParts(new Date());
+    const get = (type) => Number(parts.find(p => p.type === type).value);
+    elapsed = ((get('hour') % 24) * 3600 + get('minute') * 60 + get('second')) * 1000;
+  } catch (err) {
+    //Unknown time zone or no ICU time zone data: fall back to the process clock
+    const now = new Date();
+    elapsed = (now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()) * 1000;
+  }
+  return DAY_MS - elapsed + 1000;
+}
+
 class GoveeDevice extends Device {
   /**
    * onInit is called when the device is initialized.
@@ -32,7 +57,8 @@ class GoveeDevice extends Device {
 
   async onUninit() {
     //Clear any listeners
-    this.homey.clearInterval(this._timer);
+    this.homey.clearTimeout(this._timer);
+    this.homey.clearTimeout(this._rateLimitResetTimer);
     // Unregister MQTT event listener
     if (this.sharedDevice) {
       this.sharedDevice.unregisterMqttEventListener(this);
@@ -82,16 +108,50 @@ class GoveeDevice extends Device {
     return deviceData;
   }
 
-  start_update_loop() {
-    let interval = this.homey.settings.get('poll_interval');
-    if(interval < 60000)
-    {
-      this.log('Interval is not set or set to low, force 1 min');
-      interval = 60000;
+  /**
+   * The configured poll interval, stretched when needed so that polling all
+   * cloud devices together stays within the daily Govee API budget.
+   */
+  pollInterval() {
+    let interval = Number(this.homey.settings.get('poll_interval')) || 0;
+    if (interval < MIN_POLL_INTERVAL)
+      interval = MIN_POLL_INTERVAL;
+    let cloudDevices = 0;
+    for (const driver of Object.values(this.homey.drivers.getDrivers()))
+      cloudDevices += driver.getDevices().filter(d => d instanceof GoveeDevice).length;
+    const budgetInterval = Math.ceil(cloudDevices * DAY_MS / DAILY_POLL_BUDGET);
+    if (budgetInterval > interval) {
+      if (this._pollInterval !== budgetInterval)
+        this.log('Poll interval raised to '+Math.round(budgetInterval/1000)+'s to keep '+cloudDevices+' cloud devices within the daily Govee API limit');
+      interval = budgetInterval;
     }
-    this._timer = this.homey.setInterval(() => {
-        this.refreshState();
-    }, interval); //Do not set this to low, 4 devices per halve minute already surpases the 10K global call count per day
+    return interval;
+  }
+
+  start_update_loop() {
+    //A self-rescheduling timeout instead of an interval, so the interval follows the current device count and settings
+    this.homey.clearTimeout(this._timer);
+    this._pollInterval = this.pollInterval();
+    this._timer = this.homey.setTimeout(() => {
+      this.refreshState();
+      this.start_update_loop();
+    }, this._pollInterval);
+  }
+
+  setRateLimitWarning() {
+    this.setWarning('Govee daily API limit reached until midnight (polling every '+Math.round(this._pollInterval/1000)+'s)')
+      .catch(err => this.error('setWarning failed:', err.message));
+    if (!this._rateLimitResetTimer) {
+      this._rateLimitResetTimer = this.homey.setTimeout(() => this.clearRateLimitWarning(), msUntilMidnight(this.homey.clock.getTimezone()));
+    }
+  }
+
+  clearRateLimitWarning() {
+    if (!this._rateLimitResetTimer)
+      return;
+    this.homey.clearTimeout(this._rateLimitResetTimer);
+    this._rateLimitResetTimer = null;
+    this.unsetWarning().catch(err => this.error('unsetWarning failed:', err.message));
   }
 
   async refreshState()
@@ -103,6 +163,7 @@ class GoveeDevice extends Device {
     this.log('govee.'+this.goveedevicetype+'.'+this.data.model+': '+this.data.name+' device state to be retrieved');
     this.driver.deviceState(this.data.model, this.data.mac, this.data.type).then(currentState => {
       console.log(JSON.stringify(currentState.capabilitieslist));
+      this.clearRateLimitWarning();
 
       //Lets refresh our dynamic capabilities
       this.sharedDevice.refreshDynamicCapabilities(currentState, this);
@@ -261,7 +322,13 @@ class GoveeDevice extends Device {
           this.log('airQuality value was not a number in the state: '+JSON.stringify(aq && aq.state));
       }
 
-    }).catch((err) => this.log('Error calling the state endpoint ['+JSON.stringify(err)+']'));
+    }).catch((err) => {
+      //Also catches errors thrown while processing the state above; the stack tells those apart from API failures
+      const detail = err && err.status !== undefined ? err.message : (err && err.stack ? err.stack : err);
+      this.log('Error calling the state endpoint: '+detail);
+      if (err && err.rateLimited)
+        this.setRateLimitWarning();
+    });
   }
 
   async addRemoveStandardCapabilities()
@@ -479,9 +546,8 @@ class GoveeDevice extends Device {
    */
   async onDeleted() {
     this.log('govee.device.'+this.data.model+': '+this.data.name+' has been deleted');
-    if (this._timer) {
-      clearInterval(this._timer)
-    }
+    this.homey.clearTimeout(this._timer);
+    this.homey.clearTimeout(this._rateLimitResetTimer);
     // Unregister MQTT event listener
     if (this.sharedDevice) {
       this.sharedDevice.unregisterMqttEventListener(this);

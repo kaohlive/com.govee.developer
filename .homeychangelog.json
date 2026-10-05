@@ -292,5 +292,8 @@
   },
   "2.19.0": {
     "en": "Air quality monitors such as the H5106 now show their PM2.5 reading."
+  },
+  "2.19.1": {
+    "en": "Cloud polling now slows down automatically when you have many devices, so it stays within the Govee daily API limit. If the limit is still reached, the device shows a warning until midnight. Clearer error messages in the logs."
   }
 }

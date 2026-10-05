@@ -28,15 +28,24 @@ class GoveeClient {
 
     console.log('Call to '+url+' with config '+JSON.stringify(options));
 
-    return fetch(url, config).then((r) => r.json())
-    .then((data) => {
-      //console.log(data);
-      if(data.code==200)
+    return fetch(url, config).then(async (r) => {
+      const text = await r.text();
+      let data = null;
+      try { data = JSON.parse(text); } catch (e) { /* not JSON, reported below */ }
+      if(r.ok && data && data.code==200)
       {
         return data;
-      } 
-      throw new Error(data.msg);      
-    });      
+      }
+      //Keep the HTTP status and Govee code in the message, otherwise failures are indistinguishable in the logs
+      const detail = data
+        ? 'code ' + data.code + ': ' + (data.msg || data.message || 'no message')
+        : 'non-JSON response: ' + text.substring(0, 200);
+      const err = new Error('Govee API ' + endpoint + ' failed (HTTP ' + r.status + ', ' + detail + ')');
+      err.status = r.status;
+      err.goveeCode = data ? data.code : undefined;
+      err.rateLimited = r.status == 429 || (data != null && data.code == 429);
+      throw err;
+    });
   }
 
   ping() {
@@ -341,7 +350,7 @@ class GoveeClient {
         this.deviceControl(params).then(res => {
           resolve(res);
         }).catch(res => {
-          console.log(JSON.stringify(res));
+          console.log(res && res.message ? res.message : res);
           reject(res)
         });
       }
