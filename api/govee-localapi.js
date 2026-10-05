@@ -14,6 +14,9 @@ const INIT_TIMEOUT_MS = 15000;
 const NETWORK_WAIT_INTERVAL_MS = 5000;
 // Give up waiting for an interface after this many attempts (2 minutes).
 const NETWORK_WAIT_MAX_ATTEMPTS = 24;
+// After that, keep checking at this slower rate so multicast discovery is
+// enabled as soon as an interface does appear.
+const NETWORK_WATCH_INTERVAL_MS = 30000;
 // Govee device UDP port for incoming commands
 const DEVICE_CONTROL_PORT = 4003;
 
@@ -71,11 +74,33 @@ class GoveeLocalClient {
       if (this._netWaitAttempts >= NETWORK_WAIT_MAX_ATTEMPTS) {
         clearInterval(this._netWaitTimer);
         this._netWaitTimer = null;
+        // Don't give up: start anyway, as before the network wait existed. The
+        // socket binds on 0.0.0.0, so targeted scans to a last known IP and
+        // direct control still work; only multicast discovery needs an
+        // interface. Re-initialize once one shows up (e.g. the router came
+        // back after a power cut later than Homey did).
         const waitedSec = NETWORK_WAIT_MAX_ATTEMPTS * (NETWORK_WAIT_INTERVAL_MS / 1000);
-        this.initError = new Error(`No network interfaces available after ${waitedSec}s — local device discovery unavailable`);
-        console.error('[GoveeLocalClient] ' + this.initError.message);
+        console.warn(`[GoveeLocalClient] No network interface found after ${waitedSec}s — starting without multicast discovery (direct IP scans still work); will re-initialize when an interface appears.`);
+        this._createGoveeClient([]);
+        this._watchForNetwork();
       }
     }, NETWORK_WAIT_INTERVAL_MS);
+  }
+
+  _watchForNetwork() {
+    this._netWatchTimer = setInterval(() => {
+      if (this._destroyed) {
+        clearInterval(this._netWatchTimer);
+        this._netWatchTimer = null;
+        return;
+      }
+      if (this._getNetworkInterfaces().length > 0) {
+        clearInterval(this._netWatchTimer);
+        this._netWatchTimer = null;
+        console.log('[GoveeLocalClient] Network interface appeared, re-initializing to enable multicast discovery.');
+        this.reinitialize().catch(err => console.error('[GoveeLocalClient] Re-initialization failed:', err.message));
+      }
+    }, NETWORK_WATCH_INTERVAL_MS);
   }
 
   _createGoveeClient(interfaces) {
@@ -192,9 +217,14 @@ class GoveeLocalClient {
 
   getDeviceById(deviceId) {
     if (!this.isClientReady()) {
-      console.warn('[GoveeLocalClient] Client not ready, cannot get device by ID');
+      // Every local device polls this once a second while discovering; log once per not-ready period
+      if (!this._notReadyLogged) {
+        this._notReadyLogged = true;
+        console.warn('[GoveeLocalClient] Client not ready, cannot get device by ID (further occurrences not logged until ready)');
+      }
       return null;
     }
+    this._notReadyLogged = false;
     var filteredDevices = this.localDevices.filter(device => {
       return device.deviceID === deviceId;
     });
@@ -521,6 +551,10 @@ class GoveeLocalClient {
     if (this._netWaitTimer) {
       clearInterval(this._netWaitTimer);
       this._netWaitTimer = null;
+    }
+    if (this._netWatchTimer) {
+      clearInterval(this._netWatchTimer);
+      this._netWatchTimer = null;
     }
     if (this.GoveeClient) {
       try {
