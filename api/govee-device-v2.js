@@ -247,7 +247,20 @@ class GoveeDevice extends Device {
             this.setCapabilityValue('measure_humidity',hum.state.value.currentHumidity).catch( reason => this.log('Error while updating capability: '+reason) );
           }
         }
-      
+      if(this.hasCapability('measure_pm25'))
+      {
+        //The state format of airQuality is undocumented; assumed to be PM2.5 in µg/m³, either a plain number or an object
+        var aq = currentState.capabilitieslist.find(function(e) {return e.instance == "airQuality" })
+        this.log('Processing the air quality state: '+JSON.stringify(aq && aq.state));
+        var pm25 = aq && aq.state ? aq.state.value : undefined;
+        if (pm25 !== null && typeof pm25 === 'object')
+          pm25 = pm25.pm25 !== undefined ? pm25.pm25 : pm25.currentAirQuality;
+        if (typeof pm25 === 'number')
+          this.setCapabilityValue('measure_pm25',pm25).catch( reason => this.log('Error while updating capability: '+reason) );
+        else
+          this.log('airQuality value was not a number in the state: '+JSON.stringify(aq && aq.state));
+      }
+
     }).catch((err) => this.log('Error calling the state endpoint ['+JSON.stringify(err)+']'));
   }
 
@@ -316,7 +329,12 @@ class GoveeDevice extends Device {
       if(!this.hasCapability('measure_humidity'))
         await this.addCapability('measure_humidity'); 
     } else if(this.hasCapability('measure_humidity'))
-      await this.removeCapability('measure_humidity');  
+      await this.removeCapability('measure_humidity');
+    if(this.data.capabilitieslist.find(function(e) { return e.instance == "airQuality" })) {
+      if(!this.hasCapability('measure_pm25'))
+        await this.addCapability('measure_pm25');
+    } else if(this.hasCapability('measure_pm25'))
+      await this.removeCapability('measure_pm25');
     //humidity target
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "humidity" })) {
       this.log('Located the Target humidity capabilities')

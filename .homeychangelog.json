@@ -289,5 +289,8 @@
   },
   "2.18.0": {
     "en": "New [Beta] driver for the Govee H617A Bluetooth light strip: on/off, brightness and colour, directly over Bluetooth without the Govee cloud. Contributed by Gerard (gwesseling)."
+  },
+  "2.19.0": {
+    "en": "Air quality monitors such as the H5106 now show their PM2.5 reading."
   }
 }
