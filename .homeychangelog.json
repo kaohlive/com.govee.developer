@@ -301,5 +301,8 @@
   },
   "2.19.3": {
     "en": "Air quality monitors and purifiers now show Govee's air quality index instead of a PM2.5 value. Govee's cloud does not provide a real PM2.5 reading."
+  },
+  "2.19.4": {
+    "en": "Thermometers that go offline no longer show a false temperature of -17.8 °C; they keep their last known reading."
   }
 }

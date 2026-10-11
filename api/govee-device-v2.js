@@ -28,6 +28,19 @@ function msUntilMidnight(timeZone) {
   return DAY_MS - elapsed + 1000;
 }
 
+/**
+ * A sensor reading as a number, or undefined when Govee sent none (e.g. "" while the device is offline).
+ */
+function toNumber(value) {
+  if (typeof value === 'number')
+    return Number.isFinite(value) ? value : undefined;
+  if (typeof value === 'string' && value.trim() !== '') {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+  return undefined;
+}
+
 class GoveeDevice extends Device {
   /**
    * onInit is called when the device is initialized.
@@ -291,22 +304,25 @@ class GoveeDevice extends Device {
       {
         this.log('Processing the temp sensor state');
         var temp = currentState.capabilitieslist.find(function(e) {return e.instance == "sensorTemperature" })
-        var celc = (temp.state.value - 32) / 1.8;
-        this.setCapabilityValue('measure_temperature',celc).catch( reason => this.log('Error while updating capability: '+reason) );
+        //An offline sensor reports "" here; converting that would show a made-up -17.8 °C, so keep the last known value
+        var fahrenheit = toNumber(temp && temp.state ? temp.state.value : undefined);
+        if (fahrenheit !== undefined)
+          this.setCapabilityValue('measure_temperature',(fahrenheit - 32) / 1.8).catch( reason => this.log('Error while updating capability: '+reason) );
+        else
+          this.log('No temperature reading in the state (device offline?): '+JSON.stringify(temp && temp.state));
       }
       if(this.hasCapability('measure_humidity'))
         {
           this.log('Processing the humidity sensor state');
           var hum = currentState.capabilitieslist.find(function(e) {return e.instance == "sensorHumidity" })
-          if (hum.state.value.currentHumidity === undefined) {
-            if (hum.state.value === undefined) {
-              console.log("currentHumidity was not received in the state: "+JSON.stringify(hum.state));
-            } else {
-              this.setCapabilityValue('measure_humidity',hum.state.value).catch( reason => this.log('Error while updating capability: '+reason) );
-            }
-          } else {
-            this.setCapabilityValue('measure_humidity',hum.state.value.currentHumidity).catch( reason => this.log('Error while updating capability: '+reason) );
-          }
+          var humValue = hum && hum.state ? hum.state.value : undefined;
+          if (humValue !== null && typeof humValue === 'object')
+            humValue = humValue.currentHumidity;
+          humValue = toNumber(humValue);
+          if (humValue !== undefined)
+            this.setCapabilityValue('measure_humidity',humValue).catch( reason => this.log('Error while updating capability: '+reason) );
+          else
+            this.log('No humidity reading in the state (device offline?): '+JSON.stringify(hum && hum.state));
         }
       if(this.hasCapability('measure_aqi'))
       {
