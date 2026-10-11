@@ -298,5 +298,8 @@
   },
   "2.19.2": {
     "en": "Local devices no longer stop working for good when Homey starts before your network is up; they now recover once the network is available."
+  },
+  "2.19.3": {
+    "en": "Air quality monitors and purifiers now show Govee's air quality index instead of a PM2.5 value. Govee's cloud does not provide a real PM2.5 reading."
   }
 }

@@ -308,16 +308,14 @@ class GoveeDevice extends Device {
             this.setCapabilityValue('measure_humidity',hum.state.value.currentHumidity).catch( reason => this.log('Error while updating capability: '+reason) );
           }
         }
-      if(this.hasCapability('measure_pm25'))
+      if(this.hasCapability('measure_aqi'))
       {
-        //The state format of airQuality is undocumented; assumed to be PM2.5 in µg/m³, either a plain number or an object
+        //airQuality is a coarse air quality index (observed values 1-2), not PM2.5 in µg/m³; Govee's cloud has no real PM2.5 reading
         var aq = currentState.capabilitieslist.find(function(e) {return e.instance == "airQuality" })
         this.log('Processing the air quality state: '+JSON.stringify(aq && aq.state));
-        var pm25 = aq && aq.state ? aq.state.value : undefined;
-        if (pm25 !== null && typeof pm25 === 'object')
-          pm25 = pm25.pm25 !== undefined ? pm25.pm25 : pm25.currentAirQuality;
-        if (typeof pm25 === 'number')
-          this.setCapabilityValue('measure_pm25',pm25).catch( reason => this.log('Error while updating capability: '+reason) );
+        var aqi = aq && aq.state ? aq.state.value : undefined;
+        if (typeof aqi === 'number')
+          this.setCapabilityValue('measure_aqi',aqi).catch( reason => this.log('Error while updating capability: '+reason) );
         else
           this.log('airQuality value was not a number in the state: '+JSON.stringify(aq && aq.state));
       }
@@ -398,10 +396,10 @@ class GoveeDevice extends Device {
     } else if(this.hasCapability('measure_humidity'))
       await this.removeCapability('measure_humidity');
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "airQuality" })) {
-      if(!this.hasCapability('measure_pm25'))
-        await this.addCapability('measure_pm25');
-    } else if(this.hasCapability('measure_pm25'))
-      await this.removeCapability('measure_pm25');
+      if(!this.hasCapability('measure_aqi'))
+        await this.addCapability('measure_aqi');
+    } else if(this.hasCapability('measure_aqi'))
+      await this.removeCapability('measure_aqi');
     //humidity target
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "humidity" })) {
       this.log('Located the Target humidity capabilities')
@@ -455,6 +453,9 @@ class GoveeDevice extends Device {
 
   async cleanOldCapabilities()
   {
+    //v2.19.0 mapped airQuality to measure_pm25, but it is an index, not PM2.5; now measure_aqi
+    if(this.hasCapability('measure_pm25'))
+      await this.removeCapability('measure_pm25');
     if(this.hasCapability('segmentControlColor'))
       await this.removeCapability('segmentControlColor');
     if(this.hasCapability('segmentControlBrightness'))
