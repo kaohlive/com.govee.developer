@@ -558,6 +558,17 @@ class GoveeLocalClient {
     }
     if (this.GoveeClient) {
       try {
+        // The library's destroy() swaps its device map for an empty one before
+        // destroying the devices, so their 6s status timers keep sending on the
+        // closed socket and crash the app (ERR_SOCKET_DGRAM_NOT_RUNNING). Stop
+        // them ourselves first.
+        for (const device of (this.GoveeClient.devicesArray || [])) {
+          try {
+            device.destroy();
+          } catch (err) {
+            console.error('[GoveeLocalClient] Error destroying device:', err.message);
+          }
+        }
         // Remove all listeners to prevent callbacks after destroy
         this.GoveeClient.removeAllListeners();
         this.GoveeClient.destroy();

@@ -304,5 +304,8 @@
   },
   "2.19.4": {
     "en": "Thermometers that go offline no longer show a false temperature of -17.8 °C; they keep their last known reading."
+  },
+  "2.19.5": {
+    "en": "Fixed app crashes related to local (LAN) devices when the app stopped, updated or reconnected to the network."
   }
 }
