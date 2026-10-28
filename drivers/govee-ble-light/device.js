@@ -10,7 +10,7 @@ const {
   buildColorCommand,
 } = require('../../lib/govee-ble-light-protocol');
 
-// Segmented Govee models (this driver currently only targets the H617A) are
+// Segmented Govee models (this driver targets the H617A and H617E) are
 // known to drop single writes silently. The community's own H617A bugfix
 // sends every command 3x with a short delay to work around it, so we do the
 // same instead of trusting a single write.

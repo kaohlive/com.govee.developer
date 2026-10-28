@@ -10,6 +10,12 @@ const {
   checksum,
 } = require('../lib/govee-ble-light-protocol');
 
+test('isKnownLightModel: H617E is handled like the H617A', () => {
+  assert.equal(isKnownLightModel('H617E'), true);
+  assert.equal(buildBrightnessCommand(255, 'H617E')[2], 100);
+  assert.deepEqual(buildColorCommand(0x11, 0x22, 0x33, 'H617E'), buildColorCommand(0x11, 0x22, 0x33, 'H617A'));
+});
+
 test('isKnownLightModel: recognizes H617A case-insensitively', () => {
   assert.equal(isKnownLightModel('H617A'), true);
   assert.equal(isKnownLightModel('h617a'), true);

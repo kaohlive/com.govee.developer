@@ -307,5 +307,8 @@
   },
   "2.19.5": {
     "en": "Fixed app crashes related to local (LAN) devices when the app stopped, updated or reconnected to the network."
+  },
+  "2.20.0": {
+    "en": "The [Beta] Bluetooth light strip driver now also supports the Govee H617E."
   }
 }

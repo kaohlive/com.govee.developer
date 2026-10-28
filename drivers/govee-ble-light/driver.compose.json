@@ -1,7 +1,7 @@
 {
   "id": "govee-ble-light",
   "name": {
-    "en": "[Beta] BLE Light Strip (H617A)"
+    "en": "[Beta] BLE Light Strip (H617A/H617E)"
   },
   "class": "light",
   "platforms": ["local"],
