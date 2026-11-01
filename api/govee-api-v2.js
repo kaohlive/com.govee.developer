@@ -28,7 +28,14 @@ class GoveeClient {
 
     console.log('Call to '+url+' with config '+JSON.stringify(options));
 
-    return fetch(url, config).then(async (r) => {
+    return fetch(url, config).catch((err) => {
+      //Node's fetch reports every network failure as "fetch failed"; the real reason (timeout, DNS, TLS) is in err.cause
+      const cause = err && err.cause;
+      const detail = cause ? ' (' + [cause.code, cause.message].filter(Boolean).join(': ') + ')' : '';
+      const wrapped = new Error('Govee API ' + endpoint + ' network error: ' + (err && err.message) + detail);
+      wrapped.network = true;
+      throw wrapped;
+    }).then(async (r) => {
       const text = await r.text();
       let data = null;
       try { data = JSON.parse(text); } catch (e) { /* not JSON, reported below */ }

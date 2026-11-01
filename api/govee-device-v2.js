@@ -170,7 +170,9 @@ class GoveeDevice extends Device {
   async refreshState()
   {
     if (!this.data) {
-      this.error('Cannot refresh state: device data not initialized');
+      //Setup failed before the device data was loaded (e.g. a network error); retry it instead of staying dead until an app restart
+      this.error('Cannot refresh state: device data not initialized, retrying device setup');
+      this.setupDevice();
       return;
     }
     this.log('govee.'+this.goveedevicetype+'.'+this.data.model+': '+this.data.name+' device state to be retrieved');
@@ -338,7 +340,7 @@ class GoveeDevice extends Device {
 
     }).catch((err) => {
       //Also catches errors thrown while processing the state above; the stack tells those apart from API failures
-      const detail = err && err.status !== undefined ? err.message : (err && err.stack ? err.stack : err);
+      const detail = err && (err.status !== undefined || err.network) ? err.message : (err && err.stack ? err.stack : err);
       this.log('Error calling the state endpoint: '+detail);
       if (err && err.rateLimited)
         this.setRateLimitWarning();

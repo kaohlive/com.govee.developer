@@ -70,8 +70,11 @@ class GoveeDriver extends Driver {
           name: device.deviceName,
           model: device.sku,
           type: device.type,
-          //goveeApi: 'v2',
-          //capabilitieslist: device.capabilities,
+        },
+        //Store the capabilities we already have, so the new device does not need a second device list call to set itself up
+        store: {
+          capabilityList: device.capabilities,
+          deviceVersion: 'v2'
         }
       }
       this.log(type+' located: '+JSON.stringify(goveedevice));

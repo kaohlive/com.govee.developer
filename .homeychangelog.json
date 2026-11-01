@@ -310,5 +310,8 @@
   },
   "2.20.0": {
     "en": "The [Beta] Bluetooth light strip driver now also supports the Govee H617E."
+  },
+  "2.20.1": {
+    "en": "Cloud devices no longer stay unusable after a network error right after pairing; they retry their setup automatically. Network errors now show their actual cause."
   }
 }
