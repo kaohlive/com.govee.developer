@@ -21,11 +21,12 @@ class GoveeApp extends Homey.App {
     // Initialize cloud API for app-level flow cards
     this.initCloudApi();
 
-    // Listen for API key changes to reinitialize cloud API
+    // Listen for API key changes: every cloud client copied the key when it
+    // was created, so without this a new key (e.g. entered on the pairing
+    // screen, the only place on Homey Cloud) only reached the pairing driver.
     this.homey.settings.on('set', (key) => {
       if (key === 'api_key') {
-        this.cloudApi = null; // Force reinit on next use
-        this.log('API key updated, cloud API will reinitialize on next use');
+        this.applyNewApiKey();
       }
     });
 
@@ -169,6 +170,34 @@ class GoveeApp extends Homey.App {
       this.log('Message is for device ['+payload.device+']');
       this.eventBus.emit('device_event_'+payload.device, payload);
     })
+  }
+
+  /**
+   * Re-create every cloud API client and the MQTT connection with the current API key.
+   */
+  applyNewApiKey() {
+    this.log('API key updated, re-initializing cloud API clients');
+    this.cloudApi = null;
+    this.initCloudApi();
+    for (const driver of Object.values(this.homey.drivers.getDrivers())) {
+      try {
+        if (typeof driver.reInit === 'function')
+          driver.reInit();
+        else if (typeof driver.cloudInit === 'function' && driver.coudapi)
+          driver.cloudInit();
+      } catch (err) {
+        this.error('Failed to re-initialize driver with the new API key:', err.message);
+      }
+    }
+    if (this.mqttClient !== null) {
+      try {
+        this.mqttClient.end(true);
+      } catch (err) {
+        this.error('Error closing MQTT client:', err.message);
+      }
+      this.mqttClient = null;
+      this.setupMqttReceiver();
+    }
   }
 
   /**

@@ -313,5 +313,8 @@
   },
   "2.20.1": {
     "en": "Cloud devices no longer stay unusable after a network error right after pairing; they retry their setup automatically. Network errors now show their actual cause."
+  },
+  "2.20.2": {
+    "en": "A new Govee API key now takes effect immediately for all your devices, without restarting the app."
   }
 }
