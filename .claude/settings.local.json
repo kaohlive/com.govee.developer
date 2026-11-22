@@ -9,7 +9,22 @@
       "Bash(xargs -I {} sh -c 'echo \"\"=== {} ===\"\" && cat {}')",
       "Bash(homey app build)",
       "Bash(grep -E \"\\\\.json$\")",
-      "Bash(find /c/source/repos/com.govee.developer/drivers -name \"driver.compose.json\" -exec grep -l \"devices.types\" {} \\\\;)"
+      "Bash(find /c/source/repos/com.govee.developer/drivers -name \"driver.compose.json\" -exec grep -l \"devices.types\" {} \\\\;)",
+      "Bash(Select-String \"2.17\")",
+      "Bash(node scripts/validate-h5074-fix.js)",
+      "Bash(npm test *)",
+      "Bash(node -c drivers/govee-ble-sensor/device.js)",
+      "Bash(node -c lib/ble-parser.js)",
+      "Read(//c/Users/kaoh/.claude/projects/c--source-repos-com-govee-developer/memory/**)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "PowerShell(git push origin master)",
+      "Bash(ls \"C:\\\\Users\\\\kaoh\\\\.claude\\\\plans\" 2>&1 | head -5)",
+      "Read(//c/Users/kaoh/.claude/plans/**)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\kaoh\\.claude\\projects\\c--source-repos-com-govee-developer\\memory"
     ]
   }
 }
