@@ -4,3 +4,6 @@ build/
 
 # Added by Homey CLI
 /.homeybuild/
+
+# Claude Code per-machine settings
+.claude/settings.local.json
