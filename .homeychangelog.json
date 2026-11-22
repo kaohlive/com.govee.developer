@@ -319,5 +319,8 @@
   },
   "2.21.0": {
     "en": "Air purifiers now show their remaining filter life, and CO2 monitors such as the H5140 show their CO2 reading."
+  },
+  "2.21.1": {
+    "en": "Fixed smart plugs with a nightlight failing to set up; they now also get flow cards for nightlight scenes."
   }
 }
