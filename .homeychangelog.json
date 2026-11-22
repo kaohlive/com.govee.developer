@@ -316,5 +316,8 @@
   },
   "2.20.2": {
     "en": "A new Govee API key now takes effect immediately for all your devices, without restarting the app."
+  },
+  "2.21.0": {
+    "en": "Air purifiers now show their remaining filter life, and CO2 monitors such as the H5140 show their CO2 reading."
   }
 }

@@ -337,6 +337,24 @@ class GoveeDevice extends Device {
         else
           this.log('airQuality value was not a number in the state: '+JSON.stringify(aq && aq.state));
       }
+      if(this.hasCapability('measure_hepa_filter'))
+      {
+        var filter = currentState.capabilitieslist.find(function(e) {return e.instance == "filterLifeTime" || e.instance == "filterLifetime" })
+        var filterLife = toNumber(filter && filter.state ? filter.state.value : undefined);
+        if (filterLife !== undefined)
+          this.setCapabilityValue('measure_hepa_filter',filterLife).catch( reason => this.log('Error while updating capability: '+reason) );
+        else
+          this.log('No filter life reading in the state: '+JSON.stringify(filter && filter.state));
+      }
+      if(this.hasCapability('measure_co2'))
+      {
+        var co2 = currentState.capabilitieslist.find(function(e) {return e.instance == "carbonDioxideConcentration" })
+        var ppm = toNumber(co2 && co2.state ? co2.state.value : undefined);
+        if (ppm !== undefined)
+          this.setCapabilityValue('measure_co2',ppm).catch( reason => this.log('Error while updating capability: '+reason) );
+        else
+          this.log('No CO2 reading in the state (device offline?): '+JSON.stringify(co2 && co2.state));
+      }
 
     }).catch((err) => {
       //Also catches errors thrown while processing the state above; the stack tells those apart from API failures
@@ -418,6 +436,18 @@ class GoveeDevice extends Device {
         await this.addCapability('measure_aqi');
     } else if(this.hasCapability('measure_aqi'))
       await this.removeCapability('measure_aqi');
+    //Remaining filter life in % (air purifiers); Govee spells the instance both ways
+    if(this.data.capabilitieslist.find(function(e) { return e.instance == "filterLifeTime" || e.instance == "filterLifetime" })) {
+      if(!this.hasCapability('measure_hepa_filter'))
+        await this.addCapability('measure_hepa_filter');
+    } else if(this.hasCapability('measure_hepa_filter'))
+      await this.removeCapability('measure_hepa_filter');
+    //CO2 in ppm (e.g. H5140)
+    if(this.data.capabilitieslist.find(function(e) { return e.instance == "carbonDioxideConcentration" })) {
+      if(!this.hasCapability('measure_co2'))
+        await this.addCapability('measure_co2');
+    } else if(this.hasCapability('measure_co2'))
+      await this.removeCapability('measure_co2');
     //humidity target
     if(this.data.capabilitieslist.find(function(e) { return e.instance == "humidity" })) {
       this.log('Located the Target humidity capabilities')
